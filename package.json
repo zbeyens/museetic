@@ -1,0 +1,49 @@
+{
+  "name": "museetic",
+  "version": "0.1.0",
+  "description": "P402",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zbeyens/museetic.git"
+  },
+  "author": "Beyens Ziad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zbeyens/museetic/issues"
+  },
+  "homepage": "https://github.com/zbeyens/museetic#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^1.3.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "googleapis": "^14.1.0",
+    "mongoose": "^4.6.6",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
+    "pg": "^6.1.0",
+    "react": "^15.3.2",
+    "react-autobind": "^1.0.6",
+    "react-bootstrap": "^0.30.5",
+    "react-dom": "^15.3.2",
+    "react-google-login-component": "^0.5.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "file-loader": "^0.9.0",
+    "react-hot-loader": "^3.0.0-beta.6",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
+  }
+}
