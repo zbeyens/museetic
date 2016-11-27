@@ -3,8 +3,11 @@ if (module.hot) {
 }
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Main from './main';
+import { render } from 'react-dom';
+import { Router, browserHistory } from 'react-router';
+import routes from './routes.jsx'
 
-ReactDOM.render(
-    <Main/>, document.getElementById('content'));
+render(
+    <Router history={browserHistory} routes={routes} />,
+    document.getElementById('root')
+);

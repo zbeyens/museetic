@@ -1,45 +1,121 @@
 /*@import url('master.css');*/
+@font-face {font-family: "paris"; src: url('fonts/paris.ttf'); }
+@font-face {font-family: "bariol"; src: url('fonts/bariol.ttf'); }
+@font-face {font-family: "manifesto"; src: url('fonts/manifesto.ttf'); }
+@font-face {font-family: "kaushan"; src: url('fonts/kaushan.otf'); }
+@font-face {font-family: "kaushan"; src: url('fonts/kaushan.otf'); }
+@font-face {font-family: "roboto"; src: url('fonts/roboto/Roboto-Regular.ttf'); }
+@font-face {font-family: "raleway"; src: url('fonts/raleway/Raleway-Medium.ttf'); }
 
-html{
+
+html {
   height: 100%;
 }
 body {
-  position: relative;
-
-  width: 100%;
-  height: 100%;
-}
-
-#dropdown-div {
-    padding: 15px; padding-bottom: 0px;
-}
-
-#user_username, #user_password{
-    margin-bottom: 15px;
-}
-
-#dropdown-login {
-    clear: left; height: 32px; font-size: 13px;
-    margin: 0 0 12px;
-}
-
-#sep{
-    margin: 0 0 10px;
-}
-
-#content, .main-container {
     position: relative;
 
     width: 100%;
     height: 100%;
+
+    font-family: 'raleway';
+    background-color: rgb(245,247,250);
 }
 
-#home {
+/*The navbar*/
+#navbar {
+    background-color: white;
+}
+
+/*navbar*/
+/*.navbar > li > a:hover {
+    color: rgb(204, 75, 75) !important;
+}
+.navbar > li > a:focus {
+    color: rgb(204, 75, 75) !important;
+}*/
+.navbar {
+    min-height: 10px;
+}
+
+/*The band of the navbar*/
+#band {
+    color: rgb(210, 106, 106);
+
+    padding-left: 40px;
+    /*padding-left: 25%;*/
+    font-family: 'bariol';
+    font-size: 2em;
+}
+
+/*logo image*/
+.cafe {
+    background: url("client/img/cafe.png");
+}
+
+/*pic*/
+.pic {
+    padding: 1px;
+    margin-right: 5px;
+}
+
+/*Divider*/
+.or {
+	position: relative;
+
+	margin: 1em 0;
+	padding: 0.5em 0;
+
+	color: #bdb8b8;
+
+	font-size: 1em;
+}
+.orHr {
+	height: 1px;
+	margin: 0;
+
+	background-color: #d2cece;
+}
+.orSpan {
+	position: absolute;
+	top: -0.2em;
+	left: 50%;
+
+	display: block;
+
+	width: 2.5em;
+	margin-left: -1.5em;
+
+	text-align: center;
+
+	background-color: white;
+}
+
+/*dropdown-div in navbar*/
+#dropdown-div {
+    padding: 15px; padding-bottom: 0px;
+}
+
+/*social buttons*/
+.socialDiv {
+    padding-bottom: 7px;
+}
+
+/*input form*/
+#user_username, #user_password{
+    margin: 10px 0;
+}
+
+/*button connect*/
+.dropdown-button {
+    clear: left; height: 32px;
+    margin: 0 0 12px;font-size: 13px;
+}
+
+
+/*root*/
+#root, .main-container {
     position: relative;
 
     width: 100%;
-    height: 8%;
-
-    background-color: rgb(43, 121, 168);
-    background-size: 100%;
+    height: 100%;
 }

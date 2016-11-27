@@ -11,14 +11,24 @@ var APP_DIR = path.resolve(__dirname, 'client/js');
 var config = {
     // devtool: 'cheap-module-source-map',
     entry: [
-        // 'webpack-dev-server/client?http://localhost:8080',
-        // 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
+        //for refreshing the browser
+        'webpack-dev-server/client?http://localhost:8081',
+        //for hot updates
+        'webpack/hot/only-dev-server',
+        //app
         './client/js/index.jsx',
     ],
     // target: 'node',
+
     output: {
+        //path of the bundle, otherwise it's stocked in memory
         path: BUILD_DIR,
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        //location of hot update
+        publicPath: '/client/dist/',
+        //remove the annoying hash
+        hotUpdateChunkFilename: 'hot/hot-update.js',
+        hotUpdateMainFilename: 'hot/hot-update.json'
     },
     watch: true,
     progress: true,
@@ -28,6 +38,7 @@ var config = {
     },
 
     module: {
+        //JSX transpiling via babel-loader
         loaders: [{
             test: /\.jsx?$/,
             exclude: /node_modules/,
@@ -35,12 +46,15 @@ var config = {
         }]
     },
 
-    // devServer: {
-    //     hot: true,
-    //     contentBase: './' //same dir than index.html
-    // },
+    devServer: {
+        hot: true,
+        contentBase: './' //same dir than index.html
+    },
     plugins: [
-        // new webpack.HotModuleReplacementPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoErrorsPlugin()
+
+        //NOTE: Production:
         // new webpack.DefinePlugin({
         //     'process.env': {
         //         'NODE_ENV': JSON.stringify('production')

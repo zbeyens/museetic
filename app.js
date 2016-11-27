@@ -4,15 +4,14 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
     MongoStore = require('connect-mongo')(session),
-    flash = require('connect-flash'),
     logger = require('morgan'),
     http = require('http'),
+    // httpProxy = require('http-proxy'),
     // https = require('https'),
     path = require('path'),
     fs = require('fs'),
-    google = require('googleapis'),
-    OAuth2 = google.auth.OAuth2,
-    plus = google.plus('v1'),
+    favicon = require('serve-favicon'),
+    chalk = require('chalk'),
     passport = require('passport'),
     mongoose = require('mongoose');
 
@@ -25,6 +24,7 @@ cfgPassport(passport);
 
 app.use(logger('dev'));
 app.use('/client', express.static(path.join(__dirname, '/client')));
+app.use(favicon(__dirname + '/client/img/cafe.png'));
 app.use(bodyParser.json()); //support json-encoded bodies
 app.use(bodyParser.urlencoded({
     extended: true
@@ -44,19 +44,16 @@ app.use(session({
 })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-app.use(flash()); // use connect-flash for flash messages stored in session
 
 // Additional middleware which will set headers that we need on each request.
 app.use(function(req, res, next) {
     // Set permissive CORS header - this allows this server to be used only as
     // an API server in conjunction with something like webpack-dev-server.
     res.setHeader('Access-Control-Allow-Origin', '*');
-
     // Disable caching so we'll always get the latest comments.
     res.setHeader('Cache-Control', 'no-cache');
     next();
 });
-// app.use(express.favicon());
 
 routes(app, passport);
 
@@ -103,6 +100,39 @@ app.post('/api/comments', function(req, res) {
         });
     });
 });
+
+
+var isProduction = process.env.NODE_ENV === 'production';
+
+if (!isProduction) {
+    // we start a webpack-dev-server with our config
+    var webpack = require('webpack');
+    var WebpackDevServer = require('webpack-dev-server');
+    var config = require('./webpack.config.js');
+
+
+    new WebpackDevServer(webpack(config), {
+        hot: true,
+        quiet: false,
+        noInfo: true,
+        stats: {
+            colors: true
+        },
+        historyApiFallback: true,
+        proxy: {
+            "*": "http://localhost:8080"
+        },
+        publicPath: '/client/dist/',
+
+    }).listen(8081, 'localhost', function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+
+        console.log('Listening on http://localhost:8081');
+    });
+
+}
 
 var server = http.createServer(app);
 server.listen(process.env.PORT || 8080, function() {
