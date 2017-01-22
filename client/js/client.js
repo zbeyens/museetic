@@ -660,6 +660,7 @@ Client.prototype = {
 
     onDisconnect: function() {
         this.clearEntities();
+        console.log("closing..");
         this.socket.close();
     },
 

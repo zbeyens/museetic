@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "feefd312a7fc96ae0968"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3c4107fcab801caefd02"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1417,6 +1417,7 @@
 
 	    onDisconnect: function onDisconnect() {
 	        this.clearEntities();
+	        console.log("closing..");
 	        this.socket.close();
 	    },
 
