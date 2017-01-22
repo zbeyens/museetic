@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "301fdb7772c33412294d"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3031882c6864c2ebff6f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1706,8 +1706,8 @@
 	    serverMaxSameIp: 2,
 	    serverLagCompensation: 0,
 
-	    clientMaxUpdateBuffer: 120,
-	    clientInterpolationTime: 200,
+	    clientMaxUpdateBuffer: 10,
+	    clientInterpolationTime: 100,
 	    clientSmoothingFactor: 0.3,
 
 	    //Map 960x600
