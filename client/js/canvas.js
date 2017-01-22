@@ -573,6 +573,7 @@ Canvas.prototype = {
         food.sprite.position.y = food.state.y - selfState.y + this.canvas.height / 2;
         if (food.referrer) {
             var newScale = 1 - 3 * food.state.movingTime / cfg.foodMovingTime;
+            if (newScale < 0) newScale = 0;
             food.sprite.scale.set(newScale);
         }
 

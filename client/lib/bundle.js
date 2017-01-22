@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "f7c3364d48dbfcd4fe45"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "eb53346eeafb87323004"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -11291,6 +11291,7 @@
 	        food.sprite.position.y = food.state.y - selfState.y + this.canvas.height / 2;
 	        if (food.referrer) {
 	            var newScale = 1 - 3 * food.state.movingTime / cfg.foodMovingTime;
+	            if (newScale < 0) newScale = 0;
 	            food.sprite.scale.set(newScale);
 	        }
 
