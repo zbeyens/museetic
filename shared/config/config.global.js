@@ -13,7 +13,7 @@ module.exports = {
 
     clientMaxUpdateBuffer: 120,
     clientInterpolationTime: 100,
-    clientSmoothingFactor: 0.8,
+    clientSmoothingFactor: 0.2,
 
     //Map 960x600
     tileAmountX: 100,
