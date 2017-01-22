@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "33255b179256025f1cd8"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a2e10484cb61a8996ceb"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1259,12 +1259,12 @@
 	    },
 
 	    sendMessage: function sendMessage(packet) {
-	        if (this.socket.readyState === 1) {
-	            var buf = packet.form();
-	            this.socket.send(buf);
-	        } else {
-	            this.socket.readyState = 3;
-	        }
+	        // if (this.socket.readyState === 1) {
+	        var buf = packet.form();
+	        this.socket.send(buf);
+	        // } else {
+	        //     this.socket.readyState = 3;
+	        // }
 	    },
 
 	    onSubmit: function onSubmit() {
