@@ -1,0 +1,223 @@
+@import url('master.css');
+@font-face {
+    font-family: 'raleway';
+
+    src: url('raleway/Raleway-Bold.ttf');
+}
+
+body {
+    overflow: hidden;
+
+    font-family: 'raleway';
+}
+
+#signDiv {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    background: url("../img/titlebg.png") fixed center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+#signPanelDiv {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 15%;
+    height: 50%;
+    /*center a div*/
+    margin: auto;
+
+    border: 1px solid #f0f0f5;
+    border-radius: 20px;
+    background-color: #fff;
+}
+
+#titleDiv {
+    position: relative;
+
+    width: 100%;
+    height: 20%;
+
+    text-align: center;
+}
+
+#titleSpan {
+    position: absolute;
+    /*center a div/span*/
+    top: 50%;
+    left: 50%;
+
+    transform: translateX(-50%) translateY(-50%);
+
+    border-bottom: 1px solid #f0f0f5;
+
+    font-size: 2.5em;
+}
+
+#formDiv {
+    position: relative;
+
+    width: 100%;
+    height: 80%;
+}
+
+#signDiv-username, #signDiv-signIn {
+    position: relative;
+
+    display: block;
+
+    margin: 20% auto;
+}
+
+#signDiv-username {
+    width: 80%;
+    height: 8%;
+}
+
+#signDiv-signIn {
+    display: block;
+
+    width: 40%;
+    height: 10%;
+
+    color: #fff;
+    background-color: #33cc77;
+}
+
+#gameDiv {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+}
+
+#ctxDiv {
+    position: absolute;
+    top:0px;
+    left:0px;
+
+    width: 100%;
+    height: 100%;
+}
+
+#ctx {
+    position: absolute;
+    z-index: 0;
+    top:0px;
+    left:0px;
+
+    width: 100%;
+    height: 100%;
+}
+
+#ctx2 {
+    position: absolute;
+    z-index: 1;
+    top:0px;
+    left:0px;
+
+    width: 100%;
+    height: 100%;
+}
+
+#hudDiv {
+    position: absolute;
+    z-index: 1;
+
+    visibility: hidden;
+
+    width: 100%;
+    height: 100%;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+
+    -khtml-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+#boardDiv {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+
+    overflow: hidden;
+
+    width: 10vw;
+    max-width: 20.625vh;
+    height: 16vw;
+    max-height: 33vh;
+    margin: 0.7%;
+    padding: 0.3% 0;
+
+    text-align: center;
+    white-space: nowrap;
+
+    background-color: rgba(140, 140, 140, 0.6);
+}
+
+#leaderboard {
+    position: relative;
+
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+    width: 100%;
+    height: 14%;
+
+    color: #ffffff;
+}
+
+#leaderboard span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translateX(-50%) translateY(-50%);
+
+    border-bottom: 1px solid white;
+}
+
+#entry {
+    position: relative;
+
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+    width: 100%;
+    height: 86%;
+
+    color: white;
+}
+
+#entry div {
+    position: relative;
+
+    width: 100%;
+    height: 10%;
+}
+
+#entry div span {
+    overflow: hidden;
+
+    width: 90%;
+    height: 100%;
+}
+
+#debugDiv {
+    position: absolute;
+    top: 100%;
+
+    display: none;
+}

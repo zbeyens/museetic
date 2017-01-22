@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title> Flapp.io</title>
+	<meta charset="utf-8">
+	<link href="./client/css/style.css" media="screen" rel="stylesheet" type="text/css">
+	<script src="client/lib/pixi.min.js"></script>
+	<script src="client/lib/pixi-display.js"></script>
+	<!-->
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Varela+Round" -->
+
+</head>
+
+<body>
+
+	<!-- <div id="signDiv">
+	</div> -->
+
+	<div id="gameDiv">
+
+		<div id="ctxDiv">
+			<canvas id="ctx"></canvas>
+		</div>
+
+		<div id="signPanelDiv">
+			<div id="titleDiv">
+				<span id="titleSpan">Fly.io</span>
+			</div>
+
+			<div id="formDiv">
+				<form id="sign-form">
+					<input id="signDiv-username" type="text" placeholder="Nickname" autofocus maxlength="140"></input>
+					<button id="signDiv-signIn" type="submit">Play</button>
+				</form>
+			</div>
+		</div>
+
+		<div id="hudDiv">
+			<div id="boardDiv">
+				<div id="leaderboard">
+					<span id="pseudo">Leaderboard</span>
+				</div>
+				<div id="entry">
+					<div>
+						<span id="one"></span>
+					</div>
+					<div>
+						<span id="two"></span>
+					</div>
+					<div>
+						<span id="three"></span>
+					</div>
+					<div>
+						<span id="four"></span>
+					</div>
+					<div>
+						<span id="five"></span>
+					</div>
+					<div>
+						<span id="six"></span>
+					</div>
+					<div>
+						<span id="seven"></span>
+					</div>
+					<div>
+						<span id="eight"></span>
+					</div>
+					<div>
+						<span id="nine"></span>
+					</div>
+					<div>
+						<span id="ten"></span>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div id="debugDiv">
+			<p>
+				<span id="fps">Fps: 0 </span>
+			</p>
+			<p>
+				<b> Client : Lag =
+				<input type="text" id="lag" size="5">ms ·
+				<input type="checkbox" id="clientSidePrediction">Prediction ·
+				<input type="checkbox" id="interpolation">Interpolation
+			</b>
+			</p>
+			<p>
+				<span id="player_status">Non-acknowledged inputs: 0</span>
+			</p>
+			<p>
+				<b> Server : Physics Update
+				<input type="text" id="serverPhysicsInterval" size="5"> times per second
+			</b>
+			</p>
+			<p>
+				<b> Server : State Update
+				<input type="text" id="serverStateInterval" size="5"> times per second
+			</b>
+			</p>
+			<p>
+				<b> Interpolation delay
+				<input type="text" id="interpolationTime" size="5"> ms
+			</b>
+			</p>
+
+			<div id="chat-text" style="width:500px;height:100px;overflow-y:scroll">
+
+			</div>
+
+			<form id="chat-form">
+				<input id="chat-input" type="text" style="width:500px"></input>
+			</form>
+		</div>
+	</div>
+
+	<!-- Library code-->
+	<!-- <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script> -->
+
+	<!-- Game code -->
+	<script src="client/lib/bundle.js"></script>
+
+</body>
+
+</html>

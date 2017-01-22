@@ -1,0 +1,168 @@
+ /*librairy*/
+
+ .floatLeft { float: left; }
+ .floatRight { float: right; }
+ .textLeft { text-align: left; }
+ .textRight { text-align: right; }
+ .textCenter { text-align: center; }
+ .textJustify { text-align: justify; }
+ .blockCenter { display: block; margin-right: auto; margin-left: auto; } /* remember to set width */
+ .bold { font-weight: bold; }
+ .italic { font-style: italic; }
+ .underline { text-decoration: underline; }
+ .noindent { margin-left: 0; padding-left: 0; }
+ .nomargin { margin: 0; }
+ .nopadding { padding: 0; }
+ .nobullet { list-style: none; list-style-image: none; }
+
+ .white { color: white; }
+ .lightgray { color: lightgray; }
+ .noopacity { opacity: 0; }
+ .avant-plan { position: absolute; z-index: 1; } /*absolute + z-index permet d'être surélevés par rapport à tous les div*/
+ .absolute { position: absolute; }
+
+ * { /*!!! BREAK LONG WORDS !!!*/
+ 	white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+ 	white-space: -webkit-pre-wrap; /* Google */
+ 	white-space: -pre-wrap; /* Opera 4-6 */
+ 	white-space: -o-pre-wrap; /* Opera 7 */
+ 	word-wrap: break-word; /* Internet Explorer 5.5+ */
+ }
+
+/* margin, padding, border-color: top right bottom left;
+ * border: width style color;
+ * background: color image repeat attachment position;
+ * font: font-style (italic/normal) font-variant (small-caps) font-weight font-size/line-height font-family;
+ */
+
+ /* master.css to clear before working*/
+
+ html{
+   height: 100%;
+ }
+ body {
+   position: relative;
+   width: 100%;
+   height: 100%;
+ }
+
+ html, body {
+ 	margin: 0;
+ 	padding: 0;
+
+ 	border: 0;
+ }
+
+ body {
+ 	font: 1em/1.25 Arial, Helvetica, sans-serif;
+ }
+
+ h1, h2, h3, h4, h5, h6 {
+ 	margin: 0;
+ 	padding: 0;
+
+ 	font-family: Arial, Helvetica, sans-serif;
+ 	font-weight: normal;
+ }
+
+ p, th, td, li, dd, dt, ul, ol, blockquote, q, acronym, abbr, a, input, select, textarea {
+ 	margin: 0;
+ 	padding: 0;
+ 	/*font: normal normal normal 1em/1.25 Arial, Helvetica, sans-serif;*/
+ }
+
+ blockquote {
+ 	margin: 1.25em;
+ 	padding: 1.25em
+ }
+ q {
+ 	font-style: italic;
+ }
+ acronym, abbr {
+ 	cursor: help;
+
+ 	border-bottom: 1px dashed;
+ }
+
+ small {
+ 	font-size:.85em;
+ }
+ big {
+ 	font-size:1.2em;
+ }
+
+ a, a:link, a:visited, a:active, a:hover {
+ 	text-decoration: underline;
+ }
+
+ img {
+ 	border: none;
+ }
+
+ table {
+ 	margin: 0;
+ 	padding: 0;
+
+ 	border: none;
+ }
+
+ form {
+ 	display: inline;
+
+ 	margin: 0;
+ 	padding: 0;
+ }
+
+ label {
+ 	cursor: pointer;
+ }
+
+/* */
+
+ html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+
+	vertical-align: baseline;
+
+	border: 0;
+
+	font: inherit;
+	font-size: 100%;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-spacing: 0;
+
+	border-collapse: collapse;
+}
