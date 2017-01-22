@@ -35,9 +35,9 @@ module.exports = {
 
     playerInitSize: 50,
     playerImmunityTime: 5000,
-    playerVx: 190 * 0.7,
-    playerVy: 300 * 0.7,
-    playerGravity: 825 * 0.7,
+    playerVx: 190 * 0.8,
+    playerVy: 300 * 0.8,
+    playerGravity: 825 * 0.8,
     playerMinMassDash: 0,
 
     ringInitSize: 450,
@@ -52,11 +52,11 @@ module.exports = {
 
     foodInitSize: 50,
     foodSpawnAmount: 1000,
-    foodCollide: 10,
+    foodCollide: 20,
     foodMovingTime: 1000,
     foodRotationSpeed: 0.05,
     foodRotationRadius: 5,
-    foodEatenRadius: 10,
+    foodEatenRadius: 20,
     foodV: 0.002,
 
     //Image
