@@ -4,7 +4,7 @@ module.exports = {
 
     serverPort: process.env.PORT || 5000,
     // serverUrl: 'localhost',
-    serverUrl: location.origin,
+    serverUrl: 'flapzd69.herokuapp.com',
     serverPhysicsInterval: 60,
     serverStateInterval: 20,
     serverMaxGamers: 10,
