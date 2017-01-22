@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e1ab1069d4a49af95339"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e4b2c7bf3790d0b23fb1"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -612,7 +612,7 @@
 	    this.gameloop = new GameLoop();
 	    this.canvas = new Canvas();
 	    this.mouse = new MouseState(this.canvas.canvas);
-	    var HOST = serverUrl.replace(/^http/, 'ws');
+	    var HOST = location.origin.replace(/^http/, 'ws');
 	    var ws = new WebSocket(HOST);
 	    ws.binaryType = 'arraybuffer';
 	    ws.onopen = function (event) {
