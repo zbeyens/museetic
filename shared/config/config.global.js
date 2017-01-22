@@ -53,7 +53,7 @@ module.exports = {
     foodInitSize: 50,
     foodSpawnAmount: 1000,
     foodCollide: 20,
-    foodMovingTime: 1000,
+    foodMovingTime: 2000,
     foodRotationSpeed: 0.05,
     foodRotationRadius: 5,
     foodEatenRadius: 20,
