@@ -465,6 +465,7 @@ function Client(socket) {
     }
 
     this.socket = socket;
+    console.log(socket.readyState);
     this.stateController = new StateController();
 
     this.selfId = -1;

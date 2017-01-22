@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a2e10484cb61a8996ceb"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "feefd312a7fc96ae0968"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1223,6 +1223,7 @@
 	    }
 
 	    this.socket = socket;
+	    console.log(socket.readyState);
 	    this.stateController = new StateController();
 
 	    this.selfId = -1;
