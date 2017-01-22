@@ -6,7 +6,7 @@ module.exports = {
     // serverUrl: 'localhost',
     serverUrl: 'flapzd69.herokuapp.com',
     serverPhysicsInterval: 60,
-    serverStateInterval: 40,
+    serverStateInterval: 20,
     serverMaxGamers: 10,
     serverMaxSameIp: 2,
     serverLagCompensation: 0,
