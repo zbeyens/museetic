@@ -490,7 +490,7 @@ Client.prototype = {
         this.onSubmit();
 
         this.socket.onclose = function() {
-            this.onDisconnect();
+            // this.onDisconnect();
         }.bind(this);
     },
 
