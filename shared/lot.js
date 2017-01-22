@@ -1,31 +1,31 @@
 var cfg = require('./config');
 
 exports.getScaleMass = function(mass) {
-    return 1 - Math.sqrt(mass) * 0.005;
+    return 1; //- Math.sqrt(mass) * 0.005;
 };
 
 exports.getPlayerSize = function(mass) {
-    return cfg.playerInitSize + Math.sqrt(mass) * 0.8;
+    return cfg.playerInitSize; //+ Math.sqrt(mass) * 0.8;
 };
 
 exports.getRingSize = function(mass) {
-    return cfg.ringInitSize + Math.sqrt(mass) * 12;
+    return cfg.ringInitSize; //+ Math.sqrt(mass) * 12;
 };
 
 exports.getRingMin = function(mass) {
-    return 136 + Math.sqrt(mass) * 3.6;
+    return 136; //+ Math.sqrt(mass) * 3.6;
 };
 
 exports.getRingMax = function(mass) {
-    return 151 + Math.sqrt(mass) * 4.1;
+    return 151; //+ Math.sqrt(mass) * 4.1;
 };
 
 exports.getRingFreq = function(mass) {
-    return 2000 - Math.sqrt(mass) * 20;
+    return 2000; //- Math.sqrt(mass) * 20;
 };
 
 exports.getSelfScope = function(mass) {
-    return 20 + Math.sqrt(mass) * 0.15;
+    return 20; //+ Math.sqrt(mass) * 0.15;
 };
 
 exports.getScope = function(playerScope, checkMass) {

@@ -35,9 +35,9 @@ module.exports = {
 
     playerInitSize: 50,
     playerImmunityTime: 5000,
-    playerVx: 190,
-    playerVy: 300,
-    playerGravity: 825,
+    playerVx: 190 / 3,
+    playerVy: 300 / 3,
+    playerGravity: 825 / 3,
     playerMinMassDash: 0,
 
     ringInitSize: 450,

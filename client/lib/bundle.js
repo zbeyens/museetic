@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e3ddcbb5899c6610ca68"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9ecf8497543e5a2be029"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1548,31 +1548,31 @@
 	var cfg = __webpack_require__(6);
 
 	exports.getScaleMass = function (mass) {
-	    return 1 - Math.sqrt(mass) * 0.005;
+	    return 1; //- Math.sqrt(mass) * 0.005;
 	};
 
 	exports.getPlayerSize = function (mass) {
-	    return cfg.playerInitSize + Math.sqrt(mass) * 0.8;
+	    return cfg.playerInitSize; //+ Math.sqrt(mass) * 0.8;
 	};
 
 	exports.getRingSize = function (mass) {
-	    return cfg.ringInitSize + Math.sqrt(mass) * 12;
+	    return cfg.ringInitSize; //+ Math.sqrt(mass) * 12;
 	};
 
 	exports.getRingMin = function (mass) {
-	    return 136 + Math.sqrt(mass) * 3.6;
+	    return 136; //+ Math.sqrt(mass) * 3.6;
 	};
 
 	exports.getRingMax = function (mass) {
-	    return 151 + Math.sqrt(mass) * 4.1;
+	    return 151; //+ Math.sqrt(mass) * 4.1;
 	};
 
 	exports.getRingFreq = function (mass) {
-	    return 2000 - Math.sqrt(mass) * 20;
+	    return 2000; //- Math.sqrt(mass) * 20;
 	};
 
 	exports.getSelfScope = function (mass) {
-	    return 20 + Math.sqrt(mass) * 0.15;
+	    return 20; //+ Math.sqrt(mass) * 0.15;
 	};
 
 	exports.getScope = function (playerScope, checkMass) {
@@ -1730,9 +1730,9 @@
 
 	    playerInitSize: 50,
 	    playerImmunityTime: 5000,
-	    playerVx: 190,
-	    playerVy: 300,
-	    playerGravity: 825,
+	    playerVx: 190 / 3,
+	    playerVy: 300 / 3,
+	    playerGravity: 825 / 3,
 	    playerMinMassDash: 0,
 
 	    ringInitSize: 450,
