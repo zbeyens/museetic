@@ -56,7 +56,7 @@ module.exports = {
     foodMovingTime: 2000,
     foodRotationSpeed: 0.05,
     foodRotationRadius: 5,
-    foodEatenRadius: 20,
+    foodEatenRadius: 10,
     foodV: 0.002,
 
     //Image

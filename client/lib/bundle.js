@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7107884b40a8d1f39424"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f7c3364d48dbfcd4fe45"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1751,7 +1751,7 @@
 	    foodMovingTime: 2000,
 	    foodRotationSpeed: 0.05,
 	    foodRotationRadius: 5,
-	    foodEatenRadius: 20,
+	    foodEatenRadius: 10,
 	    foodV: 0.002,
 
 	    //Image
