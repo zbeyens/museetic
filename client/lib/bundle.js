@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9ecf8497543e5a2be029"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "b4a5d295d0628ac24f9d"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1715,8 +1715,8 @@
 	    tileAmountY: 100,
 	    tileScopeAmountX: 17,
 	    tileScopeAmountY: 9,
-	    scopeInitX: 1280,
-	    scopeInitY: 720,
+	    scopeInitX: 1280 * 0.7,
+	    scopeInitY: 720 * 0.7,
 	    minimapRad: 50,
 	    miniselfRad: 3,
 	    midLimitRad: 3000,
@@ -1730,9 +1730,9 @@
 
 	    playerInitSize: 50,
 	    playerImmunityTime: 5000,
-	    playerVx: 190 / 3,
-	    playerVy: 300 / 3,
-	    playerGravity: 825 / 3,
+	    playerVx: 190 * 0.8,
+	    playerVy: 300 * 0.8,
+	    playerGravity: 825 * 0.8,
 	    playerMinMassDash: 0,
 
 	    ringInitSize: 450,
