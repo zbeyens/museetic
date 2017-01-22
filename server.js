@@ -80,8 +80,9 @@ Server.prototype = {
 
     onPlayerConnect: function(socket) {
         var origin = socket.upgradeReq.headers.origin;
-        if (origin != 'http://' + cfg.serverUrl + ':' + cfg.serverPort &&
-            origin != 'https://' + cfg.serverUrl + ':' + cfg.serverPort &&
+        console.log(origin);
+        if (origin != 'http://' + cfg.serverUrl &&
+            origin != 'https://' + cfg.serverUrl &&
             origin != 'http://localhost:' + cfg.serverPort &&
             origin != 'https://localhost:' + cfg.serverPort &&
             origin != 'http://127.0.0.1:' + cfg.serverPort &&
