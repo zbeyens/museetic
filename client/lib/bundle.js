@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4df5347af757852e4240"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d4750b16b7548af606d9"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1697,7 +1697,7 @@
 	    env: 'development',
 	    debug: false,
 
-	    serverPort: process.env.PORT || 5000,
+	    serverPort: process.env.PORT || 3000,
 	    // serverUrl: 'localhost',
 	    serverUrl: 'flapzd.herokuapp.com',
 	    serverPhysicsInterval: 60,
@@ -1748,7 +1748,7 @@
 	    foodInitSize: 50,
 	    foodSpawnAmount: 1000,
 	    foodCollide: 20,
-	    foodMovingTime: 1500,
+	    foodMovingTime: 1000,
 	    foodRotationSpeed: 0.05,
 	    foodRotationRadius: 5,
 	    foodEatenRadius: 10,
