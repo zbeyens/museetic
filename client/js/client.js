@@ -490,7 +490,7 @@ Client.prototype = {
         this.onSubmit();
 
         this.socket.onclose = function() {
-            // this.onDisconnect();
+            this.onDisconnect();
         }.bind(this);
     },
 
@@ -660,7 +660,7 @@ Client.prototype = {
 
     onDisconnect: function() {
         this.clearEntities();
-        console.log("closing..");
+        console.log("Disconnected");
         this.socket.close();
     },
 

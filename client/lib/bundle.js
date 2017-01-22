@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "30e2700073deec04fa31"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "70f132976db329eb86e7"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -612,7 +612,7 @@
 	    this.gameloop = new GameLoop();
 	    this.canvas = new Canvas();
 	    this.mouse = new MouseState(this.canvas.canvas);
-	    var HOST = location.origin.replace(/^http/, 'ws');
+	    var HOST = serverUrl.replace(/^http/, 'ws');
 	    var ws = new WebSocket(HOST);
 	    ws.binaryType = 'arraybuffer';
 	    ws.onopen = function (event) {
@@ -1247,7 +1247,7 @@
 	        this.onSubmit();
 
 	        this.socket.onclose = function () {
-	            // this.onDisconnect();
+	            this.onDisconnect();
 	        }.bind(this);
 	    },
 
@@ -1417,7 +1417,7 @@
 
 	    onDisconnect: function onDisconnect() {
 	        this.clearEntities();
-	        console.log("closing..");
+	        console.log("Disconnected");
 	        this.socket.close();
 	    },
 
@@ -1698,7 +1698,8 @@
 	    debug: false,
 
 	    serverPort: process.env.PORT || 5000,
-	    serverUrl: 'localhost',
+	    // serverUrl: 'localhost',
+	    serverUrl: location.origin,
 	    serverPhysicsInterval: 60,
 	    serverStateInterval: 20,
 	    serverMaxGamers: 10,

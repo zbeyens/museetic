@@ -3,7 +3,8 @@ module.exports = {
     debug: false,
 
     serverPort: process.env.PORT || 5000,
-    serverUrl: 'localhost',
+    // serverUrl: 'localhost',
+    serverUrl: location.origin,
     serverPhysicsInterval: 60,
     serverStateInterval: 20,
     serverMaxGamers: 10,
