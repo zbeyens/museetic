@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "eb53346eeafb87323004"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "50519495f8cb20974df5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1748,7 +1748,7 @@
 	    foodInitSize: 50,
 	    foodSpawnAmount: 1000,
 	    foodCollide: 20,
-	    foodMovingTime: 2000,
+	    foodMovingTime: 1500,
 	    foodRotationSpeed: 0.05,
 	    foodRotationRadius: 5,
 	    foodEatenRadius: 10,

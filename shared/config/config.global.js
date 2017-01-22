@@ -4,7 +4,7 @@ module.exports = {
 
     serverPort: process.env.PORT || 5000,
     // serverUrl: 'localhost',
-    serverUrl: 'flapzd69.herokuapp.com',
+    serverUrl: 'flapzd.herokuapp.com',
     serverPhysicsInterval: 60,
     serverStateInterval: 20,
     serverMaxGamers: 10,
@@ -53,7 +53,7 @@ module.exports = {
     foodInitSize: 50,
     foodSpawnAmount: 1000,
     foodCollide: 20,
-    foodMovingTime: 2000,
+    foodMovingTime: 1500,
     foodRotationSpeed: 0.05,
     foodRotationRadius: 5,
     foodEatenRadius: 10,
