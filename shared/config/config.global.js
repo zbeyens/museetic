@@ -2,7 +2,7 @@ module.exports = {
     env: 'development',
     debug: false,
 
-    serverPort: process.env.PORT || 3000,
+    serverPort: process.env.PORT || 5000,
     serverUrl: 'localhost',
     serverPhysicsInterval: 60,
     serverStateInterval: 20,
