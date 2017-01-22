@@ -74,7 +74,7 @@ Server.prototype = {
                 binary: true
             });
         } else {
-            socket.readyState = 3;
+            socket.close();
         }
     },
 

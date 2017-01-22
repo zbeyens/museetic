@@ -12,7 +12,7 @@ module.exports = {
     serverLagCompensation: 0,
 
     clientMaxUpdateBuffer: 120,
-    clientInterpolationTime: 100,
+    clientInterpolationTime: 50,
     clientSmoothingFactor: 0.3,
 
     //Map 960x600

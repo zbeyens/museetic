@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e4b2c7bf3790d0b23fb1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6af1d493c8efe7b9fb6f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1260,12 +1260,12 @@
 	    },
 
 	    sendMessage: function sendMessage(packet) {
-	        // if (this.socket.readyState === 1) {
-	        var buf = packet.form();
-	        this.socket.send(buf);
-	        // } else {
-	        //     this.socket.readyState = 3;
-	        // }
+	        if (this.socket.readyState === 1) {
+	            var buf = packet.form();
+	            this.socket.send(buf);
+	        } else {
+	            this.onDisconnect();
+	        }
 	    },
 
 	    onSubmit: function onSubmit() {
@@ -1707,7 +1707,7 @@
 	    serverLagCompensation: 0,
 
 	    clientMaxUpdateBuffer: 120,
-	    clientInterpolationTime: 100,
+	    clientInterpolationTime: 50,
 	    clientSmoothingFactor: 0.3,
 
 	    //Map 960x600

@@ -503,12 +503,12 @@ Client.prototype = {
     },
 
     sendMessage: function(packet) {
-        // if (this.socket.readyState === 1) {
-        var buf = packet.form();
-        this.socket.send(buf);
-        // } else {
-        //     this.socket.readyState = 3;
-        // }
+        if (this.socket.readyState === 1) {
+            var buf = packet.form();
+            this.socket.send(buf);
+        } else {
+            this.onDisconnect();
+        }
     },
 
     onSubmit: function() {
