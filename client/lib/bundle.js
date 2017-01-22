@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "50519495f8cb20974df5"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4df5347af757852e4240"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1699,7 +1699,7 @@
 
 	    serverPort: process.env.PORT || 5000,
 	    // serverUrl: 'localhost',
-	    serverUrl: 'flapzd69.herokuapp.com',
+	    serverUrl: 'flapzd.herokuapp.com',
 	    serverPhysicsInterval: 60,
 	    serverStateInterval: 20,
 	    serverMaxGamers: 10,
