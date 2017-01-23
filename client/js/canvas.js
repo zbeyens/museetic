@@ -40,6 +40,11 @@ Canvas.prototype = {
     },
 
     preloadTexture: function() {
+        this.preloadTextureFromImage();
+        this.preloadTextureFromCanvas();
+    },
+
+    preloadTextureFromImage: function() {
         // this.playerImageL.baseTexture.mipmap = false;
         // this.playerImageR.baseTexture.mipmap = false;
         this.ringTexture = new PIXI.Texture.fromImage(cfg.ringImage);
@@ -55,10 +60,14 @@ Canvas.prototype = {
         for (var i = 0; i < 3; i++) {
             this.playerRTextures.push(new PIXI.Texture.fromImage('/client/img/flappyR' + i + '.png'));
         }
+    },
 
-        var canMid = this.preloadBorder(cfg.midLimitRad, cfg.midLimitStroke, cfg.midLimitOffset);
+    preloadTextureFromCanvas: function() {
+        //mid limit
+        var canMid = this.createBorderTexture(cfg.midLimitRad, cfg.midLimitStroke, cfg.midLimitOffset);
         this.midLimitTexture = new PIXI.Texture.fromCanvas(canMid);
-        var canEnd = this.preloadBorder(cfg.endLimitRad, cfg.endLimitStroke, cfg.endLimitOffset);
+        //end limit
+        var canEnd = this.createBorderTexture(cfg.endLimitRad, cfg.endLimitStroke, cfg.endLimitOffset);
         this.endLimitTexture = new PIXI.Texture.fromCanvas(canEnd);
 
         // #80FFA0
@@ -104,6 +113,7 @@ Canvas.prototype = {
 
         this.foodTextures = [];
         for (var i = 0; i < cfg.foodPaletteSize; i++) {
+            //TODO: should generate all possible size of foods (1-2-...)
             var canFood = this.createFoodTexture(i, Math.random() * 15);
             this.foodTextures.push(new PIXI.Texture.fromCanvas(canFood));
         }
@@ -124,6 +134,19 @@ Canvas.prototype = {
         //or play and rewind
         var rewind = this.dashTextures.slice(1, -1);
         this.dashTextures = this.dashTextures.concat(rewind.reverse());
+    },
+
+    createBorderTexture: function(limitRad, limitStroke, limitOffset) {
+        //can we decrease width/height according to scale ?
+        var canSize = limitRad + limitStroke - limitOffset;
+        var can = this.createCanvas(canSize, canSize);
+        var ctx = can.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(-limitOffset, -limitOffset, limitRad + limitStroke / 2, 0, Math.PI / 2); //radius + lineWidth/2
+        ctx.lineWidth = limitStroke;
+        ctx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
+        ctx.stroke();
+        return can;
     },
 
     createFoodTexture: function(i, mass) {
@@ -190,18 +213,7 @@ Canvas.prototype = {
         return can;
     },
 
-    preloadBorder: function(limitRad, limitStroke, limitOffset) {
-        //can we decrease width/height according to scale ?
-        var canSize = limitRad + limitStroke - limitOffset;
-        var can = this.createCanvas(canSize, canSize);
-        var ctx = can.getContext('2d');
-        ctx.beginPath();
-        ctx.arc(-limitOffset, -limitOffset, limitRad + limitStroke / 2, 0, Math.PI / 2); //radius + lineWidth/2
-        ctx.lineWidth = limitStroke;
-        ctx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
-        ctx.stroke();
-        return can;
-    },
+
 
     preloadStage: function() {
         this.stage = new PIXI.Container();
