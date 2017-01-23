@@ -2,9 +2,7 @@
     "name": "flappio",
     "version": "0.3.0",
     "description": "Flapp.io game",
-    "author": [
-        "Miyu <zbeyens@ulb.ac.be>",
-    ],
+    "author": "Miyud <zbeyens@ulb.ac.be>",
     "main": "app.js",
     "scripts": {
         "start": "node app.js",
