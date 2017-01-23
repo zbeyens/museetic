@@ -5,7 +5,7 @@
     "author": "Miyud <zbeyens@ulb.ac.be>",
     "main": "app.js",
     "scripts": {
-        "start": "node app.js",
+        "start": "node app.js"
     },
     "dependencies": {
         "crypto": "0.0.3",
