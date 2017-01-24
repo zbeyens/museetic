@@ -1,5 +1,5 @@
-var crypto = require('crypto'),
-    cfg = require('./config'),
+var cfg = require('./config'),
+    // crypto = require('crypto'),
     lot = require('./lot');
 
 /* jshint loopfunc:true */
@@ -24,7 +24,7 @@ var getInitPlayerState = function() {
         vx: 0,
         vy: 0,
         ring: false,
-        mass: 0,
+        mass: cfg.playerInitMass,
         dashing: false,
 
         startTime: new Date(),
@@ -135,7 +135,8 @@ var applyDash = function(player, newState, shootController) {
 
 var applyShoot = function(player, newState, shootController) {
     //New shoot
-    var newShoot = shootController.add(player);
+    // var newShoot = shootController.add(player);
+    shootController.add(player);
 
     newState.dashX = newState.x;
     newState.dashY = newState.y;
@@ -220,7 +221,7 @@ var checkFoodsEating = function(newState, newTile, selfScope, player) {
         var food = foods[i];
 
         var distPlayerFood = lot.inCircle(food.state.x, food.state.y, newState.x, newState.y);
-        if (distPlayerFood < selfScope + cfg.foodCollide) {
+        if (distPlayerFood < selfScope + cfg.foodHitbox) {
             newState.mass += 20;
             player.setScope();
             foodController.remove(food, player.id);
@@ -309,7 +310,15 @@ exports.getNewShootState = function(shoot, deltaTime) {
     return newState;
 };
 
-
+/**
+ * Prediction
+ * if food.referrer is undefined: random circular moving
+ * else: move the food towards referrer with movingTime
+ *
+ * @param  {[type]} food      [description]
+ * @param  {[type]} deltaTime [description]
+ * @return {[type]}           [description]
+ */
 exports.getNewFoodState = function(food, deltaTime) {
     var newState = {},
         state = food.state;
@@ -318,6 +327,7 @@ exports.getNewFoodState = function(food, deltaTime) {
     newState.angle = state.angle;
     newState.vr = state.vr;
     newState.movingTime = state.movingTime;
+
 
     if (food.referrer === undefined) {
         newState.angle = (state.angle + newState.vr * cfg.foodRotationSpeed) % (2 * Math.PI);
@@ -334,7 +344,7 @@ exports.getNewFoodState = function(food, deltaTime) {
 
         newState.x = state.x + distX * newState.movingTime / cfg.foodMovingTime;
         newState.y = state.y + distY * newState.movingTime / cfg.foodMovingTime;
-        if (lot.inCircle(newState.x, newState.y, referrerState.x, referrerState.y) < cfg.foodEatenRadius) {
+        if (lot.inCircle(newState.x, newState.y, referrerState.x, referrerState.y) < cfg.foodEatenHitbox) {
             return false;
         }
     }

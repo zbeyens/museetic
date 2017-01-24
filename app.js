@@ -13,14 +13,41 @@ var express = require('express'),
     logger = require('morgan'),
     helmet = require('helmet');
 
+
 app.use(helmet());
 app.use(logger('dev'));
 app.use('/client', express.static(path.join(__dirname, '/client')));
 app.use('/shared', express.static(path.join(__dirname, '/shared')));
+
+var isProduction = process.env.NODE_ENV === 'production';
+console.log(isProduction);
+if (!isProduction) {
+    //dev
+    var webpack = require('webpack'),
+        webpackDevMiddleware = require('webpack-dev-middleware'),
+        webpackHotMiddleware = require('webpack-hot-middleware'),
+        webpackConfig = require('./webpack.config');
+
+    var compiler = webpack(webpackConfig);
+    app.use(webpackDevMiddleware(compiler, {
+        hot: true,
+        noInfo: true,
+        filename: webpackConfig.output.filename,
+        publicPath: webpackConfig.output.publicPath,
+        stats: {
+            colors: true
+        }
+    }));
+    app.use(webpackHotMiddleware(compiler, {
+        log: console.log,
+        path: '/__webpack_hmr',
+        heartbeat: 10 * 1000,
+    }));
+}
+
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/client/index.html');
 });
-
 
 server.on('request', app); //or (app) in createServer
 server.listen(cfg.serverPort, function() {

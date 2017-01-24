@@ -1,11 +1,9 @@
 var webpack = require('webpack');
 var path = require('path');
 
-// webpack -p
-// for HMR without reload, put this at this entry point:
-// if (module.hot) {
-//     module.hot.accept();
-// }
+//webpack
+//webpack-dev-server (port 8080)
+//webpack-dev-server --hot --inline --history-api-fallback
 
 var BUILD_DIR = path.resolve(__dirname, 'client/bundle'); //rename to public
 var APP_DIR = path.resolve(__dirname, 'client/js');
@@ -13,26 +11,31 @@ var SRC = path.resolve(__dirname, 'client');
 var NODE_MODULES = path.resolve(__dirname, "node_modules");
 
 var config = {
+    // devtool: 'cheap-module-source-map',
     entry: [
+        // //for refreshing the browser
+        // 'webpack-dev-server/client?http://localhost:8081',
+        // //for hot updates
+        // 'webpack/hot/only-dev-server',
         //app
         './client/js/game.js',
     ],
 
     output: {
-        filename: 'bundle.js',
         //path of the bundle, otherwise it's stocked in memory
         path: BUILD_DIR,
-        // location of hot update
+        filename: 'bundle.js',
+        //location of hot update
         publicPath: '/client/bundle',
         //remove the annoying hash
-        // hotUpdateChunkFilename: 'hot/hot-update.js',
-        // hotUpdateMainFilename: 'hot/hot-update.json'
+        hotUpdateChunkFilename: 'hot/hot-update.js',
+        hotUpdateMainFilename: 'hot/hot-update.json'
     },
     postcss: [
         require('autoprefixer')
     ],
-    // watch: true,
-    // progress: true,
+    watch: true,
+    progress: true,
     // target: 'node',
 
     resolve: {
@@ -78,19 +81,29 @@ if (process.env.NODE_ENV === 'production') {
     config.plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             compress: {
-                screw_ie8: true,
-                warnings: false
+                screw_ie8: true
             },
+            // // warnings about unused variable
+            // compress: {
+            //     warnings: false
+            // }
         }),
         // remove duplicate files
         new webpack.optimize.DedupePlugin(),
         // smallest id length for often used ids
         new webpack.optimize.OccurrenceOrderPlugin()
     );
+    babelSettings.plugins.push("transform-react-inline-elements");
+    babelSettings.plugins.push("transform-react-constant-elements");
 } else {
-    config.entry.push( //connect to the server to receive bundle rebuild notifications
-        'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true'
-    );
+    // config.devtool = "#cheap-module-source-map";
+    // config.devServer = {
+    //     contentBase: './client', //same dir than index.html
+    //     hot: true,
+    //     inline: true, //
+    //     host: "localhost",
+    //     port: 8081
+    // };
     config.plugins.push(
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin()

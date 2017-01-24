@@ -39,6 +39,8 @@ module.exports = {
     playerVy: 300 * 0.8,
     playerGravity: 825 * 0.8,
     playerMinMassDash: 0,
+    //debug
+    playerInitMass: 15000,
 
     ringInitSize: 450,
     ringTime: 300,
@@ -46,18 +48,25 @@ module.exports = {
     dashSpeed: 800,
     dashMassLoss: 1,
     dashTime: 500,
+    //#sample of dash texture
+    dashTxtSize: 4,
 
     shootInitSize: 64,
     shootTime: 1000,
 
-    foodInitSize: 50,
+    foodInitSize: 50, //to remove ?
     foodSpawnAmount: 1000,
-    foodCollide: 20,
     foodMovingTime: 1000,
     foodRotationSpeed: 0.05,
     foodRotationRadius: 5,
-    foodEatenRadius: 10,
+    foodHitbox: 20,
+    foodEatenHitbox: 10,
     foodV: 0.002,
+
+    debugBorder: false,
+    debugFood: false,
+    debugFoodHitbox: false,
+    //
 
     //Image
     //playerImage: '/client/img/planet.png',

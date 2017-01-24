@@ -1,12 +1,11 @@
 var Client = require('./client'),
     GamePhysics = require('../../shared/core'),
     GameLoop = require('./gameloop'),
-    Canvas = require('./canvas'),
+    Canvas = require('./canvas/canvas'),
     THREExKeyboardState = require('./keyboard'),
     MouseState = require('./mouse'),
     cfg = require('../../shared/config');
 
-/* jshint shadow:true */
 /*
 initializeClient : startGame (onReady) : start game loop.
 update entity and player current states (on input, onUpdateClientPredictionReady)
@@ -74,6 +73,7 @@ Game.prototype = {
                 var selfState = playerController.getEntityState(selfId);
 
                 if (selfState.mass !== undefined) {
+                    //if mass changes, resize
                     if (selfState.mass !== selfMass) {
                         selfMass = selfState.mass;
                         this.canvas.resizeMass(selfMass);

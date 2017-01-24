@@ -1,22 +1,23 @@
-var cfg = require('../../shared/config'),
-    Fps = require('../../shared/fps'),
-    lot = require('../../shared/lot');
+var cfg = require('../../../shared/config'),
+    Fps = require('../../../shared/fps'),
+    lot = require('../../../shared/lot'),
+    Textures = require('./textures'),
+    Camera = require('./camera.js');
 
-/* jshint shadow:true */
+require("babel-polyfill");
+
 exports = module.exports = Canvas;
 
 function Canvas() {
     this.canvas = document.getElementById("ctx");
     this.preload();
     window.addEventListener('resize', function() {
-        this.resizeCanvas();
-        this.resizeHud();
+        this.resizeCamera();
     }.bind(this));
-    this.resizeCanvas();
-    this.resizeHud();
+    this.resizeCamera();
 }
 
-Canvas.prototype = {
+Canvas.prototype = _.extend(Camera.prototype, Textures.prototype, {
     ////////////
     //PRELOAD //
     ////////////
@@ -29,7 +30,7 @@ Canvas.prototype = {
         //PIXI.RESOLUTION = window.devicePixelRatio;
         this.renderer.clearBeforeRender = false;
 
-        this.preloadTexture();
+        Textures.call(this);
         this.preloadStage();
         this.preloadHud();
 
@@ -38,182 +39,6 @@ Canvas.prototype = {
             y: 0,
         });
     },
-
-    preloadTexture: function() {
-        this.preloadTextureFromImage();
-        this.preloadTextureFromCanvas();
-    },
-
-    preloadTextureFromImage: function() {
-        // this.playerImageL.baseTexture.mipmap = false;
-        // this.playerImageR.baseTexture.mipmap = false;
-        this.ringTexture = new PIXI.Texture.fromImage(cfg.ringImage);
-        this.shootTexture = new PIXI.Texture.fromImage(cfg.shootImage);
-        this.mapTexture = new PIXI.Texture.fromImage(cfg.mapImage);
-        // this.bgTexture = new PIXI.Texture.fromImage(cfg.bgImage);
-
-        this.playerLTextures = [];
-        for (var i = 0; i < 3; i++) {
-            this.playerLTextures.push(new PIXI.Texture.fromImage('/client/img/flappyL' + i + '.png'));
-        }
-        this.playerRTextures = [];
-        for (var i = 0; i < 3; i++) {
-            this.playerRTextures.push(new PIXI.Texture.fromImage('/client/img/flappyR' + i + '.png'));
-        }
-    },
-
-    preloadTextureFromCanvas: function() {
-        //mid limit
-        var canMid = this.createBorderTexture(cfg.midLimitRad, cfg.midLimitStroke, cfg.midLimitOffset);
-        this.midLimitTexture = new PIXI.Texture.fromCanvas(canMid);
-        //end limit
-        var canEnd = this.createBorderTexture(cfg.endLimitRad, cfg.endLimitStroke, cfg.endLimitOffset);
-        this.endLimitTexture = new PIXI.Texture.fromCanvas(canEnd);
-
-        // #80FFA0
-        // #008040
-        //
-        // #9850FF
-        // #281060
-        //
-        // rgba(255, 255, 255, 1)
-        // rgba(150,150,150, 1)
-        // rgba(80,80,80, 1)
-        // rgba(80,80,80, 1)
-        // rgba(80,80,80, 0)
-        //
-        // rgba(255, 128, 128, 1)
-        // rgba(222, 3, 3, 1)
-        // rgba(157, 18, 18, 1)
-        //
-        // rgb(192,128,255)
-        // rgb(144,153,255)
-        // rgb(128,208,208)
-        // rgb(128,255,128)
-        // rgb(238,238,112)
-        // rgb(255,144,144)
-        // rgb(255,64,64)
-        // rgb(224,48,224)
-        // rgb(255,255,255)
-        // rgb(144,153,255)
-        // rgb(80,80,80)
-        // rgb(255,192,80)
-        // rgb(40,136,96)
-        // rgb(100,117,255)
-        // rgb(120,134,255)
-        // rgb(72,84,255)
-        // rgb(160,80,255)
-        // rgb(255,224,64)
-        // rgb()
-
-
-        // rrs=[255,56,56,78,255,101,128,60,0,217,255,144,32,240,240,240,240,32],
-        // ggs=[224,68,68,35,86,200,132,192,255,69,64,144,32,32,240,144,32,240],
-        // bbs=[,64,255,255,192,9,232,144,72,83,69,64,144,240,32,32,32,240,32]
-
-        this.foodTextures = [];
-        for (var i = 0; i < cfg.foodPaletteSize; i++) {
-            //TODO: should generate all possible size of foods (1-2-...)
-            var canFood = this.createFoodTexture(i, Math.random() * 15);
-            this.foodTextures.push(new PIXI.Texture.fromCanvas(canFood));
-        }
-
-        this.dashTextures = [];
-        for (var i = 0; i < 4; i++) {
-            var b = {
-                x: 25,
-                y: 25,
-                rad: 25,
-                r: cfg.foodColor2[0],
-                g: cfg.foodColor2[1],
-                b: cfg.foodColor2[2],
-            };
-            var canDash = this.createDashTexture(i, b);
-            this.dashTextures.push(new PIXI.Texture.fromCanvas(canDash));
-        }
-        //or play and rewind
-        var rewind = this.dashTextures.slice(1, -1);
-        this.dashTextures = this.dashTextures.concat(rewind.reverse());
-    },
-
-    createBorderTexture: function(limitRad, limitStroke, limitOffset) {
-        //can we decrease width/height according to scale ?
-        var canSize = limitRad + limitStroke - limitOffset;
-        var can = this.createCanvas(canSize, canSize);
-        var ctx = can.getContext('2d');
-        ctx.beginPath();
-        ctx.arc(-limitOffset, -limitOffset, limitRad + limitStroke / 2, 0, Math.PI / 2); //radius + lineWidth/2
-        ctx.lineWidth = limitStroke;
-        ctx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
-        ctx.stroke();
-        return can;
-    },
-
-    createFoodTexture: function(i, mass) {
-        var size = 20 + mass * 3;
-        var can = this.createCanvas(size, size);
-        var ctx = can.getContext('2d');
-        ctx.globalCompositeOperation = "lighter";
-        ctx.beginPath();
-        var b = {
-            x: size / 2,
-            y: size / 2,
-            rad: size / 2,
-            r: cfg['foodColor' + i][0],
-            g: cfg['foodColor' + i][1],
-            b: cfg['foodColor' + i][2],
-        };
-        var gradblur = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.rad);
-        var edgecolor1 = "rgba(" + b.r + "," + b.g + "," + b.b + ",0.65)"; // + (0.9 + mass * 0.03) + ")";
-        var edgecolor2 = "rgba(" + b.r + "," + b.g + "," + b.b + ",0.0)";
-        gradblur.addColorStop(0, edgecolor2);
-        gradblur.addColorStop(0.2, edgecolor2);
-        gradblur.addColorStop(0.6, edgecolor1);
-        gradblur.addColorStop(0.95, edgecolor2);
-        ctx.fillStyle = gradblur;
-        ctx.arc(b.x, b.y, b.rad, 0, Math.PI * 2, false);
-        ctx.fill();
-        ctx.fillStyle = "rgba(" + b.r + "," + b.g + "," + b.b + ",0.4)";
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.rad - 4 - mass / 2, 0, Math.PI * 2, false);
-        // ctx.fill();
-        ctx.strokeStyle = "rgba(" + b.r + "," + b.g + "," + b.b + ",0.8)";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        // ctx.beginPath();
-        // ctx.arc(b.x, b.y, b.rad - 10 - mass / 2, 0, Math.PI * 2, false);
-        // ctx.stroke();
-        // ctx.arc(b.x, b.y, b.rad - 13 - mass / 2, 0, Math.PI * 2, false);
-        // ctx.stroke();
-        // ctx.arc(b.x, b.y, b.rad - 22 - mass / 2, 0, Math.PI * 2, false);
-        // ctx.stroke();
-
-        // ctx.strokeStyle = "rgba(" + b.r + "," + b.g + "," + b.b + ",0.9)";
-        // ctx.lineWidth = 3;
-        // ctx.strokeRect(0, 0, can.width, can.height);
-        return can;
-    },
-
-    createDashTexture: function(i, b) {
-        var can = this.createCanvas(b.rad * 2, b.rad * 2);
-        var ctx = can.getContext('2d');
-        ctx.globalCompositeOperation = "lighter";
-        ctx.beginPath();
-        var gradblur = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.rad);
-
-        var edgecolor1 = "rgba(" + b.r + "," + b.g + "," + b.b + "," + (0.6) + ")";
-        var edgecolor2 = "rgba(" + b.r + "," + b.g + "," + b.b + ",0.0)";
-        gradblur.addColorStop(0, edgecolor1);
-        gradblur.addColorStop(0.7 + i * 0.05, edgecolor2);
-        ctx.fillStyle = gradblur;
-        ctx.arc(b.x, b.y, b.rad, 0, Math.PI * 2, false);
-        for (var j = -3; j < i; j++) {
-            ctx.fill();
-        }
-        return can;
-    },
-
-
 
     preloadStage: function() {
         this.stage = new PIXI.Container();
@@ -225,7 +50,7 @@ Canvas.prototype = {
         // this.textLayer = new PIXI.DisplayGroup(4, false);
 
         //Map
-        this.map = new PIXI.extras.TilingSprite(this.mapTexture, cfg.mapSize, cfg.mapSize);
+        this.map = new PIXI.extras.TilingSprite(this.mapTxt, cfg.mapSize, cfg.mapSize);
         this.map.displayGroup = this.limitLayer;
 
         this.stage.addChild(this.map);
@@ -235,10 +60,10 @@ Canvas.prototype = {
         // this.stage.addChild(this.bg);
 
         //Limit
-        this.midLimit = new PIXI.Sprite(this.midLimitTexture);
+        this.midLimit = new PIXI.Sprite(this.midLimitTxt);
         this.midLimit.displayGroup = this.limitLayer;
         this.stage.addChild(this.midLimit);
-        this.endLimit = new PIXI.Sprite(this.endLimitTexture);
+        this.endLimit = new PIXI.Sprite(this.endLimitTxt);
         this.endLimit.displayGroup = this.limitLayer;
         this.stage.addChild(this.endLimit);
 
@@ -246,6 +71,11 @@ Canvas.prototype = {
         this.tunnel = new PIXI.Graphics();
         this.tunnel.displayGroup = this.tunnelLayer;
         this.stage.addChild(this.tunnel);
+
+        //Debug layer
+        this.debug = new PIXI.Graphics();
+        this.debug.displayGroup = this.tunnelLayer;
+        this.stage.addChild(this.debug);
 
         // this.foodContainer = new PIXI.particles.ParticleContainer(15000, {
         //     alpha: true
@@ -298,79 +128,6 @@ Canvas.prototype = {
         this.hud.addChild(this.miniself);
 
         this.hud.visible = false;
-    },
-
-    ///////////
-    //RESIZE //
-    ///////////
-    resizeCanvas: function() {
-        //like agario
-        var w = window.innerWidth * 1.25;
-        var h = window.innerHeight * 1.25;
-        // console.log(w);
-        // console.log(h);
-        this.canvas.width = w;
-        this.canvas.height = h;
-        this.renderer.resize(this.canvas.width, this.canvas.height);
-
-
-        // 1600 / 1920 = 0.8333;
-        // 500 / 1080 = 0.463;
-        // to fill canvas will be 0.8333 * (1920,1080) = (1600,900) clipped top and bottom
-        var scale = Math.max(w / cfg.scopeInitX, h / cfg.scopeInitY);
-
-        var canW = (scale * cfg.scopeInitX);
-        var canH = (scale * cfg.scopeInitY);
-        if (canW > w) {
-            this.scale = window.innerHeight / cfg.scopeInitY;
-        } else
-        if (canH > h) {
-            this.scale = window.innerWidth / cfg.scopeInitX;
-        }
-
-        // console.log(this.scale);
-        this.resizeContainer(this.stage, this.scale * this.scaleMass);
-    },
-
-    resizeContainer: function(container, scale) {
-        container.scale.set(scale);
-        container.position.set(this.canvas.width * (1 - scale) / 2, this.canvas.height * (1 - scale) / 2);
-    },
-
-    resizeMass: function(mass) {
-        this.scaleMass = lot.getScaleMass(mass);
-        this.resizeContainer(this.stage, this.scale * this.scaleMass);
-    },
-
-    resizeHud: function() {
-        this.leaderboard.style.fontSize = (this.board.offsetWidth / 7) + "px";
-        this.entry.style.fontSize = (this.board.offsetWidth / 11) + "px";
-
-        var fpsTextX = 5 * this.scale,
-            fpsTextY = 5 * this.scale,
-            scoreX = 5 * this.scale,
-            scoreY = this.canvas.height - 25 * this.scale,
-            xX = 5 * this.scale,
-            xY = 30 * this.scale,
-            yX = 5 * this.scale,
-            yY = 50 * this.scale,
-            miniX = this.canvas.width - 60 * this.scale,
-            miniY = this.canvas.height - 60 * this.scale;
-
-        this.fpsText.position.set(fpsTextX, fpsTextY);
-        this.score.position.set(scoreX, scoreY);
-        this.x.position.set(xX, xY);
-        this.y.position.set(yX, yY);
-
-        var style = this.getStyle(20);
-        this.fpsText.style = style;
-        this.score.style = style;
-        this.x.style = style;
-        this.y.style = style;
-
-        this.minimap.clear();
-        this.minimap.beginFill(0xa8a8a8, 0.5);
-        this.minimap.drawCircle(miniX, miniY, cfg.minimapRad * this.scale);
     },
 
 
@@ -443,7 +200,6 @@ Canvas.prototype = {
         } else {
             this.tunnel.drawRect(x + cfg.midLimitRad, y - cfg.tunnelHeight / 2, cfg.midLimitStroke, cfg.tunnelHeight);
         }
-        this.tunnel.endFill();
 
         var miniX = this.canvas.width + (selfState.x * cfg.minimapRad / cfg.midLimitRad - 60) * this.scale;
         var miniY = this.canvas.height + (selfState.y * cfg.minimapRad / cfg.midLimitRad - 60) * this.scale;
@@ -451,15 +207,16 @@ Canvas.prototype = {
         this.miniself.beginFill(0x000000, 0.5);
         this.miniself.drawCircle(miniX, miniY, cfg.miniselfRad * this.scale);
 
+        this.debug.clear();
     },
 
     drawPlayer: function(player, selfState) {
         //player
         var size = lot.getPlayerSize(player.state.mass);
-
         if (!player.sprite) {
             //player.sprite = new PIXI.Sprite(this.playerImageR);
-            player.sprite = new PIXI.extras.MovieClip(this.playerRTextures);
+
+            player.sprite = new PIXI.extras.MovieClip(this.playerRTxtList);
             player.sprite.animationSpeed = 0.15;
             player.sprite.play();
             player.sprite.anchor.set(0.5);
@@ -468,7 +225,7 @@ Canvas.prototype = {
             this.stage.addChild(player.sprite);
 
             //to destroy
-            player.spriteDash = new PIXI.extras.MovieClip(this.dashTextures);
+            player.spriteDash = new PIXI.extras.MovieClip(this.dashTxtList);
             player.spriteDash.animationSpeed = 0.3;
             player.spriteDash.anchor.set(0.5);
             player.spriteDash.blendMode = PIXI.BLEND_MODES.ADD;
@@ -476,7 +233,7 @@ Canvas.prototype = {
             player.spriteDash.displayGroup = this.foodLayer;
             this.stage.addChild(player.spriteDash);
 
-            player.spriteRing = new PIXI.Sprite(this.ringTexture);
+            player.spriteRing = new PIXI.Sprite(this.ringTxt);
             player.spriteRing.anchor.set(0.5);
             player.spriteRing.alpha = 0;
             player.spriteRing.displayGroup = this.playerLayer;
@@ -501,10 +258,10 @@ Canvas.prototype = {
         player.text.style = this.getStyle(14);
 
         if (player.state.angle < 0) {
-            player.sprite.textures = this.playerLTextures;
+            player.sprite.textures = this.playerLTxtList;
             player.sprite.rotation = (player.state.angle / 1000) + 8;
         } else if (player.state.angle > 0) {
-            player.sprite.textures = this.playerRTextures;
+            player.sprite.textures = this.playerRTxtList;
             player.sprite.rotation = (player.state.angle / 1000) - 8;
         }
         if (!player.state.dashing && player.sprite.currentFrame === 0 && (player.state.angle === 9006 || player.state.angle === -2723)) {
@@ -571,20 +328,23 @@ Canvas.prototype = {
     drawFood: function(food, selfState) {
         if (!food.sprite) {
             // var size = cfg.foodInitSize;
+
+            //TODO: color food + size
             var texture = Math.round(Math.random() * cfg.foodPaletteSize);
-            food.sprite = new PIXI.Sprite(this.foodTextures[texture]);
+            food.sprite = new PIXI.Sprite(this.foodTxtList[texture]);
             food.sprite.blendMode = PIXI.BLEND_MODES.ADD;
             food.sprite.anchor.set(0.5);
             food.sprite.alpha = 0;
             food.sprite.displayGroup = this.foodLayer;
             this.stage.addChild(food.sprite);
         }
-
-
-        food.sprite.position.x = food.state.x - selfState.x + this.canvas.width / 2;
-        food.sprite.position.y = food.state.y - selfState.y + this.canvas.height / 2;
+        var x = food.state.x - selfState.x + this.canvas.width / 2;
+        var y = food.state.y - selfState.y + this.canvas.height / 2;
+        food.sprite.position.x = x;
+        food.sprite.position.y = y;
         if (food.referrer) {
-            var newScale = 1 - 3 * food.state.movingTime / cfg.foodMovingTime;
+            var newScale = (1 - food.state.movingTime / cfg.foodMovingTime) / 3;
+            console.log(food.state.movingTime / cfg.foodMovingTime);
             if (newScale < 0) newScale = 0;
             food.sprite.scale.set(newScale);
         }
@@ -594,11 +354,16 @@ Canvas.prototype = {
             food.sprite.alpha = Math.round(food.sprite.alpha * 100) / 100;
             food.sprite.scale.set(food.sprite.alpha);
         }
+        if (cfg.debugFoodHitbox) {
+            this.debug.lineStyle(1, 0xFF0000);
+            this.debug.drawCircle(x, y, cfg.foodHitbox);
+            // this.debug.drawCircle(x, y, cfg.foodEatenHitbox);
+        }
     },
 
     drawShoot: function(shoot, selfState) {
         if (!shoot.sprite) {
-            shoot.sprite = new PIXI.Sprite(this.ringTexture);
+            shoot.sprite = new PIXI.Sprite(this.ringTxt);
             shoot.sprite.anchor.set(0.5);
             shoot.sprite.displayGroup = this.playerLayer;
             this.stage.addChild(shoot.sprite);
@@ -663,10 +428,4 @@ Canvas.prototype = {
         this.renderer.render(this.hud);
     },
 
-    createCanvas: function(width, height) {
-        var can = document.createElement("canvas");
-        can.width = width;
-        can.height = height;
-        return can;
-    },
-};
+});

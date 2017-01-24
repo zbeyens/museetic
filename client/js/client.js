@@ -128,10 +128,21 @@ StateController.prototype = {
         this.initStates(dataInit, this.shootController);
     },
 
+    /**
+     * call initStates with foodController
+     * @param  {list} dataInit : all foods to init
+     * @return {void}
+     */
     updateFoodInitStates: function(dataInit) {
         this.initStates(dataInit, this.foodController);
     },
 
+    /**
+     * add an Entity after lerp
+     * @param  {list} states : all entities to init
+     * @param  {object} controller
+     * @return {void}
+     */
     initStates: function(states, controller) {
         var self = this;
 
@@ -147,6 +158,11 @@ StateController.prototype = {
         }
     },
 
+    /**
+     *  remove the outscope food after lerp
+     * @param  {list} dataRemove : all foods to be removed
+     * @return {void}
+     */
     updateFoodRemoveStates: function(dataRemove) {
         var self = this;
 
@@ -164,6 +180,11 @@ StateController.prototype = {
         }
     },
 
+    /**
+     *  add a referrer (player) to each food after lerp
+     * @param  {list} dataEat : all foods to be eaten by referrerId
+     * @return {void}
+     */
     updateFoodEatStates: function(dataEat) {
         var self = this;
 
@@ -222,10 +243,15 @@ StateController.prototype = {
     }
 };
 
+/**
+ * entities: to render
+ * removedEntities: sprites to remove
+ */
 function EntityController() {
     this.entities = [];
     this.removedEntities = [];
 }
+
 EntityController.prototype = {
     //Remove
     removeEntity: function(entity) {
@@ -233,11 +259,12 @@ EntityController.prototype = {
         this.remove(i);
     },
 
-    removeId: function(id) {
-        var i = lot.idxOf(this.entities, 'id', id);
-        this.remove(i);
-    },
-
+    /**
+     * add the Entity to remove in removedEntities and remove from entities
+     * (used for outscope)
+     * @param  {int} i : entities index
+     * @return {void}
+     */
     remove: function(i) {
         if (i >= 0) {
             this.removedEntities.push(this.entities[i]);
@@ -288,12 +315,14 @@ EntityController.prototype = {
 function FoodController() {
     EntityController.call(this);
 }
-FoodController.prototype = Object.create(EntityController.prototype);
-FoodController.prototype.add = function(id) {
-    var food = new Food(id, 0);
-    this.entities.push(food);
-    return food;
-};
+
+FoodController.prototype = _.extend(EntityController.prototype, {
+    add: function(id) {
+        var food = new Food(id);
+        this.entities.push(food);
+        return food;
+    }
+});
 
 function ShootController() {
     EntityController.call(this);
@@ -401,6 +430,16 @@ Entity.prototype = {
     }
 };
 
+/**
+ * Food entity, state:
+ * xReal, yReal: hitbox,
+ * x, y: random position,
+ * vr - random circular speed: Math.random()
+ * angle - random circular direction
+ * movingTime - when eating: 0 (idle)
+ *
+ * @param {[type]} id [description]
+ */
 function Food(id) {
     Entity.call(this, id);
     this.state.movingTime = 0;
@@ -606,6 +645,7 @@ Client.prototype = {
             this.stateController.updateShootStates(shootsScopeInit);
         }
 
+        // new foods: id, xReal, yReal
         if (foodsScopeInitFlag) {
             var lenFoodsScopeInit = buf.getUint16(),
                 foodsScopeInit = [];
@@ -626,6 +666,7 @@ Client.prototype = {
             this.stateController.updateFoodInitStates(foodsScopeInit);
         }
 
+        //foods to remove: id
         if (foodsScopeRemoveFlag) {
             var lenFoodsScopeRemove = buf.getUint16(),
                 foodsScopeRemove = [];
@@ -636,6 +677,7 @@ Client.prototype = {
             this.stateController.updateFoodRemoveStates(foodsScopeRemove);
         }
 
+        //foods to eat: id, referrerId
         if (foodsScopeEatFlag) {
             var lenFoodsScopeEat = buf.getUint8(),
                 foodsScopeEat = [];

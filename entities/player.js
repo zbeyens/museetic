@@ -11,7 +11,7 @@ function Player(id, name) {
         vx: 0,
         vy: 0,
         ring: false,
-        mass: 0,
+        mass: cfg.playerInitMass,
         dashing: false,
 
         startTime: new Date(),
