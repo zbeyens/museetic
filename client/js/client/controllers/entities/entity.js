@@ -47,7 +47,7 @@ Entity.prototype = {
         // console.log(this.updates[0]);
         // console.log(time);
         var found = false;
-        for (var i = 0; i < this.updates.length; i++) {
+        for (var i = 0; i < this.updates.length - 1; i++) {
             var previous = this.updates[i],
                 target = this.updates[i + 1];
             if (time >= previous.time && time < target.time) {

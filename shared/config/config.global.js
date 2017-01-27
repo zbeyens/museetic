@@ -70,7 +70,7 @@ module.exports = {
     playerGravity: 825 * 0.8,
     playerMinMassDash: 0,
     //debug
-    playerInitMass: 5000,
+    playerInitMass: 0,
 
 
     ringTime: 300,

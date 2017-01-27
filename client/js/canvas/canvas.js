@@ -309,7 +309,7 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
             }
         }
         //
-        player.spriteRing.visible = false;
+        player.spriteRing.visible = true;
 
         // var scope = (cfg.scopeInitX / 2) / lot.getScaleMass(player.state.mass);
         var selfScope = lot.getSelfScope(player.state.mass) + 10;

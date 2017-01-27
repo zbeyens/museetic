@@ -62,7 +62,7 @@ StateController.prototype = {
      */
     updatePlayerState: function(entity) {
         var pos, interpolationFactor, newState,
-            pos = entity.getInterpolatedUpdates(this.renderTime);
+            pos = entity.getInterpolatedUpdates(this.renderTime + this.elapsedLastUpdate);
 
         if (pos.previous && pos.target) {
             interpolationFactor = this.getInterpolatedValue(pos.previous.time, pos.target.time, this.renderTime + this.elapsedLastUpdate);

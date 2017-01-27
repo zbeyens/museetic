@@ -45,10 +45,8 @@ Game.prototype = {
                 lastTs = lastTs || nowTs;
                 var deltaTime = (nowTs - lastTs);
                 lastTs = nowTs;
-                stateController.elapsedLastUpdate += deltaTime;
-                stateController.lastUpdateTime = nowTs;
-                console.log(stateController.elapsedLastUpdate + ":" + deltaTime);
-                // console.log(stateController.elapsedLastUpdate);
+                stateController.elapsedLastUpdate = nowTs - stateController.lastUpdateTime;
+                // stateController.elapsedLastUpdate += deltaTime;
 
                 stateController.predictShootStates(deltaTime);
                 stateController.predictFoodStates(deltaTime);
