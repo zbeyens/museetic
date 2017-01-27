@@ -218,6 +218,28 @@ StateController.prototype = {
         }
     },
 
+
+    // TODO: broadcast opti!
+    // for (var i = 0; i < entities.length; i++) {
+    //     var entity = entities[i];
+    //     var alreadyInScope = {}
+    //
+    //     for (var j = entity.entitiesInScope.length - 1; j >= 0; j--) {
+    //         var checkEntity = entity.entitiesInScope[j];
+    //
+    //         if (!check(checkEntity.state, entity.state)) {
+    //            var id = entity.entitiesInScope.splice(-1, 1).id
+    //         } else {
+    //             alreadyInScope[checkEntity.id] = true;
+    //         }
+    //     }
+    //
+    //     for (var j = 0; j < entities.length; j++) {
+    //         if (alreadyInScope.hasOwnProperty(entities[j].id) == false && check) {
+    //             entity.entitiesInScope.push(entities[j])
+    //         }
+    //     }
+    // }
     getFoodsInScope: function(gamer, states) {
         var playerScope = gamer.getScope();
 
@@ -258,12 +280,19 @@ StateController.prototype = {
         states.updateBoard = updatedBoard;
     },
 
-    //Add
+    /**
+     * add socket when connected
+     * @param {socket} socket
+     */
     addSocket: function(socket) {
         this.sockets.push(socket);
     },
 
-    //Remove
+    /**
+     * remove socket when disconnected
+     * @param  {socket} socket
+     * @return {void}
+     */
     removeSocket: function(socket) {
         var i = this.sockets.indexOf(socket);
         if (i >= 0) {

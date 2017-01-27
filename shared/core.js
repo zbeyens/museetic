@@ -315,9 +315,9 @@ exports.getNewShootState = function(shoot, deltaTime) {
  * if food.referrer is undefined: random circular moving
  * else: move the food towards referrer with movingTime
  *
- * @param  {[type]} food      [description]
- * @param  {[type]} deltaTime [description]
- * @return {[type]}           [description]
+ * @param  {Food} food
+ * @param  {int} deltaTime
+ * @return {booleanOrObject}    false if Food is eaten
  */
 exports.getNewFoodState = function(food, deltaTime) {
     var newState = {},
@@ -330,11 +330,10 @@ exports.getNewFoodState = function(food, deltaTime) {
 
 
     if (food.referrer === undefined) {
-        newState.angle = (state.angle + newState.vr * cfg.foodRotationSpeed) % (2 * Math.PI);
+        newState.angle = (state.angle + newState.vr * cfg.foodRotationSpeed * deltaTime) % (2 * Math.PI);
         newState.x = state.xReal + cfg.foodRotationRadius * Math.cos(state.angle);
         newState.y = state.yReal + cfg.foodRotationRadius * Math.sin(state.angle);
     } else {
-        //foods that have referrer are being eaten
         var referrerState = food.referrer.state;
 
         newState.movingTime = state.movingTime + deltaTime;

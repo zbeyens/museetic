@@ -13,7 +13,11 @@ function EntityController() {
 }
 
 EntityController.prototype = {
-    //Remove
+    /**
+     * remove the entity from socket
+     * @param  {Entity} entity
+     * @return {void}        
+     */
     remove: function(entity) {
         var idx = this.entities.indexOf(entity);
         if (idx >= 0) {

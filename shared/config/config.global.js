@@ -1,6 +1,5 @@
 module.exports = {
     env: 'development',
-    debug: false,
 
     serverPort: process.env.PORT || 3000,
     // serverUrl: 'localhost',
@@ -10,10 +9,41 @@ module.exports = {
     serverMaxGamers: 10,
     serverMaxSameIp: 2,
     serverLagCompensation: 0,
+    serverPacketMaxSize: 128, //OPTI: serverPacketMaxSize
 
     clientMaxUpdateBuffer: 120,
     clientInterpolationTime: 100,
     clientSmoothingFactor: 0.3,
+
+    /**
+     * inactive_destroy = 5*60*1000;   //time in ms when to destroy inactive balls
+     * inactive_check   = 10*1000;     //time in ms when to search inactive balls
+     * spawn_interval   = 200;         //time in ms for respawn interval. 0 to disable (if your custom server don't have spawn problems)
+     * spawn_attempts   = 25;          //how much attempts to spawn before give up
+     *
+     *
+     */
+
+    debug: false,
+    debugBorder: false,
+    debugFood: false,
+    debugFoodHitbox: false,
+
+    //balance size
+    scaleMassFactor: 0.003,
+    selfScopeInitSize: 20,
+    selfScopeFactor: 0.15,
+    playerInitSize: 50,
+    playerFactor: 0.8,
+    ringInitSize: 450,
+    ringFactor: 12,
+    ringMinInitSize: 136,
+    ringMinFactor: 3.6,
+    ringMaxInitSize: 151,
+    ringMaxFactor: 4.1,
+
+    ringFreqInit: 2000,
+    ringFreqFactor: 20,
 
     //Map 960x600
     tileAmountX: 100,
@@ -33,16 +63,16 @@ module.exports = {
     mapSize: 23200,
     tunnelHeight: 300,
 
-    playerInitSize: 50,
+    playerNameMaxSize: 15,
     playerImmunityTime: 5000,
     playerVx: 190 * 0.8,
     playerVy: 300 * 0.8,
     playerGravity: 825 * 0.8,
     playerMinMassDash: 0,
     //debug
-    playerInitMass: 15000,
+    playerInitMass: 5000,
 
-    ringInitSize: 450,
+
     ringTime: 300,
 
     dashSpeed: 800,
@@ -55,20 +85,17 @@ module.exports = {
     shootTime: 1000,
 
     foodInitSize: 50, //to remove ?
-    foodSpawnAmount: 1000,
-    foodMovingTime: 1000,
-    foodRotationSpeed: 0.05,
+    foodSpawnAmount: 2000,
+    foodInsideProportion: 0.5,
+    foodMovingTime: 1700,
+    foodRotationSpeed: 0.003,
     foodRotationRadius: 5,
     foodHitbox: 20,
     foodEatenHitbox: 10,
     foodV: 0.002,
 
-    debugBorder: false,
-    debugFood: false,
-    debugFoodHitbox: false,
-    //
 
-    //Image
+    //Images
     //playerImage: '/client/img/planet.png',
     playerImageR: '/client/img/flappyR.png',
     playerImageL: '/client/img/flappyL1.png',
@@ -103,4 +130,10 @@ module.exports = {
     foodColor7: [249, 38, 114],
     //rgb(255, 144, 144) crusta
     foodColor8: [255, 144, 144],
+
+    spectatorInitState: {
+        x: 0,
+        y: 0,
+        mass: 0,
+    },
 };

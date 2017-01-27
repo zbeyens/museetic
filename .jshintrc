@@ -1,3 +1,4 @@
 {
-    "shadow": true
+    "shadow": true,
+    "loopfunc": true
 }

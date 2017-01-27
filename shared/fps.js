@@ -7,6 +7,8 @@ function Fps() {
     this.frameTime = 0;
     this.lastLoop = new Date();
     this.thisLoop = null;
+    this.value = 0;
+    this.oldValue = 0;
 }
 
 Fps.prototype.setFps = function(now) {
@@ -21,7 +23,11 @@ Fps.prototype.getFps = function() {
 
 Fps.prototype.startServer = function() {
     setInterval(function() {
-        console.log((1000 / this.frameTime).toFixed(1) + " fps");
+        this.value = Math.ceil(1000 / this.frameTime);
+        if (this.value != this.oldValue) {
+            console.log(this.value + " FPS");
+            this.oldValue = this.value;
+        }
     }.bind(this), 1000);
 };
 

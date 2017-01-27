@@ -62,6 +62,12 @@ TileController.prototype = {
         return tilesInScope;
     },
 
+    /**
+     * each controller has a counter
+     * OPTI: id limit
+     * @param  {int} flag
+     * @return {int}      id
+     */
     getNextId: function(flag) {
         switch (flag) {
             case 0:

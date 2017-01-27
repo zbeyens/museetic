@@ -14,6 +14,7 @@ var NODE_MODULES = path.resolve(__dirname, "node_modules");
 
 var config = {
     entry: [
+        //connect to the server to receive bundle rebuild notifications
         //app
         './client/js/game.js',
     ],
@@ -45,27 +46,25 @@ var config = {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
                 loaders: ['babel-loader'],
-            },
-            // {
-            //     test: [
-            //         /\.png$/,
-            //         /\.jpg$/
-            //     ],
-            //     loader: "url-loader"
-            // }, {
-            //     test: /\.css$/,
-            //     include: [
-            //         NODE_MODULES,
-            //         SRC
-            //     ],
-            //     loader: 'style-loader!css-loader!postcss-loader',
-            // }
+            }, {
+                test: [
+                    /\.png$/,
+                    /\.jpg$/
+                ],
+                loader: "url-loader"
+            }, {
+                test: /\.css$/,
+                include: [
+                    NODE_MODULES,
+                    SRC
+                ],
+                loader: 'style-loader!css-loader!postcss-loader',
+            }
 
         ]
     },
 
     plugins: [
-        //PROD: uglify
         new webpack.DefinePlugin({
             'process.env': {
                 'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
@@ -88,9 +87,7 @@ if (process.env.NODE_ENV === 'production') {
         new webpack.optimize.OccurrenceOrderPlugin()
     );
 } else {
-    config.entry.push( //connect to the server to receive bundle rebuild notifications
-        'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true'
-    );
+    config.entry.push('webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true');
     config.plugins.push(
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin()

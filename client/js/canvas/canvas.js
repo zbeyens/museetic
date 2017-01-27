@@ -4,8 +4,6 @@ var cfg = require('../../../shared/config'),
     Textures = require('./textures'),
     Camera = require('./camera.js');
 
-require("babel-polyfill");
-
 exports = module.exports = Canvas;
 
 function Canvas() {
@@ -17,10 +15,7 @@ function Canvas() {
     this.resizeCamera();
 }
 
-Canvas.prototype = _.extend(Camera.prototype, Textures.prototype, {
-    ////////////
-    //PRELOAD //
-    ////////////
+Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textures.prototype), {
     preload: function() {
         this.scale = 1;
         this.scaleMass = 1;
@@ -343,9 +338,9 @@ Canvas.prototype = _.extend(Camera.prototype, Textures.prototype, {
         food.sprite.position.x = x;
         food.sprite.position.y = y;
         if (food.referrer) {
-            var newScale = (1 - food.state.movingTime / cfg.foodMovingTime) / 3;
-            console.log(food.state.movingTime / cfg.foodMovingTime);
-            if (newScale < 0) newScale = 0;
+            var referrerState = food.referrer.state;
+            var dist = lot.inCircle(referrerState.x, referrerState.y, food.state.x, food.state.y);
+            var newScale = 1 - ((cfg.foodHitbox - cfg.foodEatenHitbox) / dist);
             food.sprite.scale.set(newScale);
         }
 

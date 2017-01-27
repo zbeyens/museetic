@@ -1,31 +1,32 @@
 var cfg = require('./config');
 
 exports.getScaleMass = function(mass) {
-    return 1 - Math.sqrt(mass) * 0.005;
+    return 1 - Math.sqrt(mass) * cfg.scaleMassFactor;
 };
 
 exports.getPlayerSize = function(mass) {
-    return cfg.playerInitSize + Math.sqrt(mass) * 0.8;
+    return cfg.playerInitSize + Math.sqrt(mass) * cfg.playerFactor;
 };
 
+//sprite
 exports.getRingSize = function(mass) {
-    return cfg.ringInitSize + Math.sqrt(mass) * 12;
+    return cfg.ringInitSize + Math.sqrt(mass) * cfg.ringFactor;
 };
 
 exports.getRingMin = function(mass) {
-    return 136 + Math.sqrt(mass) * 3.6;
+    return cfg.ringMinInitSize + Math.sqrt(mass) * cfg.ringMinFactor;
 };
 
 exports.getRingMax = function(mass) {
-    return 151 + Math.sqrt(mass) * 4.1;
+    return cfg.ringMaxInitSize + Math.sqrt(mass) * cfg.ringMaxFactor;
 };
 
 exports.getRingFreq = function(mass) {
-    return 2000 - Math.sqrt(mass) * 20;
+    return cfg.ringFreqInit - Math.sqrt(mass) * cfg.ringFreqFactor;
 };
 
 exports.getSelfScope = function(mass) {
-    return 20 + Math.sqrt(mass) * 0.15;
+    return cfg.selfScopeInitSize + Math.sqrt(mass) * cfg.selfScopeFactor;
 };
 
 exports.getScope = function(playerScope, checkMass) {
@@ -41,18 +42,22 @@ exports.getRandomPos = function(midBegin, midEnd, max) {
     var randomRadius,
         randomZone = Math.random();
 
-    if (randomZone < 0.5) {
-        randomRadius = Math.floor(Math.random() * (1 + midBegin));
+    if (randomZone < cfg.foodInsideProportion) {
+        randomRadius = exports.randomIntFromInterval(0, Math.pow(midBegin, 2));
     } else {
-        randomRadius = Math.floor(Math.random() * (1 + max - midEnd)) + midEnd;
+        randomRadius = exports.randomIntFromInterval(Math.pow(midEnd, 2), Math.pow(max, 2));
     }
 
     var angle = Math.random() * Math.PI * 2;
 
     return {
-        x: Math.cos(angle) * randomRadius,
-        y: Math.sin(angle) * randomRadius,
+        x: Math.cos(angle) * Math.sqrt(randomRadius),
+        y: Math.sin(angle) * Math.sqrt(randomRadius),
     };
+};
+
+exports.randomIntFromInterval = function(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
 exports.inRect = function(x, y, xc, yr, width, height) {

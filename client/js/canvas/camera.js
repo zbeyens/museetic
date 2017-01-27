@@ -37,7 +37,7 @@ Camera.prototype = {
         }
 
         // console.log(this.scale);
-        this.resizeContainer.call(this, this.stage, this.scale * this.scaleMass);
+        this.resizeContainer(this.stage, this.scale * this.scaleMass);
     },
     resizeContainer: function(container, scale) {
         container.scale.set(scale);
@@ -46,7 +46,7 @@ Camera.prototype = {
 
     resizeMass: function(mass) {
         this.scaleMass = lot.getScaleMass(mass);
-        this.resizeContainer.call(this, this.stage, this.scale * this.scaleMass);
+        this.resizeContainer(this.stage, this.scale * this.scaleMass);
     },
 
     resizeHud: function() {

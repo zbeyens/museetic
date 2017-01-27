@@ -1,4 +1,4 @@
-var Client = require('./client'),
+var Client = require('./client/client'),
     GamePhysics = require('../../shared/core'),
     GameLoop = require('./gameloop'),
     Canvas = require('./canvas/canvas'),
@@ -45,6 +45,11 @@ Game.prototype = {
                 lastTs = lastTs || nowTs;
                 var deltaTime = (nowTs - lastTs);
                 lastTs = nowTs;
+                stateController.elapsedLastUpdate += deltaTime;
+                stateController.lastUpdateTime = nowTs;
+                console.log(stateController.elapsedLastUpdate + ":" + deltaTime);
+                // console.log(stateController.elapsedLastUpdate);
+
                 stateController.predictShootStates(deltaTime);
                 stateController.predictFoodStates(deltaTime);
 
@@ -55,8 +60,10 @@ Game.prototype = {
                 var stateController = this.client.getStateController(),
                     playerController = stateController.getPlayerController(),
                     foodController = stateController.getFoodController(),
-                    shootController = stateController.getShootController(),
-                    players = playerController.getEntities(),
+                    shootController = stateController.getShootController();
+
+                this.removeRemovedEntitiesSprites(playerController, foodController, shootController);
+                var players = playerController.getEntities(),
                     foods = foodController.getEntities(),
                     shoots = shootController.getEntities();
 
@@ -67,11 +74,11 @@ Game.prototype = {
 
                     selfId = this.client.getSelfId();
                     this.client.setLeftSpectator(false);
-                    this.clearRemovedEntities(playerController, foodController, shootController);
                 }
-
+                // console.log(foodController.entities);
+                // console.log(foodController.removedEntities);
                 var selfState = playerController.getEntityState(selfId);
-
+                // console.log(selfState);
                 if (selfState.mass !== undefined) {
                     //if mass changes, resize
                     if (selfState.mass !== selfMass) {
@@ -88,6 +95,7 @@ Game.prototype = {
                         this.canvas.drawShoot(shoots[i], selfState);
                     }
                     for (var i = players.length; i--;) {
+                        console.log("hehe");
                         if (players[i].isVisible()) {
                             this.canvas.drawPlayer(players[i], selfState);
                         }
@@ -98,8 +106,6 @@ Game.prototype = {
                         this.canvas.drawBoard(playerController.getBoard());
                         playerController.setUpdatedBoard(false);
                     }
-
-                    this.clearRemovedEntities(playerController, foodController, shootController);
 
                     this.canvas.render();
                 }
@@ -145,7 +151,7 @@ Game.prototype = {
         }
     },
 
-    clearRemovedEntities: function(playerController, foodController, shootController) {
+    removeRemovedEntitiesSprites: function(playerController, foodController, shootController) {
         this.canvas.removeSprites(playerController.getRemovedEntities(), foodController.getRemovedEntities(), shootController.getRemovedEntities());
         playerController.clearRemovedEntities();
         shootController.clearRemovedEntities();

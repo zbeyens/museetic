@@ -10,17 +10,18 @@ var express = require('express'),
     path = require('path'),
     cfg = require('./shared/config'),
     Game = require('./game'),
+    favicon = require('serve-favicon'),
     logger = require('morgan'),
     helmet = require('helmet');
 
 
 app.use(helmet());
 app.use(logger('dev'));
+app.use(favicon(__dirname + '/client/img/flappyR0.png'));
 app.use('/client', express.static(path.join(__dirname, '/client')));
 app.use('/shared', express.static(path.join(__dirname, '/shared')));
 
 var isProduction = process.env.NODE_ENV === 'production';
-console.log(isProduction);
 if (!isProduction) {
     //dev
     var webpack = require('webpack'),

@@ -3,7 +3,7 @@ var BufferWriter = require('../../shared/BufferWriter');
 /* jshint shadow:true */
 module.exports = Update;
 
-function Update(isSpectator, states) {
+function Update(states) {
     this.states = states;
 }
 

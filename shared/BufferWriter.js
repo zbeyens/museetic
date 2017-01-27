@@ -1,13 +1,20 @@
-/* jshint shadow:true */
 module.exports = BufferWriter;
 
-//little endian
+/**
+ * Used for big packets
+ */
 function BufferWriter() {
     this.bytes = [];
     this.miniBuf = new ArrayBuffer(4);
     this.miniView = new DataView(this.miniBuf);
 }
 
+/**
+ * true: little endian
+ * add each data in this.miniBuf
+ * add each byte to this.bytes
+ * @type {Object}
+ */
 BufferWriter.prototype = {
     setUint8: function(data) {
         this.miniView.setUint8(0, data);
@@ -44,10 +51,19 @@ BufferWriter.prototype = {
         this.addToBytes(4);
     },
 
+    /**
+     * if username not empty:
+     * Javascript String are stored in UTF-16
+     * encodeURIComponent to get UTF-8 bytes URL-encoded
+     * unescape to decode
+     * send all the charCode bytes
+     * @param {String} data
+     */
     setStringUTF8: function(data) {
         if (data && data.length) {
+
             var utf8 = unescape(encodeURIComponent(data));
-            //max 255 bytes
+            // REVIEW: max 255 bytes
             this.setUint8(utf8.length);
             for (var i = 0; i < utf8.length; i++) {
                 this.setUint8(utf8.charCodeAt(i));
@@ -72,6 +88,11 @@ BufferWriter.prototype = {
         return byte;
     },
 
+    /**
+     * push all the bytes of this.miniBuf in this.bytes
+     * then clear this.miniBuf
+     * @param {int} lenBytes
+     */
     addToBytes: function(lenBytes) {
         for (var i = 0; i < lenBytes; i++) {
             this.bytes.push(this.miniView.getUint8(i));
@@ -79,11 +100,19 @@ BufferWriter.prototype = {
         this.clearMiniBuf();
     },
 
+    /**
+     * clear this.miniBuf after addToBytes
+     * @return {void}
+     */
     clearMiniBuf: function() {
         this.miniBuf = new ArrayBuffer(4);
         this.miniView = new DataView(this.miniBuf);
     },
 
+    /**
+     * form the final Buffer from this.bytes
+     * @return {Buffer}
+     */
     form: function() {
         var buf = new ArrayBuffer(this.bytes.length);
         var view = new DataView(buf);

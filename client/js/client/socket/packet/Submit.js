@@ -1,4 +1,4 @@
-var BufferWriter = require('../../../shared/BufferWriter');
+var BufferWriter = require('../../../../../shared/BufferWriter');
 
 module.exports = Submit;
 
@@ -6,6 +6,10 @@ function Submit(name) {
     this.name = name;
 }
 
+/**
+ * #1, username
+ * @return {Buffer}
+ */
 Submit.prototype.form = function() {
     var buf = new BufferWriter();
 

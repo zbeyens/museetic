@@ -15,7 +15,9 @@ function SpectatorController(getNextId) {
 
 SpectatorController.prototype = Object.create(GamerController.prototype);
 
-//Add
+/**
+ * Flag 0
+ */
 SpectatorController.prototype.add = function() {
     var id = this.getNextId(0);
 
