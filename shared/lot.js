@@ -83,13 +83,6 @@ exports.idxOf = function(array, attr, value) {
     return idx;
 };
 
-exports.getDeltaTs = function(obj, attr) {
-    var now = new Date();
-    var physicsDelta = now - obj[attr];
-    obj[attr] = now;
-    return physicsDelta;
-};
-
 exports.abs = function(number) {
     if (number >= 0) {
         return number;

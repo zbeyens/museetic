@@ -30,9 +30,8 @@ Server.prototype = _.extend(Object.create(Receiver.prototype), Object.create(Sen
      * check maxSameIp
      * if ok, add spectator
      *
-     * socket.id: spectator.id
-     * socket.isConnected: true
-     * socket.isSpectator: true
+     * socket.id: -1
+     * socket.isConnected: true, used for IP limit
      * add to sockets
      * @param  {socket} socket
      * @return {void}
@@ -71,31 +70,29 @@ Server.prototype = _.extend(Object.create(Receiver.prototype), Object.create(Sen
             return;
         }
 
-        var newSpectator = this.stateController.getTileController().getSpectatorController().add();
-        socket.id = newSpectator.id;
-        console.log('Spectator ' + socket.id + ' connected');
-        socket.player = newSpectator;
-        socket.isConnected = true;
-        socket.isSpectator = true;
         this.stateController.addSocket(socket);
+        var newSpectator = this.stateController.getTileController().getPlayerController().addSpectator();
+        socket.id = -1; //-1
+        socket.player = newSpectator;
+        console.log('Spectator ' + socket.player.idSpec + ' connected');
+        socket.isConnected = true;
     },
 
     /**
      * socket.isConnected: false
-     * remove gamer
+     * remove player
      * remove socket
      * @param  {socket} socket
      * @return {void}
      */
     onPlayerDisconnect: function(socket) {
         socket.isConnected = false;
-        if (socket.isSpectator) {
-            this.stateController.getTileController().getSpectatorController().remove(socket.player);
-            console.log('Spectator ' + socket.id + ' disconnected');
+        if (socket.id == -1) {
+            console.log('Spectator ' + socket.player.idSpec + ' disconnected');
         } else {
-            this.stateController.getTileController().getPlayerController().remove(socket.player);
             console.log('Player ' + socket.id + ' disconnected');
         }
+        this.stateController.getTileController().getPlayerController().remove(socket.player);
         this.stateController.removeSocket(socket);
     },
 

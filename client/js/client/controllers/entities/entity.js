@@ -1,16 +1,22 @@
-var Update = require('./../update');
+var Update = require('./../update'),
+    cfg = require('./../../../../../shared/config');
 
 exports = module.exports = Entity;
 
 function Entity(id) {
     this.id = id;
     this.state = {};
-    this.updates = [];
-    this.visible = false;
+    this.updates = []; //only players
+    this.visible = false; //wait lerpTime before rendering
+    setTimeout(function() {
+        this.visible = true;
+    }.bind(this), cfg.clientInterpolationTime);
+
     this.toRemove = false;
 }
 
 Entity.prototype = {
+    //not used
     addUpdate: function(state, time) {
         var newUpdate = new Update(state, time);
         if (this.updates.length === 0) {
@@ -27,10 +33,6 @@ Entity.prototype = {
         this.state = state;
     },
 
-    setVisible: function(visible) {
-        this.visible = visible;
-    },
-
     setToRemove: function(toRemove) {
         this.toRemove = toRemove;
     },
@@ -40,20 +42,19 @@ Entity.prototype = {
         return this.updates;
     },
 
-
-    getInterpolatedUpdates: function(time) {
+    /**
+     * find the 2 updates bounding renderTime
+     * @param  {time} time : renderTime
+     * @return {object}      pos{previous, target}
+     */
+    getInterpolatedUpdates: function(renderTime) {
         var pos = {};
-        // console.log(this.updates[this.updates.length - 1]);
-        // console.log(this.updates[0]);
-        // console.log(time);
-        var found = false;
         for (var i = 0; i < this.updates.length - 1; i++) {
             var previous = this.updates[i],
                 target = this.updates[i + 1];
-            if (time >= previous.time && time < target.time) {
+            if (renderTime >= previous.time && renderTime < target.time) {
                 pos.previous = previous;
                 pos.target = target;
-                found = true;
                 break;
             }
         }

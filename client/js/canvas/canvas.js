@@ -47,8 +47,8 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
         //Map
         this.map = new PIXI.extras.TilingSprite(this.mapTxt, cfg.mapSize, cfg.mapSize);
         this.map.displayGroup = this.limitLayer;
-
         this.stage.addChild(this.map);
+
         // this.bg = new PIXI.extras.TilingSprite(this.bgTexture, cfg.mapSize, 10000);
         // this.bg = new PIXI.Sprite(this.bgTexture);
         // this.bg.displayGroup = this.limitLayer;
@@ -209,9 +209,7 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
         //player
         var size = lot.getPlayerSize(player.state.mass);
         if (!player.sprite) {
-            //player.sprite = new PIXI.Sprite(this.playerImageR);
-
-            player.sprite = new PIXI.extras.MovieClip(this.playerRTxtList);
+            player.sprite = new PIXI.extras.MovieClip(this.playerTxtList);
             player.sprite.animationSpeed = 0.15;
             player.sprite.play();
             player.sprite.anchor.set(0.5);
@@ -252,14 +250,16 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
 
         player.text.style = this.getStyle(14);
 
-        if (player.state.angle < 0) {
-            player.sprite.textures = this.playerLTxtList;
-            player.sprite.rotation = (player.state.angle / 1000) + 8;
-        } else if (player.state.angle > 0) {
-            player.sprite.textures = this.playerRTxtList;
-            player.sprite.rotation = (player.state.angle / 1000) - 8;
+        var angle = Math.atan2(player.state.vy, player.state.vx);
+        if (player.state.vx < 0) {
+            // player.sprite.textures = this.playerLTxtList;
+            player.sprite.scale.x = -1;
+            player.sprite.rotation = angle + Math.PI;
+        } else {
+            player.sprite.scale.x = 1;
+            player.sprite.rotation = angle;
         }
-        if (!player.state.dashing && player.sprite.currentFrame === 0 && (player.state.angle === 9006 || player.state.angle === -2723)) {
+        if (!player.state.dashing && player.sprite.currentFrame === 0 && player.state.vy === cfg.playerVy) {
             player.sprite.stop();
         } else {
             if (!player.sprite.playing) {
@@ -308,35 +308,38 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
                 player.spriteRing.alpha = 0;
             }
         }
-        //
-        player.spriteRing.visible = true;
 
-        // var scope = (cfg.scopeInitX / 2) / lot.getScaleMass(player.state.mass);
-        var selfScope = lot.getSelfScope(player.state.mass) + 10;
-        player.graphics.clear();
-        player.graphics.lineStyle(1, 0xFF0000);
-        // player.graphics.drawCircle(x, y, selfScope);
-        player.graphics.drawCircle(x, y, lot.getRingMin(player.state.mass));
-        player.graphics.drawCircle(x, y, lot.getRingMax(player.state.mass));
+        player.spriteRing.visible = false;
+        // this.debug.clear();
+        this.debug.lineStyle(1, 0xFF0000);
+        if (cfg.debugSelfHitbox) {
+            var selfScope = lot.getSelfScope(player.state.mass);
+            this.debug.drawCircle(x, y, selfScope);
+        }
+        if (cfg.debugRingHitbox) {
+            this.debug.drawCircle(x, y, lot.getRingMin(player.state.mass));
+            this.debug.drawCircle(x, y, lot.getRingMax(player.state.mass));
+        }
     },
 
     drawFood: function(food, selfState) {
         if (!food.sprite) {
-            // var size = cfg.foodInitSize;
-
             //TODO: color food + size
-            var texture = Math.round(Math.random() * cfg.foodPaletteSize);
+            //NOTE: texture careful!
+            var texture = Math.round(Math.random() * (cfg.foodPaletteSize - 1));
             food.sprite = new PIXI.Sprite(this.foodTxtList[texture]);
             food.sprite.blendMode = PIXI.BLEND_MODES.ADD;
             food.sprite.anchor.set(0.5);
             food.sprite.alpha = 0;
             food.sprite.displayGroup = this.foodLayer;
+
             this.stage.addChild(food.sprite);
         }
         var x = food.state.x - selfState.x + this.canvas.width / 2;
         var y = food.state.y - selfState.y + this.canvas.height / 2;
         food.sprite.position.x = x;
         food.sprite.position.y = y;
+
         if (food.referrer) {
             var referrerState = food.referrer.state;
             var dist = lot.inCircle(referrerState.x, referrerState.y, food.state.x, food.state.y);
@@ -349,6 +352,7 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
             food.sprite.alpha = Math.round(food.sprite.alpha * 100) / 100;
             food.sprite.scale.set(food.sprite.alpha);
         }
+
         if (cfg.debugFoodHitbox) {
             this.debug.lineStyle(1, 0xFF0000);
             this.debug.drawCircle(x, y, cfg.foodHitbox);
@@ -376,7 +380,7 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
         shoot.sprite.position.x = shoot.state.x - selfState.x + this.canvas.width / 2;
         shoot.sprite.position.y = shoot.state.y - selfState.y + this.canvas.height / 2;
         //
-        shoot.sprite.visible = false;
+        // shoot.sprite.visible = true;
     },
 
 

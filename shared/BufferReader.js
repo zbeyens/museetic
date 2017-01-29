@@ -69,16 +69,20 @@ BufferReader.prototype = {
         return name;
     },
 
-    getFlags: function(length) {
+    /**
+     * get 8 flags from 1 byte
+     * @return {list}        
+     */
+    getFlags: function() {
         var data = this.getUint8();
-        var flags = this.fromByte(data, length);
+        var flags = this.fromByte(data);
         return flags;
     },
 
 
-    fromByte: function(byte, length) {
-        var arr = new Array(length);
-        for (var i = 0; i < length; i++) {
+    fromByte: function(byte) {
+        var arr = new Array(8);
+        for (var i = 0; i < 8; i++) {
             arr[i] = (byte & (1 << i)) !== 0;
         }
         return arr;

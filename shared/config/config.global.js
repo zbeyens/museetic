@@ -4,12 +4,17 @@ module.exports = {
     serverPort: process.env.PORT || 3000,
     // serverUrl: 'localhost',
     serverUrl: 'flapzd.herokuapp.com',
-    serverPhysicsInterval: 60,
-    serverStateInterval: 20,
     serverMaxGamers: 10,
-    serverMaxSameIp: 2,
+    serverMaxSameIp: 5,
     serverLagCompensation: 0,
     serverPacketMaxSize: 128, //OPTI: serverPacketMaxSize
+
+    tickMain: 50, //main loop - times in ms
+    tickBoard: 10, //update board - this * tickMain
+    tickPhysics: 17, //update physics
+
+    tickState: 50, //send state, each player
+    tickScope: 8, //scope = this * tickState
 
     clientMaxUpdateBuffer: 120,
     clientInterpolationTime: 100,
@@ -28,6 +33,8 @@ module.exports = {
     debugBorder: false,
     debugFood: false,
     debugFoodHitbox: false,
+    debugSelfHitbox: false,
+    debugRingHitbox: false,
 
     //balance size
     scaleMassFactor: 0.003,
@@ -65,12 +72,12 @@ module.exports = {
 
     playerNameMaxSize: 15,
     playerImmunityTime: 5000,
-    playerVx: 190 * 0.8,
-    playerVy: 300 * 0.8,
+    playerVx: 152,
+    playerVy: 240,
     playerGravity: 825 * 0.8,
     playerMinMassDash: 0,
     //debug
-    playerInitMass: 0,
+    playerInitMass: 5000,
 
 
     ringTime: 300,
@@ -85,7 +92,8 @@ module.exports = {
     shootTime: 1000,
 
     foodInitSize: 50, //to remove ?
-    foodSpawnAmount: 2000,
+    foodMass: 5000,
+    foodSpawnAmount: 200,
     foodInsideProportion: 0.5,
     foodMovingTime: 1700,
     foodRotationSpeed: 0.003,
@@ -97,8 +105,7 @@ module.exports = {
 
     //Images
     //playerImage: '/client/img/planet.png',
-    playerImageR: '/client/img/flappyR.png',
-    playerImageL: '/client/img/flappyL1.png',
+    playerImage: '/client/img/flappy.png',
     ringImage: '/client/img/firewater.png',
     shootImage: '/client/img/bullet.png',
     // mapImage: '/client/img/clouds.jpg',

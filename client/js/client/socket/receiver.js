@@ -6,11 +6,13 @@ exports = module.exports = Receiver;
 function Receiver() {
     this.handler = {
         1: this.onMsgSubmit.bind(this),
+        2: this.onMsgClear.bind(this),
         // 1: this.message_onSpectate,
         10: this.onMsgUpdate.bind(this),
     };
     this.handleSocketEvents();
 }
+
 
 Receiver.prototype = {
     /**
@@ -26,6 +28,10 @@ Receiver.prototype = {
         this.socket.onclose = function() {
             this.onDisconnect();
         }.bind(this);
+
+        this.socket.onerror = function(evt) {
+            console.log("ERROR " + evt.data);
+        };
     },
 
     /**
@@ -42,6 +48,9 @@ Receiver.prototype = {
         this.handler[packetId](buf);
     },
 
+    onMsgClear: function(msg) {
+        this.stateController.clearEntities();
+    },
 
     /**
      * leftSpectator, set selfId, clearEntities before joining game
@@ -50,40 +59,32 @@ Receiver.prototype = {
      * @return {void}
      */
     onMsgSubmit: function(msg) {
-        this.stateController.isSpectator = false;
         var buf = new BufferReader(msg);
         buf.addOffset(1);
         var id = buf.getUint16();
-        setTimeout(function() {
-            // console.log(this.stateController.playerController.entities);
-            // this.stateController.clearEntities();
-            this.selfId = id;
-            this.leftSpectator = true;
-            this.onSubmitted();
-        }.bind(this), cfg.clientInterpolationTime);
+        this.selfId = id;
+        this.leftSpectator = true;
     },
 
     /**
      * onUpdate, broadcast loop
-     * only if not lefting spectator
+     * only if not clearing
      */
     onMsgUpdate: function(msg) {
         var buf = new BufferReader(msg);
         buf.addOffset(1);
         var t = buf.getUint32();
-        this.stateController.setTime(t);
-        // this.oldTime = new Date();
-        // console.log(t - this.oldTime);
-        this.oldTime = t;
+        this.stateController.lastUpdateTime = new Date();
+        this.stateController.setServerTime(t);
 
-        var flagsMain = buf.getFlags(6),
+        var flagsMain = buf.getFlags(),
             updatePsFlag = flagsMain[0],
-            shootsScopeInitFlag = flagsMain[1],
-            foodsScopeInitFlag = flagsMain[2],
-            foodsScopeRemoveFlag = flagsMain[3],
-            foodsScopeEatFlag = flagsMain[4],
-            updateBoardFlag = flagsMain[5];
-
+            playersScopeRemoveFlag = flagsMain[1],
+            shootsScopeInitFlag = flagsMain[2],
+            foodsScopeInitFlag = flagsMain[3],
+            foodsScopeRemoveFlag = flagsMain[4],
+            foodsScopeEatFlag = flagsMain[5],
+            updateBoardFlag = flagsMain[6];
         if (updatePsFlag) {
             var lenUpdatePs = buf.getUint8(),
                 updatePs = [];
@@ -95,14 +96,15 @@ Receiver.prototype = {
                     state = {},
                     name;
 
-                var flagsPlayer = buf.getFlags(7),
+                var flagsPlayer = buf.getFlags(),
                     nameFlag = flagsPlayer[0],
                     xFlag = flagsPlayer[1],
                     yFlag = flagsPlayer[2],
-                    angleFlag = flagsPlayer[3],
-                    massFlag = flagsPlayer[4];
-                state.ring = flagsPlayer[5];
-                state.dashing = flagsPlayer[6];
+                    vxFlag = flagsPlayer[3],
+                    vyFlag = flagsPlayer[4],
+                    massFlag = flagsPlayer[5];
+                state.ring = flagsPlayer[6];
+                state.dashing = flagsPlayer[7];
 
                 if (nameFlag) {
                     name = buf.getStringUTF8();
@@ -113,11 +115,16 @@ Receiver.prototype = {
                 if (yFlag) {
                     state.y = buf.getFloat32();
                 }
-                if (angleFlag) {
-                    state.angle = buf.getInt16();
+                if (vxFlag) {
+                    var vxModif = buf.getInt16();
+                    state.vx = vxModif / 100.0;
+                }
+                if (vyFlag) {
+                    var vyModif = buf.getInt16();
+                    state.vy = vyModif / 100.0;
                 }
                 if (massFlag) {
-                    state.mass = buf.getUint16();
+                    state.mass = buf.getUint32();
                 }
 
                 if (!nameFlag) {
@@ -127,6 +134,18 @@ Receiver.prototype = {
                 }
             }
             this.stateController.addPlayerUpdates(t, updatePs);
+        }
+
+
+        //foods to remove: id
+        if (playersScopeRemoveFlag) {
+            var lenPlayersScopeRemove = buf.getUint16(),
+                playersScopeRemove = [];
+            for (var i = 0; i < lenPlayersScopeRemove; i++) {
+                var id = buf.getUint16();
+                playersScopeRemove.push(id);
+            }
+            this.stateController.updatePlayerRemoveStates(playersScopeRemove);
         }
 
         if (shootsScopeInitFlag) {
@@ -159,7 +178,7 @@ Receiver.prototype = {
                 state.xReal = buf.getFloat32();
                 state.yReal = buf.getFloat32();
                 state.x = state.xReal;
-                state.y = state.xReal;
+                state.y = state.yReal;
                 foodsScopeInit.push([id, state]);
             }
             this.stateController.updateFoodInitStates(foodsScopeInit);

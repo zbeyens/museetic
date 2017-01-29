@@ -9,10 +9,9 @@ var cfg = require('../../../../shared/config'),
 exports = module.exports = StateController;
 
 function StateController() {
-    this.isSpectator = true;
     this.serverTime = 0;
-    this.renderTime = 0;
     this.interpolationTime = cfg.clientInterpolationTime;
+    this.elapsedLastUpdate = 0;
     this.smoothingFactor = cfg.clientSmoothingFactor;
 
     this.playerController = new PlayerController();
@@ -29,7 +28,6 @@ StateController.prototype = {
     /**
      * TODO: reset leaderboard
      * onDisconnect: just clear
-     * startGame: isSpectator = false to avoid spectator spawn in game
      * @return {void}
      */
     clearEntities: function() {
@@ -55,48 +53,86 @@ StateController.prototype = {
 
     /**
      * update one player: interpolation of player updates
-     * for a new player, no lerp till interpolationTime
+     * for a new player, no lerp till lerpTime
+     * after lerpTime,
      *
      * @param  {Player} entity
      * @return {void}
      */
     updatePlayerState: function(entity) {
-        var pos, interpolationFactor, newState,
-            pos = entity.getInterpolatedUpdates(this.renderTime + this.elapsedLastUpdate);
-
-        if (pos.previous && pos.target) {
-            interpolationFactor = this.getInterpolatedValue(pos.previous.time, pos.target.time, this.renderTime + this.elapsedLastUpdate);
-
-            newState = GamePhysics.getInterpolatedEntityState(pos.previous.state, pos.target.state, interpolationFactor);
-            // console.log(pos.previous.state);
-            // console.log(newState.x);
-            // console.log(entity.state.x);
-            // console.log(pos.target.state);
-            // newState = GamePhysics.getInterpolatedEntityState(entity.state, newState, this.smoothingFactor);
-            // console.log(newState.x);
-            entity.setState(newState);
-            // console.log(entity.state.x);
-
-
-            //entities can be drawed after the first state interpolation
-            if (!entity.isVisible()) {
-                entity.setVisible(true);
-            }
-
+        if (this.wait > 0) {
+            this.wait -= this.deltaTime;
         } else {
-            //remove after interpolationTime
-            if (entity.isToRemove()) {
-                this.playerController.removeEntity(entity);
+            this.wait = 0;
+
+            // var lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time);
+            var lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 3].time);
+            var renderTime = this.getRenderTime(lastDeltaTime);
+            // console.log(renderTime);
+            if (renderTime > entity.updates[entity.updates.length - 2].time) {
+                // lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time);
+
+                // console.log("lupdate : " + entity.updates[entity.updates.length - 1].time);
+                // console.log("pupdate : " + entity.updates[entity.updates.length - 2].time);
+                // console.log("renderT : " + renderTime);
+                // console.log("bupdate : " + entity.updates[entity.updates.length - 3].time);
+                // console.log("whut");
+            }
+            // var renderTime = this.getRenderTime(100);
+            // var renderTime = this.getRenderTime(100);
+            // console.log(entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time);
+            var pos, interpolationFactor, newState,
+                pos = entity.getInterpolatedUpdates(renderTime);
+
+            // OPTI: jittering solution?
+            if (!pos.previous && entity.isVisible()) {
+                console.log("Jittering");
+                // var lastDeltaTime = entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time;
+                // console.log(lastDeltaTime);
+                //
+                // var renderTime = this.getRenderTime(lastDeltaTime);
+                // pos = entity.getInterpolatedUpdates(renderTime);
+                if (!pos.previous && entity.isVisible()) {
+                    console.log("waiting");
+                }
+            }
+            if (pos.previous && pos.target) {
+                if (renderTime > entity.updates[entity.updates.length - 1].time) {
+                    console.log("elapsed  : " + this.lastElapsedTime);
+                    console.log("target   : " + pos.target.time);
+                    console.log("renderT  : " + renderTime);
+                    console.log("previous : " + pos.previous.time);
+                }
+                interpolationFactor = this.getInterpolatedValue(pos.previous.time, pos.target.time, renderTime);
+
+                newState = GamePhysics.getInterpolatedEntityState(pos.previous.state, pos.target.state, interpolationFactor);
+                // newState = GamePhysics.getInterpolatedEntityState(entity.state, newState, this.smoothingFactor);
+                entity.setState(newState);
+
+                //entities can be drawed after the first state interpolation
+                // if (!entity.isVisible()) {
+                //     entity.setVisible(true);
+                // }
+            } else {
+                //remove after interpolationTime
+                if (entity.isToRemove()) {
+                    this.playerController.removeEntity(entity);
+                }
             }
         }
+    },
+
+    getRenderTime: function(interpolationTime) {
+        return this.serverTime - interpolationTime + this.elapsedLastUpdate;
     },
 
     getInterpolatedValue: function(previousTime, targetTime, renderTime) {
         var range = targetTime - previousTime,
             difference = renderTime - previousTime;
         var ratio = difference / range;
-        // console.log(ratio);
         if (ratio > 1) ratio = 1;
+        // console.log(ratio);
+        // ratio = 1;
         var value = parseFloat(ratio.toFixed(3));
         // console.log((difference / range));
         return value;
@@ -115,6 +151,12 @@ StateController.prototype = {
         }
     },
 
+    /**
+     * predict food state: random or eating
+     * remove if eaten
+     * @param  {time} deltaTime rendering
+     * @return {void}
+     */
     predictFoodStates: function(deltaTime) {
         var entities = this.foodController.getEntities();
         for (var i = entities.length; i--;) {
@@ -133,8 +175,6 @@ StateController.prototype = {
      * if player new: add player(id, name)
      * else: add update(state, time) to player from id
      *
-     * for all updatePs, player.inScope = true
-     * for all player not in updatePs (in scope), setToRemove
      * @param {time} time     serverTs
      * @param {list} updatePs array of array: players to update
      */
@@ -150,17 +190,8 @@ StateController.prototype = {
                 player = this.playerController.add(playerState[0], playerState[2]);
             }
             player.addUpdate(playerState[1], time);
-            player.inScope = true;
         }
         var entities = this.playerController.getEntities();
-        for (var i = entities.length; i--;) {
-            var player = entities[i];
-            if (!player.inScope) {
-                player.setToRemove(true);
-            } else {
-                player.inScope = false;
-            }
-        }
     },
 
     updateShootStates: function(dataInit) {
@@ -184,38 +215,50 @@ StateController.prototype = {
      */
     initStates: function(states, controller) {
         var self = this;
-        var beforeSpectator = this.isSpectator;
-        // console.log('1:' + self.isSpectator);
 
         for (var i = states.length; i--;) {
-            (function() {
-                var entityState = states[i];
+            var entityState = states[i];
 
-                setTimeout(function() {
-                    // console.log('2:' + self.isSpectator);
-                    var newEntity = controller.add(entityState[0]);
-                    newEntity.setState(entityState[1]);
-                }, self.interpolationTime);
-            })();
+            var newEntity = controller.add(entityState[0]);
+            newEntity.setState(entityState[1]);
         }
     },
 
     /**
-     *  remove the outscope food after lerp
+     *  remove players after lerpTime
+     * @param  {list} dataRemove : all players to be removed
+     * @return {void}
+     */
+    updatePlayerRemoveStates: function(dataRemove) {
+        this.updateEntityRemoveStates(dataRemove, this.playerController);
+    },
+
+    /**
+     *  remove outscope foods after lerpTime
      * @param  {list} dataRemove : all foods to be removed
      * @return {void}
      */
     updateFoodRemoveStates: function(dataRemove) {
+        this.updateEntityRemoveStates(dataRemove, this.foodController);
+    },
+
+    /**
+     * remove players/foods after lerpTime
+     * @param  {list} dataRemove id to remove
+     * @param  {Controller} controller
+     * @return {void}
+     */
+    updateEntityRemoveStates: function(dataRemove, controller) {
         var self = this;
 
         for (var i = dataRemove.length; i--;) {
             (function() {
                 var entityId = dataRemove[i];
                 setTimeout(function() {
-                    var foods = self.foodController.getEntities();
-                    var idx = lot.idxOf(foods, 'id', entityId);
+                    var entities = controller.getEntities();
+                    var idx = lot.idxOf(entities, 'id', entityId);
                     if (idx >= 0) {
-                        self.foodController.remove(idx);
+                        controller.remove(idx);
                     }
                 }, self.interpolationTime);
             })();
@@ -223,7 +266,7 @@ StateController.prototype = {
     },
 
     /**
-     *  add a referrer (player) to each food after lerp
+     *  add a referrer (player) to each food after lerpTime
      * @param  {list} dataEat : all foods to be eaten by referrerId
      * @return {void}
      */
@@ -265,13 +308,14 @@ StateController.prototype = {
      * client render in the past to have at least 2 known position during the interpolationTime
      * @param {time} serverTime
      */
-    setTime: function(serverTime) {
+    setServerTime: function(serverTime) {
         this.serverTime = serverTime;
-        this.elapsedLastUpdate = 0;
-        this.lastUpdateTime = new Date();
-        this.renderTime = this.serverTime - this.interpolationTime;
     },
 
+    setElapsedLastUpdate: function(now) {
+        this.elapsedLastUpdate = now - this.lastUpdateTime;
+        // console.log(this.elapsedLastUpdate);
+    },
 
     //Getters
     getPlayerController: function() {
@@ -285,8 +329,4 @@ StateController.prototype = {
     getShootController: function() {
         return this.shootController;
     },
-
-    getRenderTime: function() {
-        return this.renderTime;
-    }
 };

@@ -1,5 +1,4 @@
 var Tile = require('./tile'),
-    SpectatorController = require('./spectatorcontroller'),
     PlayerController = require('./playercontroller'),
     ShootController = require('./shootcontroller'),
     cfg = require('../shared/config');
@@ -9,7 +8,7 @@ exports = module.exports = TileController;
 
 function TileController() {
     this.tiles = [];
-    this.nextIdSpectator = 0;
+    this.nextIdSpec = 0;
     this.nextIdPlayer = 0;
     this.nextIdShoot = 0;
     this.nextIdFood = 0;
@@ -18,17 +17,15 @@ function TileController() {
         return this.getNextId(flag);
     }.bind(this);
 
-    this.spectatorController = new SpectatorController(getNextId);
-    this.playerController = new PlayerController(this.spectatorController.getEntities(), getNextId);
-    this.shootController = new ShootController(this.spectatorController.getEntities(), this.playerController.getEntities());
+    this.playerController = new PlayerController(getNextId);
+    this.shootController = new ShootController(this.playerController.getEntities());
 
-    var spectators = this.spectatorController.getEntities();
     var players = this.playerController.getEntities();
 
     for (var x = 0; x < cfg.tileAmountX; x++) {
         var tilesRow = [];
         for (var y = 0; y < cfg.tileAmountY; y++) {
-            var newTile = new Tile(x, y, spectators, players, getNextId);
+            var newTile = new Tile(x, y, players, getNextId);
             tilesRow.push(newTile);
         }
         this.tiles.push(tilesRow);
@@ -71,7 +68,7 @@ TileController.prototype = {
     getNextId: function(flag) {
         switch (flag) {
             case 0:
-                return this.nextIdSpectator++;
+                return this.nextIdSpec++;
             case 1:
                 return this.nextIdPlayer++;
             case 2:
@@ -83,9 +80,6 @@ TileController.prototype = {
         }
     },
 
-    getSpectatorController: function() {
-        return this.spectatorController;
-    },
 
     getPlayerController: function() {
         return this.playerController;

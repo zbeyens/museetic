@@ -222,7 +222,7 @@ var checkFoodsEating = function(newState, newTile, selfScope, player) {
 
         var distPlayerFood = lot.inCircle(food.state.x, food.state.y, newState.x, newState.y);
         if (distPlayerFood < selfScope + cfg.foodHitbox) {
-            newState.mass += 20;
+            newState.mass += cfg.foodMass;
             player.setScope();
             foodController.remove(food, player.id);
         }
@@ -353,13 +353,25 @@ exports.getNewFoodState = function(food, deltaTime) {
 };
 
 //Client: oP oE
+/**
+ * compute interpolated Player state
+ * @param  {object} previousState
+ * @param  {object} targetState
+ * @param  {float} interpolationFactor
+ * @return {object}                     interpolatedState
+ */
 exports.getInterpolatedEntityState = function(previousState, targetState, interpolationFactor) {
     var interpolatedState = {};
-    interpolatedState.x = (previousState.x + interpolationFactor * (targetState.x - previousState.x));
-    interpolatedState.y = (previousState.y + interpolationFactor * (targetState.y - previousState.y));
-    interpolatedState.angle = targetState.angle;
+    interpolatedState.x = previousState.x + interpolationFactor * (targetState.x - previousState.x);
+    interpolatedState.y = previousState.y + interpolationFactor * (targetState.y - previousState.y);
+    interpolatedState.vx = targetState.vx;
+    // if (targetState.vy - previousState.vy < 0) {
+    //     interpolatedState.vy = targetState.vy;
+    // } else {
+    // }
+    interpolatedState.vy = previousState.vy + interpolationFactor * (targetState.vy - previousState.vy);
+    interpolatedState.mass = Math.round(previousState.mass + interpolationFactor * (targetState.mass - previousState.mass));
     interpolatedState.ring = targetState.ring;
-    interpolatedState.mass = targetState.mass;
     interpolatedState.dashing = targetState.dashing;
 
     return interpolatedState;

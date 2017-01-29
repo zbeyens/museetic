@@ -6,10 +6,9 @@ var EntityController = require('./entitycontroller'),
 /* jshint shadow:true */
 exports = module.exports = FoodController;
 
-function FoodController(spectators, players, getNextId) {
+function FoodController(players, getNextId) {
     EntityController.call(this);
 
-    this.spectators = spectators;
     this.players = players;
     this.getNextId = getNextId;
 }
@@ -21,10 +20,6 @@ FoodController.prototype = _.extend(Object.create(EntityController.prototype), {
         var newFood = new Food(id);
         this.entities.push(newFood);
 
-        for (var i = this.spectators.length; i--;) {
-            var spectator = this.spectators[i];
-            spectator.addFoodToAdd(newFood);
-        }
         for (var i = this.players.length; i--;) {
             var player = this.players[i];
             player.addFoodToAdd(newFood);
@@ -37,10 +32,6 @@ FoodController.prototype = _.extend(Object.create(EntityController.prototype), {
         var idx = this.entities.indexOf(entity);
         if (idx >= 0) {
 
-            for (var i = this.spectators.length; i--;) {
-                var spectator = this.spectators[i];
-                spectator.addFoodToRemove(this.entities[idx], referrerId);
-            }
             for (var i = this.players.length; i--;) {
                 var player = this.players[i];
                 player.addFoodToRemove(this.entities[idx], referrerId);

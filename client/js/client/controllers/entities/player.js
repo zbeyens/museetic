@@ -42,8 +42,11 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
             if (state.y === undefined) {
                 newState.y = preState.y;
             }
-            if (state.angle === undefined) {
-                newState.angle = preState.angle;
+            if (state.vx === undefined) {
+                newState.vx = preState.vx;
+            }
+            if (state.vy === undefined) {
+                newState.vy = preState.vy;
             }
             if (state.ring === undefined) {
                 newState.ring = preState.ring;

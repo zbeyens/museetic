@@ -1,5 +1,6 @@
 var TileController = require('./tilecontroller'),
     lot = require('../shared/lot'),
+    cfg = require('../shared/config'),
     GamePhysics = require('../shared/core');
 
 /* jshint shadow:true */
@@ -21,45 +22,61 @@ function StateController(broadcastCallback) {
 }
 
 StateController.prototype = {
-    //Updates
+    /**
+     * updates the state of the players in game, at the same time!
+     * using tickPhysics of each player
+     *
+     * remove player if dead
+     * @return {void}
+     */
     updatePlayerStates: function() {
-        var players = this.tileController.getPlayerController().getEntities();
+        var playerController = this.tileController.getPlayerController();
+        var players = playerController.getEntities();
+
+        playerController.tickPhysics++;
+        if (playerController.tickPhysics < cfg.tickPhysics) return;
+        playerController.tickPhysics = 0;
+
+        var now = new Date();
+        var physicsDelta = (now - playerController.getLastPhysicsTs()) / 1000.0;
+        playerController.setLastPhysicsTs(now);
 
         for (var i = players.length; i--;) {
             var player = players[i];
-
-            player.tickPhysics++;
-            if (player.tickPhysics < 17) continue;
-            player.tickPhysics = 0;
-            var physicsDelta = lot.getDeltaTs(player, 'lastPhysicsTs') / 1000.0;
+            if (player.id == -1) continue; //spectator
 
             var newState = GamePhysics.getNewPlayerState(player, physicsDelta, this.tileController);
-
             if (newState) {
                 player.setState(newState);
             } else {
-                this.tileController.getPlayerController().remove(player);
+                playerController.remove(player);
             }
         }
     },
 
+    //Not sure if we should update ALL entities together.
     updateShootStates: function() {
-        var shoots = this.tileController.getShootController().getEntities();
+        var shootController = this.tileController.getShootController();
+        var shoots = shootController.getEntities();
+
+        shootController.tickPhysics++;
+        if (shootController.tickPhysics < cfg.tickPhysics) return;
+        shootController.tickPhysics = 0;
+
+        var now = new Date();
+        // / 1000.0 ?
+        var physicsDelta = now - shootController.getLastPhysicsTs();
+        shootController.setLastPhysicsTs(now);
 
         for (var i = shoots.length; i--;) {
             var shoot = shoots[i];
-
-            shoot.tickPhysics++;
-            if (shoot.tickPhysics < 17) continue;
-            shoot.tickPhysics = 0;
-            var physicsDelta = lot.getDeltaTs(shoot, 'lastPhysicsTs');
 
             var newState = GamePhysics.getNewShootState(shoot, physicsDelta);
 
             if (newState) {
                 shoot.setState(newState);
             } else {
-                this.tileController.getShootController().remove(shoot);
+                shootController.remove(shoot);
             }
         }
     },
@@ -70,6 +87,8 @@ StateController.prototype = {
         var newBoard = [];
         var players = playerController.getEntities();
         for (var i = players.length; i--;) {
+            if (players[i].id == -1) continue;
+
             if (newBoard.length < 10) {
                 this.sortBoard(newBoard, players[i]);
             } else {
@@ -113,23 +132,24 @@ StateController.prototype = {
         }
     },
 
-    //Broadcast
+    //Broadcast to players not clearing
     broadcastState: function(startTime) {
-
         for (var i = this.sockets.length; i--;) {
             var socket = this.sockets[i];
-            var gamer = socket.player;
+            if (socket.clearing) return;
+            var player = socket.player;
 
-            gamer.tickState++;
-            if (gamer.tickState < 50) continue;
-            gamer.tickState = 0;
-            gamer.tickScope++;
+            player.tickState++;
+            if (player.tickState < cfg.tickState) continue;
+            player.tickState = 0;
+            player.tickScope++;
 
             var localTime = new Date() - startTime,
                 states = {
                     packet: 'update',
                     t: localTime,
                     updatePs: [],
+                    playersScopeRemove: [],
                     shootsScopeInit: [],
                     foodsScopeInit: [],
                     foodsScopeRemove: [],
@@ -137,18 +157,22 @@ StateController.prototype = {
                     updateBoard: []
                 };
 
-            this.getPlayersInScope(gamer, states);
-            this.getShootsInScope(gamer, states);
-            gamer.getFoodsToSpawn(states);
-            gamer.getFoodsToEat(states);
+            this.getPlayersInScope(player, states);
+            this.getShootsInScope(player, states);
+            player.getPlayersToRemove(states);
+            // console.log(states.playersScopeRemove);
+            player.getFoodsToSpawn(states);
+            player.getFoodsToEat(states);
 
-            if (gamer.tickScope >= 8 || gamer.isFirstState()) {
-                gamer.tickScope = 0;
-                this.getFoodsInScope(gamer, states);
-                this.getUpdatedBoard(gamer, states);
+            //send directly if first state.
+            if (player.tickScope >= cfg.tickScope || player.isFirstState()) {
+                player.tickScope = 0;
+                // console.log(player.fInScope);
+                this.getFoodsInScope(player, states);
+                this.getUpdatedBoard(player, states);
 
-                if (gamer.isFirstState()) {
-                    gamer.setFirstState(false);
+                if (player.isFirstState()) {
+                    player.setFirstState(false);
                 }
             }
 
@@ -161,30 +185,33 @@ StateController.prototype = {
         }
     },
 
-    getPlayersInScope: function(gamer, states) {
-        var playerScope = gamer.getScope();
+    getPlayersInScope: function(player, states) {
+        var playerScope = player.getScope();
 
         var entities = this.tileController.getPlayerController().getEntities();
         for (var i = entities.length; i--;) {
+            if (entities[i].id == -1) continue; //don't send spectators state
+
             var checkPlayer = entities[i],
                 scope = lot.getScope(playerScope, checkPlayer.state.mass);
 
-            var idx = lot.idxOf(gamer.pInScope, 'id', checkPlayer.id);
+            var idx = lot.idxOf(player.pInScope, 'id', checkPlayer.id);
             if (idx >= 0) {
-                if (!lot.inRect(checkPlayer.state.x, checkPlayer.state.y, gamer.state.x, gamer.state.y, scope.maxScopeW, scope.maxScopeH)) {
-                    gamer.removePlayerInScope(idx);
+                if (!lot.inRect(checkPlayer.state.x, checkPlayer.state.y, player.state.x, player.state.y, scope.maxScopeW, scope.maxScopeH)) {
+                    player.removePlayerInScope(idx);
+                    states.playersScopeRemove.push(checkPlayer.id);
                 } else {
-                    var updatedState = checkPlayer.getPlayerState(idx, gamer);
-                    gamer.pInScope[idx] = {
+                    var updatedState = checkPlayer.getPlayerState(idx, player);
+                    player.pInScope[idx] = {
                         id: checkPlayer.id,
                         state: checkPlayer.state,
                     };
                     states.updatePs.push([checkPlayer.id, updatedState]);
                 }
             } else {
-                if (lot.inRect(checkPlayer.state.x, checkPlayer.state.y, gamer.state.x, gamer.state.y, scope.minScopeW, scope.minScopeH)) {
+                if (lot.inRect(checkPlayer.state.x, checkPlayer.state.y, player.state.x, player.state.y, scope.minScopeW, scope.minScopeH)) {
                     var updatedState = checkPlayer.getFirstPlayerState();
-                    gamer.addPlayerInScope({
+                    player.addPlayerInScope({
                         id: checkPlayer.id,
                         state: checkPlayer.state,
                     });
@@ -195,23 +222,23 @@ StateController.prototype = {
         }
     },
 
-    getShootsInScope: function(gamer, states) {
-        var playerScope = gamer.getScope();
+    getShootsInScope: function(player, states) {
+        var playerScope = player.getScope();
 
         var entities = this.tileController.getShootController().getEntities();
         for (var i = entities.length; i--;) {
             var checkShoot = entities[i],
                 scope = lot.getScope(playerScope, checkShoot.state.mass);
 
-            var idx = gamer.sInScope.indexOf(checkShoot);
+            var idx = player.sInScope.indexOf(checkShoot);
             if (idx >= 0) {
-                if (!lot.inRect(checkShoot.state.x, checkShoot.state.y, gamer.state.x, gamer.state.y, scope.maxScopeW, scope.maxScopeH)) {
-                    gamer.removeShootInScope(idx);
+                if (!lot.inRect(checkShoot.state.x, checkShoot.state.y, player.state.x, player.state.y, scope.maxScopeW, scope.maxScopeH)) {
+                    player.removeShootInScope(idx);
                 }
             } else {
-                if (lot.inRect(checkShoot.state.x, checkShoot.state.y, gamer.state.x, gamer.state.y, scope.minScopeW, scope.minScopeH)) {
+                if (lot.inRect(checkShoot.state.x, checkShoot.state.y, player.state.x, player.state.y, scope.minScopeW, scope.minScopeH)) {
                     var initState = checkShoot.getShootState();
-                    gamer.addShootInScope(checkShoot);
+                    player.addShootInScope(checkShoot);
                     states.shootsScopeInit.push(initState);
                 }
             }
@@ -240,25 +267,25 @@ StateController.prototype = {
     //         }
     //     }
     // }
-    getFoodsInScope: function(gamer, states) {
-        var playerScope = gamer.getScope();
+    getFoodsInScope: function(player, states) {
+        var playerScope = player.getScope();
 
 
-        var tiles = this.tileController.getTilesInScope(gamer.state.x, gamer.state.y);
+        var tiles = this.tileController.getTilesInScope(player.state.x, player.state.y);
         for (var j = 0; j < tiles.length; j++) {
             var entities = tiles[j].getFoodController().getEntities();
             for (var i = entities.length; i--;) {
                 var checkFood = entities[i];
 
-                var idx = gamer.fInScope.indexOf(checkFood);
+                var idx = player.fInScope.indexOf(checkFood);
                 if (idx >= 0) {
-                    if (!lot.inRect(checkFood.state.x, checkFood.state.y, gamer.state.x, gamer.state.y, playerScope.maxScopeWInit, playerScope.maxScopeHInit)) {
-                        gamer.removeFoodInScope(idx);
+                    if (!lot.inRect(checkFood.state.x, checkFood.state.y, player.state.x, player.state.y, playerScope.maxScopeWInit, playerScope.maxScopeHInit)) {
+                        player.removeFoodInScope(idx);
                         states.foodsScopeRemove.push(checkFood.id);
                     }
                 } else {
-                    if (lot.inRect(checkFood.state.x, checkFood.state.y, gamer.state.x, gamer.state.y, playerScope.minScopeWInit, playerScope.minScopeHInit)) {
-                        gamer.addFoodInScope(checkFood);
+                    if (lot.inRect(checkFood.state.x, checkFood.state.y, player.state.x, player.state.y, playerScope.minScopeWInit, playerScope.minScopeHInit)) {
+                        player.addFoodInScope(checkFood);
                         states.foodsScopeInit.push([checkFood.id, checkFood.state]);
                     }
                 }

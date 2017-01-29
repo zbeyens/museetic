@@ -31,6 +31,7 @@ Sender.prototype = {
 
         signForm.onsubmit = function(e) {
             e.preventDefault();
+            // this.sendMessage(new Packet.Clear());
             this.sendMessage(new Packet.Submit(signDivUsername.value));
         }.bind(this);
     },

@@ -1,6 +1,7 @@
-var GamerController = require('./gamercontroller'),
+var EntityController = require('./entitycontroller'),
     Player = require('../entities/player'),
-    lot = require('../shared/lot');
+    lot = require('../shared/lot'),
+    _ = require('underscore');
 
 /* jshint shadow:true */
 /*
@@ -10,51 +11,64 @@ Can add and remove players, and addInput to a player.
 
 exports = module.exports = PlayerController;
 
-function PlayerController(spectators, getNextId) {
-    GamerController.call(this);
+function PlayerController(getNextId) {
+    EntityController.call(this);
+    this.board = [];
+    this.bestPlayer = null;
 
-    this.spectators = spectators;
     this.getNextId = getNextId;
 }
 
-PlayerController.prototype = Object.create(GamerController.prototype);
+PlayerController.prototype = _.extend(Object.create(EntityController.prototype), {
+    addSpectator: function() {
+        var idSpec = this.getNextId(0);
+        var newPlayer = new Player(idSpec);
+        this.entities.push(newPlayer);
 
-//Add
-PlayerController.prototype.add = function(name) {
-    var id = this.getNextId(1);
+        return newPlayer;
+    },
 
-    var newPlayer = new Player(id, name);
-    this.entities.push(newPlayer);
+    addInGame: function(player, name) {
+        player.addInGame(this.getNextId(1), name);
+    },
 
-    for (var i = this.spectators.length; i--;) {
-        var spectator = this.spectators[i];
-    }
-    for (var i = this.entities.length; i--;) {
-        var player = this.entities[i];
-    }
+    /**
+     * if inGame and in scope of an other player:
+     * remove him from player.pInScope
+     * add him in player.playersToRemove
+     * remove from entities
+     * @param  {Player} entity : player to remove
+     * @return {void}
+     */
+    remove: function(entity) {
+        //check if entity connected
+        var idx = this.entities.indexOf(entity);
+        if (idx == -1) return;
 
-    return newPlayer;
-};
-
-PlayerController.prototype.remove = function(entity) {
-    var idx = this.entities.indexOf(entity);
-    if (idx >= 0) {
-
-        for (var i = this.spectators.length; i--;) {
-            var spectator = this.spectators[i];
-            var idxbis = lot.idxOf(spectator.pInScope, 'id', this.entities[idx].id);
-            if (idxbis >= 0) {
-                spectator.removePlayerInScope(idxbis);
-            }
-        }
-        for (var i = this.entities.length; i--;) {
-            var player = this.entities[i];
-            var idxbis = lot.idxOf(player.pInScope, 'id', this.entities[idx].id);
-            if (idxbis >= 0) {
-                player.removePlayerInScope(idxbis);
+        if (entity.id != -1) {
+            for (var i = this.entities.length; i--;) {
+                var player = this.entities[i];
+                var idxbis = lot.idxOf(player.pInScope, 'id', entity.id);
+                if (idxbis >= 0) {
+                    player.removePlayerInScope(idxbis);
+                }
+                player.addPlayerToRemove(entity.id);
             }
         }
 
         this.entities.splice(idx, 1);
-    }
-};
+    },
+
+    setBestPlayer: function(bestPlayer) {
+        this.bestPlayer = bestPlayer;
+    },
+
+    setBoard: function(board) {
+        this.board = board;
+    },
+
+    //Getters
+    getBoard: function() {
+        return this.board;
+    },
+});

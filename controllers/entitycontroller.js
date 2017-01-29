@@ -1,6 +1,6 @@
 var lot = require('../shared/lot');
 
-/* jshint shadow:true */
+
 /*
 Has an array of entity.
 Can add and remove entities.
@@ -10,13 +10,15 @@ exports = module.exports = EntityController;
 
 function EntityController() {
     this.entities = [];
+    this.tickPhysics = 0;
+    this.lastPhysicsTs = new Date();
 }
 
 EntityController.prototype = {
     /**
      * remove the entity from socket
      * @param  {Entity} entity
-     * @return {void}        
+     * @return {void}
      */
     remove: function(entity) {
         var idx = this.entities.indexOf(entity);
@@ -25,8 +27,17 @@ EntityController.prototype = {
         }
     },
 
+    //Setters
+    setLastPhysicsTs: function(lastPhysicsTs) {
+        this.lastPhysicsTs = lastPhysicsTs;
+    },
+
     //Getters
     getEntities: function() {
         return this.entities;
+    },
+
+    getLastPhysicsTs: function() {
+        return this.lastPhysicsTs;
     },
 };

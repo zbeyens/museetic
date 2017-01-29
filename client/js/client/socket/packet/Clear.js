@@ -1,13 +1,13 @@
-module.exports = SubmitACK;
+module.exports = Clear;
 
 
-function SubmitACK() {}
+function Clear() {}
 
 /**
- * #2
+ * #2 tell the server to stop send updates 
  * @return {Buffer}
  */
-SubmitACK.prototype.form = function() {
+Clear.prototype.form = function() {
     var buf = new ArrayBuffer(1);
     var view = new DataView(buf);
 

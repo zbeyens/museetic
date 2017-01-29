@@ -7,7 +7,7 @@ exports = module.exports = Receiver;
 function Receiver() {
     this.handler = {
         1: this.onMsgSubmit.bind(this),
-        2: this.onMsgSubmitACK.bind(this),
+        2: this.onMsgClear.bind(this),
         // 1: this.onSpectate,
         10: this.onMsgInputLeft.bind(this),
         11: this.onMsgInputRight.bind(this),
@@ -64,20 +64,32 @@ Receiver.prototype = {
     },
 
     /**
-     * if isSpectator
+     * reset the socket so we no longer send updates
+     * @param  {socket} socket
+     * @return {void}
+     */
+    onMsgClear: function(socket) {
+        // if (socket.clearedSpectator) return;
+        // socket.clearedPlayer
+        // socket.clearing = true;
+        this.sendMessage(socket, new Packet.Clear());
+    },
+
+    /**
+     * after Clearing, Submit.
+     * if spectator:
      * check username length
      * remove spectator and add player
      *
      * socket.id = player.id
      * socket.player = player
-     * socket.isSpectator = false
      * send Packet.Submit(id)
      * @param  {socket} socket
      * @param  {Buffer} msg
      * @return {void}
      */
     onMsgSubmit: function(socket, msg) {
-        if (!socket.isSpectator) return;
+        if (socket.id != -1) return;
 
         var buffer = new Uint8Array(msg).buffer;
         var buf = new BufferReader(buffer);
@@ -88,47 +100,32 @@ Receiver.prototype = {
         }
 
         var tileController = this.stateController.getTileController();
-        tileController.getSpectatorController().remove(socket.player);
-        var newPlayer = tileController.getPlayerController().add(name);
-        socket.id = newPlayer.id;
-        socket.player = newPlayer;
+        tileController.getPlayerController().addInGame(socket.player, name);
+        socket.clearing = false;
+        socket.id = socket.player.id;
         console.log('Player ' + socket.id + ' connected');
-        socket.isSpectator = false;
+        this.sendMessage(socket, new Packet.Clear());
         this.sendMessage(socket, new Packet.Submit(socket.id));
     },
 
-    /**
-     * socket.submitACK when client ready to receive updates
-     * @param  {socket} socket
-     * @return {void}
-     */
-    onMsgSubmitACK: function(socket) {
-        var tileController = this.stateController.getTileController();
-        // var newPlayer = tileController.getPlayerController().add(socket.name);
-        // socket.id = newPlayer.id;
-        // socket.player = newPlayer;
-        // socket.name = "";
-        // console.log('Player ' + socket.id + ' connected');
-    },
-
     onMsgInputLeft: function(socket, msg) {
-        if (msg.length !== 1 || socket.isSpectator) return;
+        if (msg.length !== 1 || socket.id == -1) return;
         socket.player.setPressLeft(true);
         // setTimeout(function() {
         // }, this.lagCompensation);
     },
 
     onMsgInputRight: function(socket, msg) {
-        if (msg.length !== 1 || socket.isSpectator) return;
+        if (msg.length !== 1 || socket.id == -1) return;
         socket.player.setPressRight(true);
     },
 
     onMsgInputDash: function(socket, msg) {
-        if (msg.length !== 1 || socket.isSpectator) return;
+        if (msg.length !== 1 || socket.id == -1) return;
         socket.player.setPressDash(true);
     },
     onMsgInputClick: function(socket, msg) {
-        if (msg.length !== 1 || socket.isSpectator) return;
+        if (msg.length !== 1 || socket.id == -1) return;
         socket.player.setPressClick(true);
     },
 };

@@ -4,7 +4,7 @@ var express = require('express'),
     WebSocketServer = require('ws').Server,
     wss = new WebSocketServer({
         server: server,
-        // perMessageDeflate: false,
+        perMessageDeflate: false, //big headers to compress. Don't need
         // maxPayload: 4096
     }),
     path = require('path'),
@@ -17,7 +17,7 @@ var express = require('express'),
 
 app.use(helmet());
 app.use(logger('dev'));
-app.use(favicon(__dirname + '/client/img/flappyR0.png'));
+app.use(favicon(__dirname + '/client/img/flappy0.png'));
 app.use('/client', express.static(path.join(__dirname, '/client')));
 app.use('/shared', express.static(path.join(__dirname, '/shared')));
 

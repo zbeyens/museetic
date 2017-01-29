@@ -68,11 +68,11 @@ Game.prototype = {
         var deltaTime = (nowTs - this.lastMainTs);
         this.tickMain += deltaTime;
         this.lastMainTs = nowTs;
-        if (this.tickMain < 50) return;
+        if (this.tickMain < cfg.tickMain) return;
         this.tickMain = 0;
 
         this.tickBoard++;
-        if (this.tickBoard < 10) return;
+        if (this.tickBoard < cfg.tickBoard) return;
         this.tickBoard = 0;
 
         setTimeout(function() {

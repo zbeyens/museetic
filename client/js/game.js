@@ -21,10 +21,9 @@ function Game() {
     var ws = new WebSocket(HOST);
     ws.binaryType = 'arraybuffer';
     ws.onopen = function(event) {
-        setTimeout(function() {
-            this.client = new Client(ws);
-            this.startGame();
-        }.bind(this), 0);
+        //NOTE: lost one day because of setTimeout(0): first msg not received
+        this.client = new Client(ws);
+        this.startGame();
     }.bind(this);
 }
 
@@ -39,14 +38,13 @@ Game.prototype = {
             function() {
                 var stateController = this.client.getStateController();
 
-                stateController.updatePlayerStates();
 
                 var nowTs = new Date();
                 lastTs = lastTs || nowTs;
                 var deltaTime = (nowTs - lastTs);
                 lastTs = nowTs;
-                stateController.elapsedLastUpdate = nowTs - stateController.lastUpdateTime;
-                // stateController.elapsedLastUpdate += deltaTime;
+                stateController.setElapsedLastUpdate(nowTs);
+                stateController.updatePlayerStates();
 
                 stateController.predictShootStates(deltaTime);
                 stateController.predictFoodStates(deltaTime);
@@ -73,10 +71,8 @@ Game.prototype = {
                     selfId = this.client.getSelfId();
                     this.client.setLeftSpectator(false);
                 }
-                // console.log(foodController.entities);
-                // console.log(foodController.removedEntities);
+
                 var selfState = playerController.getEntityState(selfId);
-                // console.log(selfState);
                 if (selfState.mass !== undefined) {
                     //if mass changes, resize
                     if (selfState.mass !== selfMass) {
@@ -87,16 +83,19 @@ Game.prototype = {
                     this.canvas.drawMap(selfState);
 
                     for (var i = foods.length; i--;) {
-                        this.canvas.drawFood(foods[i], selfState);
+                        var food = foods[i];
+                        if (!food.isVisible()) continue;
+                        this.canvas.drawFood(food, selfState);
                     }
                     for (var i = shoots.length; i--;) {
-                        this.canvas.drawShoot(shoots[i], selfState);
+                        var shoot = shoots[i];
+                        if (!shoot.isVisible()) continue;
+                        this.canvas.drawShoot(shoot, selfState);
                     }
                     for (var i = players.length; i--;) {
-                        console.log("hehe");
-                        if (players[i].isVisible()) {
-                            this.canvas.drawPlayer(players[i], selfState);
-                        }
+                        var player = players[i];
+                        if (!player.isVisible()) continue;
+                        this.canvas.drawPlayer(player, selfState);
                     }
 
                     this.canvas.drawHud(selfState);

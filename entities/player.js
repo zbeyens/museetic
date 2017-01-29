@@ -1,96 +1,276 @@
-var gamer = require('./gamer'),
-    cfg = require('../shared/config');
+var Entity = require('../entities/entity'),
+    cfg = require('../shared/config'),
+    lot = require('../shared/lot'),
+    _ = require('underscore');
 
 exports = module.exports = Player;
 
-function Player(id, name) {
-    gamer.call(this, id);
+function Player(idSpec) {
+    Entity.call(this, -1);
+    this.idSpec = idSpec;
+    this.tickState = 0;
+    this.tickScope = 0;
+
+    this.clear();
+
+    this.scope = {};
+
+    // this.inGame = false;
     this.state = {
         x: 0,
         y: 0,
-        vx: 0,
-        vy: 0,
-        ring: false,
-        mass: cfg.playerInitMass,
-        dashing: false,
-
-        startTime: new Date(),
-        lastRing: new Date(),
-        lastDash: new Date(),
-        canDash: false,
-        immunity: true,
+        mass: 0,
     };
+    //scope function of mass
     this.setScope();
 
-    this.name = name;
+    //this.name
     this.pressLeft = false;
     this.pressRight = false;
     this.pressDash = false;
     this.pressClick = false;
 }
 
-Player.prototype = Object.create(gamer.prototype);
+Player.prototype = _.extend(Object.create(Entity.prototype), {
 
-//Setters
-Player.prototype.setPressLeft = function(isPress) {
-    this.pressLeft = isPress;
-};
-Player.prototype.setPressRight = function(isPress) {
-    this.pressRight = isPress;
-};
-Player.prototype.setPressDash = function(isPress) {
-    this.pressDash = isPress;
-};
-Player.prototype.setPressClick = function(isPress) {
-    this.pressClick = isPress;
-};
+    /**
+     * when Player submit, add him in game
+     * @param {int} id
+     * @param {string} name
+     */
+    addInGame: function(id, name) {
+        this.state = {
+            x: 0,
+            y: 0,
+            vx: 0,
+            vy: 0,
+            ring: false,
+            mass: cfg.playerInitMass,
+            dashing: false,
 
-Player.prototype.setState = function(state) {
-    this.state = state;
-    this.pressLeft = false;
-    this.pressRight = false;
-    this.pressDash = false;
-    this.pressClick = false;
-};
+            startTime: new Date(),
+            lastRing: new Date(),
+            lastDash: new Date(),
+            canDash: false,
+            immunity: true,
+        };
+        this.setScope();
+        this.id = id;
+        this.name = name;
+        this.clear();
+    },
 
-//Getters
-Player.prototype.getFirstPlayerState = function() {
-    var updatedState = {};
+    /**
+     * variable to reset when new game
+     * @return {void}
+     */
+    clear: function() {
+        this.firstState = true;
+        this.updatedBoard = true;
+        this.pInScope = [];
+        this.sInScope = [];
+        this.fInScope = [];
 
-    updatedState.x = this.state.x;
-    updatedState.y = this.state.y;
-    if (this.state.vx < 0) {
-        updatedState.angle = Math.round((Math.PI + Math.atan2(this.state.vy, this.state.vx) - 8) * 1000);
-    } else {
-        updatedState.angle = Math.round((Math.atan2(this.state.vy, this.state.vx) + 8) * 1000);
-    }
-    updatedState.ring = this.state.ring;
-    updatedState.dashing = this.state.dashing;
-    updatedState.mass = this.state.mass;
-    return updatedState;
-};
+        this.playersToRemove = []; //id
+        this.foodsToAdd = []; //Food
+        this.foodsToRemove = []; //id, referrerId
+    },
 
-Player.prototype.getPlayerState = function(idx, gamer) {
-    var updatedState = {};
+    //Add
+    addPlayerInScope: function(entity) {
+        this.pInScope.push(entity);
+    },
 
-    if (this.state.x != gamer.pInScope[idx].state.x) {
+    addShootInScope: function(entity) {
+        this.sInScope.push(entity);
+    },
+
+    addFoodInScope: function(entity) {
+        this.fInScope.push(entity);
+    },
+
+    /**
+     * players disconnected + no longer in scope
+     * OPTI: object better than array ?
+     * @param {int} toRemove : id player to remove
+     */
+    addPlayerToRemove: function(toRemove) {
+        this.playersToRemove.push(toRemove);
+    },
+
+    addFoodToAdd: function(toAdd) {
+        this.foodsToAdd.push(toAdd);
+    },
+
+    addFoodToRemove: function(toRemove, referrerId) {
+        this.foodsToRemove.push([toRemove, referrerId]);
+    },
+
+    //Remove
+    removePlayerInScope: function(idx) {
+        this.pInScope.splice(idx, 1);
+    },
+
+    removeShootInScope: function(idx) {
+        this.sInScope.splice(idx, 1);
+    },
+
+    removeFoodInScope: function(idx) {
+        this.fInScope.splice(idx, 1);
+    },
+
+    //Setters
+    setPressLeft: function(isPress) {
+        this.pressLeft = isPress;
+    },
+    setPressRight: function(isPress) {
+        this.pressRight = isPress;
+    },
+    setPressDash: function(isPress) {
+        this.pressDash = isPress;
+    },
+    setPressClick: function(isPress) {
+        this.pressClick = isPress;
+    },
+
+    setState: function(state) {
+        this.state = state;
+        this.pressLeft = false;
+        this.pressRight = false;
+        this.pressDash = false;
+        this.pressClick = false;
+    },
+
+    /**
+     * update the scope when the mass changes
+     */
+    setScope: function() {
+        this.scope = {
+            maxScopeWInit: (cfg.scopeInitX / 2) / lot.getScaleMass(this.state.mass) + 600,
+            maxScopeHInit: (cfg.scopeInitY / 2) / lot.getScaleMass(this.state.mass) + 600,
+            minScopeWInit: (cfg.scopeInitX / 2) / lot.getScaleMass(this.state.mass) + 400,
+            minScopeHInit: (cfg.scopeInitY / 2) / lot.getScaleMass(this.state.mass) + 400,
+        };
+    },
+
+    setFirstState: function(firstState) {
+        this.firstState = firstState;
+    },
+
+    setUpdatedBoard: function(updatedBoard) {
+        this.updatedBoard = updatedBoard;
+    },
+
+    //Getters
+    getScope: function() {
+        return this.scope;
+    },
+
+    /**
+     * if new in scope, send all the state.
+     * @return {object} updatedState
+     */
+    getFirstPlayerState: function() {
+        var updatedState = {};
+
         updatedState.x = this.state.x;
-    }
-    if (this.state.y != gamer.pInScope[idx].state.y) {
         updatedState.y = this.state.y;
-    }
-    if (this.state.vx != gamer.pInScope[idx].state.vx ||
-        this.state.vy != gamer.pInScope[idx].state.vy) {
-        if (this.state.vx < 0) {
-            updatedState.angle = Math.round((Math.PI + Math.atan2(this.state.vy, this.state.vx) - 8) * 1000);
-        } else {
-            updatedState.angle = Math.round((Math.atan2(this.state.vy, this.state.vx) + 8) * 1000);
-        }
-    }
-    if (this.state.mass != gamer.pInScope[idx].state.mass) {
+        updatedState.vx = this.state.vx;
+        updatedState.vy = this.state.vy;
+        // if (this.state.vx < 0) {
+        //     updatedState.angle = Math.round((Math.PI + Math.atan2(this.state.vy, this.state.vx) - 8) * 1000);
+        // } else {
+        //     updatedState.angle = Math.round((Math.atan2(this.state.vy, this.state.vx) + 8) * 1000);
+        // }
+        updatedState.ring = this.state.ring;
+        updatedState.dashing = this.state.dashing;
         updatedState.mass = this.state.mass;
-    }
-    updatedState.ring = this.state.ring;
-    updatedState.dashing = this.state.dashing;
-    return updatedState;
-};
+        return updatedState;
+    },
+
+    /**
+     * if already in scope, update pInScope.
+     * only send what have changed.
+     * @param  {int} idx    : index in pInScope
+     * @param  {player} player : we send to this player
+     * @return {object}        updatedState
+     */
+    getPlayerState: function(idx, player) {
+        var updatedState = {};
+
+        if (this.state.x != player.pInScope[idx].state.x) {
+            updatedState.x = this.state.x;
+        }
+        if (this.state.y != player.pInScope[idx].state.y) {
+            updatedState.y = this.state.y;
+        }
+        // if (this.state.vx != player.pInScope[idx].state.vx ||
+        //     this.state.vy != player.pInScope[idx].state.vy) {
+        //     if (this.state.vx < 0) {
+        //         updatedState.angle = Math.round((Math.PI + Math.atan2(this.state.vy, this.state.vx) - 8) * 1000);
+        //     } else {
+        //         updatedState.angle = Math.round((Math.atan2(this.state.vy, this.state.vx) + 8) * 1000);
+        //     }
+        //     console.log(updatedState.angle);
+        // }
+        if (this.state.vx != player.pInScope[idx].state.vx) {
+            updatedState.vx = this.state.vx;
+        }
+
+        if (this.state.vy != player.pInScope[idx].state.vy) {
+            updatedState.vy = this.state.vy;
+        }
+
+        if (this.state.mass != player.pInScope[idx].state.mass) {
+            updatedState.mass = this.state.mass;
+        }
+        updatedState.ring = this.state.ring;
+        updatedState.dashing = this.state.dashing;
+        return updatedState;
+    },
+
+    /**
+     * every tickState, get players to remove
+     * @param  {object} states to broadcast
+     * @return {void}
+     */
+    getPlayersToRemove: function(states) {
+        states.playersScopeRemove = states.playersScopeRemove.concat(this.playersToRemove);
+        this.playersToRemove = [];
+    },
+
+    getFoodsToSpawn: function(states) {
+        var playerScope = this.scope;
+
+        for (var i = this.foodsToAdd.length; i--;) {
+            var checkFood = this.foodsToAdd[i];
+
+            if (lot.inRect(checkFood.state.x, checkFood.state.y, this.state.x, this.state.y, playerScope.minScopeWInit, playerScope.minScopeHInit)) {
+                this.addFoodInScope(checkFood);
+                states.foodsScopeInit.push([checkFood.id, checkFood.state]);
+            }
+        }
+        this.foodsToAdd = [];
+    },
+
+    getFoodsToEat: function(states) {
+        for (var i = this.foodsToRemove.length; i--;) {
+            var checkFood = this.foodsToRemove[i];
+
+            var idx = lot.idxOf(this.fInScope, 'id', checkFood[0].id);
+            if (idx >= 0) {
+                this.removeFoodInScope(idx);
+                states.foodsScopeEat.push([checkFood[0].id, checkFood[1]]);
+            }
+        }
+        this.foodsToRemove = [];
+    },
+
+    isFirstState: function() {
+        return this.firstState;
+    },
+
+    isUpdatedBoard: function() {
+        return this.updatedBoard;
+    },
+});

@@ -17,13 +17,9 @@ Textures.prototype = {
         this.mapTxt = new PIXI.Texture.fromImage(cfg.mapImage);
         // this.bgTextureTxt = new PIXI.Texture.fromImage(cfg.bgImage);
 
-        this.playerLTxtList = [];
+        this.playerTxtList = [];
         for (var i = 0; i < 3; i++) {
-            this.playerLTxtList.push(new PIXI.Texture.fromImage('/client/img/flappyL' + i + '.png'));
-        }
-        this.playerRTxtList = [];
-        for (var i = 0; i < 3; i++) {
-            this.playerRTxtList.push(new PIXI.Texture.fromImage('/client/img/flappyR' + i + '.png'));
+            this.playerTxtList.push(new PIXI.Texture.fromImage('/client/img/flappy' + i + '.png'));
         }
     },
 
@@ -79,7 +75,7 @@ Textures.prototype = {
         this.foodTxtList = [];
         for (var i = 0; i < cfg.foodPaletteSize; i++) {
             //TODO: should generate all possible size of foods (1-2-...)
-            var canFood = this.createFoodTexture(i, Math.random() * 15);
+            var canFood = this.createFoodTexture(i, 10);
             this.foodTxtList.push(new PIXI.Texture.fromCanvas(canFood));
         }
 

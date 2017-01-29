@@ -1,5 +1,5 @@
 module.exports = {
     Submit: require('./Submit'),
-    SubmitACK: require('./SubmitACK'),
+    Clear: require('./Clear'),
     Input: require('./Input'),
 };

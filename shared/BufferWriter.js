@@ -73,11 +73,20 @@ BufferWriter.prototype = {
         }
     },
 
+    /**
+     * set 8 flags in one byte
+     * @param {list} flags 0-1
+     */
     setFlags: function(flags) {
         var data = this.toByte(flags);
         this.setUint8(data);
     },
 
+    /**
+     * convert 8 binary to 1 byte
+     * @param  {list} arr of binary
+     * @return {int}     byte
+     */
     toByte: function(arr) {
         var byte = 0;
         for (var i = 0; i < arr.length; i++) {
