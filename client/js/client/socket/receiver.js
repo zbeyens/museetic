@@ -74,6 +74,7 @@ Receiver.prototype = {
         var buf = new BufferReader(msg);
         buf.addOffset(1);
         var t = buf.getUint32();
+        console.log(new Date() - this.stateController.lastUpdateTime);
         this.stateController.lastUpdateTime = new Date();
         this.stateController.setServerTime(t);
 
