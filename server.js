@@ -15,9 +15,12 @@ exports = module.exports = Server;
  */
 function Server(wss) {
     this.wss = wss;
-
+    this.lastBroadcast = 0;
     this.stateController = new StateController(function(socket, states) {
         this.sendMessage(socket, new Packet.Update(states));
+        var now = new Date();
+        console.log(now - this.lastBroadcast);
+        this.lastBroadcast = now;
     }.bind(this));
 
     Receiver.call(this);
