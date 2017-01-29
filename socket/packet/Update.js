@@ -94,7 +94,6 @@ Update.prototype.form = function() {
             if (vyFlag) {
                 var vyModif = Math.round(vy * 100);
                 buf.setInt16(vyModif);
-                console.log(vyModif);
             }
             if (massFlag) {
                 buf.setUint32(mass);

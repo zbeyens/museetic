@@ -32,9 +32,11 @@ exports = module.exports = Game;
 function Game(wss) {
     this.startTime = 0;
 
-    this.lastMainTs = new Date();
+    this.tickPhysics = 0;
+    this.lastPhysicsTs = 0;
 
     this.tickMain = 0;
+    this.lastMainTs = 0;
     this.tickBoard = 0;
 
     this.server = new Server(wss);
@@ -46,6 +48,9 @@ function Game(wss) {
 Game.prototype = {
     start: function() {
         this.startTime = new Date();
+        this.lastPhysicsTs = new Date();
+        this.lastMainTs = new Date();
+
         setInterval(function() {
             this.mainLoop();
         }.bind(this), 1);
@@ -61,7 +66,8 @@ Game.prototype = {
         }.bind(this), 0);
 
         setTimeout(function() {
-            this.server.getStateController().broadcastState(this.startTime);
+            var localTime = this.lastPhysicsTs - this.startTime;
+            this.server.getStateController().broadcastState(localTime);
         }.bind(this), 0);
 
         var nowTs = new Date();
@@ -82,8 +88,18 @@ Game.prototype = {
 
     //Updates
     updateEntities: function() {
+        this.tickPhysics++;
+        if (this.tickPhysics < cfg.tickPhysics) return;
+        this.tickPhysics = 0;
+
+        var now = new Date();
+        var physicsDelta = (now - this.lastPhysicsTs);
+
         var stateController = this.server.getStateController();
-        stateController.updatePlayerStates();
-        stateController.updateShootStates();
+        stateController.updatePlayerStates(physicsDelta / 1000.0);
+        this.lastPhysicsTs = now;
+        var localTime = this.lastPhysicsTs - this.startTime;
+        console.log("updat " + localTime);
+        stateController.updateShootStates(physicsDelta);
     },
 };

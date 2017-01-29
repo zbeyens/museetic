@@ -67,7 +67,7 @@ StateController.prototype = {
 
             // var lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time);
             var lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 3].time);
-            var renderTime = this.getRenderTime(lastDeltaTime);
+            var renderTime = this.getRenderTime(100);
             // console.log(renderTime);
             if (renderTime > entity.updates[entity.updates.length - 2].time) {
                 // lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time);

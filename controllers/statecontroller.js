@@ -12,7 +12,7 @@ Instanciate a playercontroller and entitycontroller.
 exports = module.exports = StateController;
 
 function StateController(broadcastCallback) {
-    this.startTime = 0;
+    this.lastUpdate = 0;
     this.sockets = [];
     this.broadcastCallback = broadcastCallback;
 
@@ -29,17 +29,10 @@ StateController.prototype = {
      * remove player if dead
      * @return {void}
      */
-    updatePlayerStates: function() {
+    updatePlayerStates: function(physicsDelta) {
+        var now = new Date();
         var playerController = this.tileController.getPlayerController();
         var players = playerController.getEntities();
-
-        playerController.tickPhysics++;
-        if (playerController.tickPhysics < cfg.tickPhysics) return;
-        playerController.tickPhysics = 0;
-
-        var now = new Date();
-        var physicsDelta = (now - playerController.getLastPhysicsTs()) / 1000.0;
-        playerController.setLastPhysicsTs(now);
 
         for (var i = players.length; i--;) {
             var player = players[i];
@@ -51,26 +44,22 @@ StateController.prototype = {
             } else {
                 playerController.remove(player);
             }
+
+            var test = new Date() - now;
+            if (test > 0) {
+                console.log("Ouch " + test);
+            }
         }
     },
 
     //Not sure if we should update ALL entities together.
-    updateShootStates: function() {
+    updateShootStates: function(physicsDelta) {
         var shootController = this.tileController.getShootController();
         var shoots = shootController.getEntities();
 
-        shootController.tickPhysics++;
-        if (shootController.tickPhysics < cfg.tickPhysics) return;
-        shootController.tickPhysics = 0;
-
-        var now = new Date();
-        // / 1000.0 ?
-        var physicsDelta = now - shootController.getLastPhysicsTs();
-        shootController.setLastPhysicsTs(now);
-
         for (var i = shoots.length; i--;) {
             var shoot = shoots[i];
-
+            //should we compute physicsDelta here ?
             var newState = GamePhysics.getNewShootState(shoot, physicsDelta);
 
             if (newState) {
@@ -133,7 +122,7 @@ StateController.prototype = {
     },
 
     //Broadcast to players not clearing
-    broadcastState: function(startTime) {
+    broadcastState: function(localTime) {
         for (var i = this.sockets.length; i--;) {
             var socket = this.sockets[i];
             if (socket.clearing) return;
@@ -144,18 +133,17 @@ StateController.prototype = {
             player.tickState = 0;
             player.tickScope++;
 
-            var localTime = new Date() - startTime,
-                states = {
-                    packet: 'update',
-                    t: localTime,
-                    updatePs: [],
-                    playersScopeRemove: [],
-                    shootsScopeInit: [],
-                    foodsScopeInit: [],
-                    foodsScopeRemove: [],
-                    foodsScopeEat: [],
-                    updateBoard: []
-                };
+            var states = {
+                packet: 'update',
+                t: localTime,
+                updatePs: [],
+                playersScopeRemove: [],
+                shootsScopeInit: [],
+                foodsScopeInit: [],
+                foodsScopeRemove: [],
+                foodsScopeEat: [],
+                updateBoard: []
+            };
 
             this.getPlayersInScope(player, states);
             this.getShootsInScope(player, states);
@@ -177,6 +165,7 @@ StateController.prototype = {
             }
 
             this.broadcastCallback(socket, states);
+            console.log("broad " + localTime);
 
             if (this.sizeObject !== lot.sizeObject(states)) {
                 // console.log('Size : ' + lot.sizeObject(states));

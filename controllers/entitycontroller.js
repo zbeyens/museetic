@@ -10,8 +10,6 @@ exports = module.exports = EntityController;
 
 function EntityController() {
     this.entities = [];
-    this.tickPhysics = 0;
-    this.lastPhysicsTs = new Date();
 }
 
 EntityController.prototype = {
@@ -27,17 +25,10 @@ EntityController.prototype = {
         }
     },
 
-    //Setters
-    setLastPhysicsTs: function(lastPhysicsTs) {
-        this.lastPhysicsTs = lastPhysicsTs;
-    },
 
     //Getters
     getEntities: function() {
         return this.entities;
     },
 
-    getLastPhysicsTs: function() {
-        return this.lastPhysicsTs;
-    },
 };
