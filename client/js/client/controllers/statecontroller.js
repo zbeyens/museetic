@@ -92,6 +92,10 @@ StateController.prototype = {
                 //
                 // var renderTime = this.getRenderTime(lastDeltaTime);
                 // pos = entity.getInterpolatedUpdates(renderTime);
+                console.log("lupdate : " + entity.updates[entity.updates.length - 1].time);
+                console.log("pupdate : " + entity.updates[entity.updates.length - 2].time);
+                console.log("renderT : " + renderTime);
+                console.log("bupdate : " + entity.updates[entity.updates.length - 3].time);
                 if (!pos.previous && entity.isVisible()) {
                     console.log("waiting");
                 }
