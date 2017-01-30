@@ -43,7 +43,7 @@ Game.prototype = {
                 lastTs = lastTs || nowTs;
                 var deltaTime = (nowTs - lastTs);
                 lastTs = nowTs;
-                stateController.setElapsedLastUpdate(nowTs);
+                // stateController.setElapsedLastUpdate(deltaTime);
                 stateController.updatePlayerStates();
 
                 stateController.predictShootStates(deltaTime);

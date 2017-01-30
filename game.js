@@ -98,8 +98,8 @@ Game.prototype = {
         var stateController = this.server.getStateController();
         stateController.updatePlayerStates(physicsDelta / 1000.0);
         this.lastPhysicsTs = now;
-        var localTime = this.lastPhysicsTs - this.startTime;
-        console.log("updat " + localTime);
+        // var localTime = this.lastPhysicsTs - this.startTime;
+        // console.log("updat " + localTime);
         stateController.updateShootStates(physicsDelta);
     },
 };

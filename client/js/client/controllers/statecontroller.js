@@ -11,7 +11,10 @@ exports = module.exports = StateController;
 function StateController() {
     this.serverTime = 0;
     this.interpolationTime = cfg.clientInterpolationTime;
-    this.elapsedLastUpdate = 0;
+    this.rendered = 0;
+    this.lastRenderTime = 0;
+    this.rendering = false;
+
     this.smoothingFactor = cfg.clientSmoothingFactor;
 
     this.playerController = new PlayerController();
@@ -66,53 +69,50 @@ StateController.prototype = {
             this.wait = 0;
 
             // var lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time);
-            var lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 3].time);
-            var renderTime = this.getRenderTime(100);
+            // var lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 3].time);
+            // var renderTime = this.renderTimethis.serverTime - 100;
+            // if (!this.firstInterpolation) {
+            //     renderTime = this.serverTime - 100 + deltaTime;
+            //     this.firstInterpolation = true;
+            // } else {
+            //     renderTime = this.serverTime - 100;
+            // }
             // console.log(renderTime);
-            if (renderTime > entity.updates[entity.updates.length - 2].time) {
-                // lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time);
-
-                // console.log("lupdate : " + entity.updates[entity.updates.length - 1].time);
-                // console.log("pupdate : " + entity.updates[entity.updates.length - 2].time);
-                // console.log("renderT : " + renderTime);
-                // console.log("bupdate : " + entity.updates[entity.updates.length - 3].time);
-                // console.log("whut");
+            var now = new Date();
+            var rendered = 0;
+            if (this.rendering) {
+                rendered = this.rendered + (now - this.lastRenderTime);
             }
-            // var renderTime = this.getRenderTime(100);
-            // var renderTime = this.getRenderTime(100);
-            // console.log(entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time);
+            this.lastRenderTime = now;
+            console.log(rendered);
+            var renderTime = this.getRenderTime(rendered);
+
             var pos, interpolationFactor, newState,
                 pos = entity.getInterpolatedUpdates(renderTime);
 
             // OPTI: jittering solution?
             if (!pos.previous && entity.isVisible()) {
                 console.log("Jittering");
-                // var lastDeltaTime = entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time;
-                // console.log(lastDeltaTime);
-                //
-                // var renderTime = this.getRenderTime(lastDeltaTime);
-                // pos = entity.getInterpolatedUpdates(renderTime);
-                console.log("lupdate : " + entity.updates[entity.updates.length - 1].time);
-                console.log("pupdate : " + entity.updates[entity.updates.length - 2].time);
-                console.log("renderT : " + renderTime);
-                console.log("bupdate : " + entity.updates[entity.updates.length - 3].time);
-                if (!pos.previous && entity.isVisible()) {
-                    console.log("waiting");
-                }
+                // if (!pos.previous && entity.isVisible()) {
+                //     // console.log("waiting");
+                // }
             }
             if (pos.previous && pos.target) {
-                if (renderTime > entity.updates[entity.updates.length - 1].time) {
-                    console.log("elapsed  : " + this.lastElapsedTime);
-                    console.log("target   : " + pos.target.time);
-                    console.log("renderT  : " + renderTime);
-                    console.log("previous : " + pos.previous.time);
-                }
                 interpolationFactor = this.getInterpolatedValue(pos.previous.time, pos.target.time, renderTime);
 
                 newState = GamePhysics.getInterpolatedEntityState(pos.previous.state, pos.target.state, interpolationFactor);
                 // newState = GamePhysics.getInterpolatedEntityState(entity.state, newState, this.smoothingFactor);
                 entity.setState(newState);
 
+                if (!this.rendering) {
+                    this.rendering = true;
+                }
+                //only if interpolated
+                this.rendered = rendered;
+                // this.lastRenderTime = now;
+
+                // this.rendered += now - this.lastRenderTime;
+                // this.lastRenderTime = now;
                 //entities can be drawed after the first state interpolation
                 // if (!entity.isVisible()) {
                 //     entity.setVisible(true);
@@ -126,10 +126,6 @@ StateController.prototype = {
         }
     },
 
-    getRenderTime: function(interpolationTime) {
-        return this.serverTime - interpolationTime + this.elapsedLastUpdate;
-    },
-
     getInterpolatedValue: function(previousTime, targetTime, renderTime) {
         var range = targetTime - previousTime,
             difference = renderTime - previousTime;
@@ -140,6 +136,32 @@ StateController.prototype = {
         var value = parseFloat(ratio.toFixed(3));
         // console.log((difference / range));
         return value;
+    },
+
+    getRenderTime: function(rendered) {
+        // var renderTime = this.serverTime - interpolationTime + this.elapsedLastUpdate;
+        // console.log(-interpolationTime + this.elapsedLastUpdate);
+        var renderTime = this.serverTime - this.interpolationTime + rendered;
+        // console.log(this.rendered);
+        return renderTime;
+    },
+
+    /**
+     * client render in the past to have at least 2 known position during the interpolationTime
+     * @param {time} serverTime
+     */
+    setServerTime: function(serverTime) {
+        this.serverTime = serverTime;
+    },
+
+    //only for client rendering
+    setElapsedLastUpdate: function(deltaTime) {
+        // console.log(now - this.lastUpdateTime);
+        if (!this.serverTime) return;
+        this.elapsedLastUpdate += deltaTime;
+        // console.log(this.elapsedLastUpdate);
+        // this.lastUpdateTime = now;
+        // console.log(this.elapsedLastUpdate);
     },
 
     predictShootStates: function(deltaTime) {
@@ -308,18 +330,7 @@ StateController.prototype = {
 
     //Remove
 
-    /**
-     * client render in the past to have at least 2 known position during the interpolationTime
-     * @param {time} serverTime
-     */
-    setServerTime: function(serverTime) {
-        this.serverTime = serverTime;
-    },
 
-    setElapsedLastUpdate: function(now) {
-        this.elapsedLastUpdate = now - this.lastUpdateTime;
-        // console.log(this.elapsedLastUpdate);
-    },
 
     //Getters
     getPlayerController: function() {

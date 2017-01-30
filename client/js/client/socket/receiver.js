@@ -4,6 +4,7 @@ var BufferReader = require('../../../../shared/BufferReader'),
 exports = module.exports = Receiver;
 
 function Receiver() {
+    this.seqUpdates = 0;
     this.handler = {
         1: this.onMsgSubmit.bind(this),
         2: this.onMsgClear.bind(this),
@@ -71,11 +72,16 @@ Receiver.prototype = {
      * only if not clearing
      */
     onMsgUpdate: function(msg) {
+        // cl
         var buf = new BufferReader(msg);
         buf.addOffset(1);
         var t = buf.getUint32();
-        console.log(new Date() - this.stateController.lastUpdateTime);
-        this.stateController.lastUpdateTime = new Date();
+        // console.log(t - this.stateController.serverTime);
+        if (this.stateController.rendering) {
+            this.stateController.rendered -= (t - this.stateController.serverTime);
+            // console.log("whut " + (t - this.stateController.serverTime));
+        }
+        // console.log((t - this.stateController.serverTime));
         this.stateController.setServerTime(t);
 
         var flagsMain = buf.getFlags(),

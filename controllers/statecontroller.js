@@ -165,7 +165,7 @@ StateController.prototype = {
             }
 
             this.broadcastCallback(socket, states);
-            console.log("broad " + localTime);
+            // console.log("broad " + localTime);
 
             if (this.sizeObject !== lot.sizeObject(states)) {
                 // console.log('Size : ' + lot.sizeObject(states));

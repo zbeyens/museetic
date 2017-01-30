@@ -11,7 +11,7 @@ module.exports = {
 
     tickMain: 50, //main loop - times in ms
     tickBoard: 10, //update board - this * tickMain
-    tickPhysics: 25, //update physics
+    tickPhysics: 17, //update physics
 
     tickState: 50, //send state, each player
     tickScope: 8, //scope = this * tickState

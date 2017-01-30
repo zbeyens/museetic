@@ -366,10 +366,11 @@ exports.getInterpolatedEntityState = function(previousState, targetState, interp
     interpolatedState.y = previousState.y + interpolationFactor * (targetState.y - previousState.y);
     interpolatedState.vx = targetState.vx;
     // if (targetState.vy - previousState.vy < 0) {
-    //     interpolatedState.vy = targetState.vy;
-    // } else {
-    // }
-    interpolatedState.vy = previousState.vy + interpolationFactor * (targetState.vy - previousState.vy);
+    if ((targetState.vx / previousState.vx) < 0) {
+        interpolatedState.vy = targetState.vy;
+    } else {
+        interpolatedState.vy = previousState.vy + interpolationFactor * (targetState.vy - previousState.vy);
+    }
     interpolatedState.mass = Math.round(previousState.mass + interpolationFactor * (targetState.mass - previousState.mass));
     interpolatedState.ring = targetState.ring;
     interpolatedState.dashing = targetState.dashing;
