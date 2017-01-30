@@ -83,8 +83,9 @@ StateController.prototype = {
             if (this.rendering) {
                 rendered = this.rendered + (now - this.lastRenderTime);
             }
+            // console.log(rendered);
+            this.rendered = rendered;
             this.lastRenderTime = now;
-            console.log(rendered);
             var renderTime = this.getRenderTime(rendered);
 
             var pos, interpolationFactor, newState,
@@ -93,9 +94,10 @@ StateController.prototype = {
             // OPTI: jittering solution?
             if (!pos.previous && entity.isVisible()) {
                 console.log("Jittering");
-                // if (!pos.previous && entity.isVisible()) {
-                //     // console.log("waiting");
-                // }
+                // this.rendered = -this.interpolationTime;
+                // this.rendering = false;
+                // newState = GamePhysics.getExtrapolatedPlayerState(entity.updates[entity.updates.length - 1], renderTime - entity.updates[entity.updates.length - 1].time);
+                // entity.setState(newState);
             }
             if (pos.previous && pos.target) {
                 interpolationFactor = this.getInterpolatedValue(pos.previous.time, pos.target.time, renderTime);
@@ -104,15 +106,10 @@ StateController.prototype = {
                 // newState = GamePhysics.getInterpolatedEntityState(entity.state, newState, this.smoothingFactor);
                 entity.setState(newState);
 
-                if (!this.rendering) {
-                    this.rendering = true;
-                }
                 //only if interpolated
-                this.rendered = rendered;
-                // this.lastRenderTime = now;
+                this.rendering = true;
+                // this.rendered = rendered;
 
-                // this.rendered += now - this.lastRenderTime;
-                // this.lastRenderTime = now;
                 //entities can be drawed after the first state interpolation
                 // if (!entity.isVisible()) {
                 //     entity.setVisible(true);

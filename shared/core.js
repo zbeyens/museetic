@@ -43,6 +43,30 @@ var getInitFoodState = function() {
     };
 };
 
+//client
+exports.getExtrapolatedPlayerState = function(state, deltaTime) {
+    var newState = {};
+
+    newState.x = state.x;
+    newState.y = state.y;
+    newState.vx = state.vx;
+    newState.vy = state.vy;
+    newState.ring = state.ring;
+    newState.mass = state.mass;
+    newState.dashing = state.dashing;
+
+    if (newState.vy < cfg.playerVy) { // && new Date() - newState.lastFlap > 100) {
+        newState.vy += cfg.playerGravity * deltaTime;
+    }
+    if (newState.vy > cfg.playerVy) {
+        newState.vy = cfg.playerVy;
+    }
+
+    newState.x += newState.vx * deltaTime;
+    newState.y += newState.vy * deltaTime;
+    return newState;
+};
+
 exports.getNewPlayerState = function(player, deltaTime, tileController) {
     var id = player.id,
         state = player.state,

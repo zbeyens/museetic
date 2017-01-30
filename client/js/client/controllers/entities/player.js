@@ -7,7 +7,7 @@ exports = module.exports = Player;
 
 /**
  * name
- * state {x, y, angle, mass}
+ * state {x, y, vx, vy, mass, ring, dashing}
  *
  * @param {int} id
  * @param {string} name

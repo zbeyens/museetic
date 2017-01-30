@@ -92,8 +92,8 @@ module.exports = {
     shootTime: 1000,
 
     foodInitSize: 50, //to remove ?
-    foodMass: 5000,
-    foodSpawnAmount: 200,
+    foodMass: 50,
+    foodSpawnAmount: 5000,
     foodInsideProportion: 0.5,
     foodMovingTime: 1700,
     foodRotationSpeed: 0.003,
