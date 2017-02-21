@@ -107,7 +107,7 @@ var processInputs = function(player, newState, tileController, shootController) 
         applyLeft(newState);
     } else if (player.pressRight && !newState.dashing) {
         applyRight(newState);
-    } else if (player.pressDash && newState.canDash && newState.mass >= cfg.playerMinMassDash) {
+    } else if (player.pressDash && newState.mass >= cfg.playerMinMassDash) { //canDash
         applyDash(player, newState, shootController);
     } else if (player.pressClick) {
         applySpawnFoods(tileController);
@@ -293,7 +293,6 @@ var checkKill = function(newState, tileController, selfScope, ball) {
     var ballRadius = lot.getBallRadius(ball.state.mass);
 
     if (selfScope + ballRadius > distPlayerBall) {
-        console.log("dead");
         for (var i = 0; i < 20; i++) {
             // spawnFood(newState, tileController, i);
         }
