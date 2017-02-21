@@ -2,7 +2,6 @@ var EntityController = require('./entitycontroller'),
     Shoot = require('../entities/shoot'),
     _ = require('underscore');
 
-/* jshint shadow:true */
 exports = module.exports = ShootController;
 
 function ShootController(players) {

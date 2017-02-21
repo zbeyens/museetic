@@ -8,14 +8,15 @@ function PlayerController() {
     this.board = [];
     this.updatedBoard = false;
 }
+
 PlayerController.prototype = _.extend(Object.create(EntityController.prototype), {
     /**
      * add player from updatePs msg
      * @param {int} id
      * @param {string} name
      */
-    add: function(id, name) {
-        var player = new Player(id, name);
+    add: function(id, name, ballAngle, ballStartTime) {
+        var player = new Player(id, name, ballAngle, ballStartTime);
         this.entities.push(player);
         return player;
     },

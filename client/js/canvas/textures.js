@@ -4,26 +4,35 @@ var cfg = require('../../../shared/config');
 exports = module.exports = Textures;
 
 function Textures() {
-    this.preloadTextureFromImage();
-    this.preloadTextureFromCanvas();
+    // this.preloadTextureFromImage();
+    // this.preloadTextureFromCanvas();
 }
 
 Textures.prototype = {
-    preloadTextureFromImage: function() {
-        // this.playerImageL.baseTexture.mipmap = false;
-        // this.playerImageR.baseTexture.mipmap = false;
-        this.ringTxt = new PIXI.Texture.fromImage(cfg.ringImage);
-        this.shootTxt = new PIXI.Texture.fromImage(cfg.shootImage);
-        this.mapTxt = new PIXI.Texture.fromImage(cfg.mapImage);
-        // this.bgTextureTxt = new PIXI.Texture.fromImage(cfg.bgImage);
+    /**
+     * Pixi uses Texture cache to store and reference all the textures needed.
+     * Texture = WebGL format of an image, to be processed by the GPU.
+     * @return {[type]} [description]
+     */
+    preloadTextures: function() {
+        this.loader = new PIXI.loaders.Loader();
+        this.loader
+            // Chainable `add` to enqueue a resource
+            .add("ringTxt", cfg.ringImg)
+            .add("mapTxt", cfg.mapImg)
+            .add(cfg.playerSet)
+            .add(cfg.fireballSet)
 
-        this.playerTxtList = [];
-        for (var i = 0; i < 3; i++) {
-            this.playerTxtList.push(new PIXI.Texture.fromImage('/client/img/flappy' + i + '.png'));
-        }
-    },
+            .on("progress", this.onAssetsLoading.bind(this))
+            .once("complete", this.onAssetsLoaded.bind(this))
+            // The `load` method loads the queue of resources, and calls the
+            // passed in callback called once all resources have loaded.
+            .load();
 
-    preloadTextureFromCanvas: function() {
+        //.reset()
+        //PIXI.TextureCache['assets/images/hud/hud_bench.png'].destroy(true);
+
+
         //mid limit
         var canMid = this.createBorderTexture(cfg.midLimitRad, cfg.midLimitStroke, cfg.midLimitOffset);
         this.midLimitTxt = new PIXI.Texture.fromCanvas(canMid);
@@ -97,6 +106,45 @@ Textures.prototype = {
         //or play and rewind
         var rewind = this.dashTxtList.slice(1, -1);
         this.dashTxtList = this.dashTxtList.concat(rewind.reverse());
+    },
+
+    onAssetsLoading: function(loader, loadedResource) {
+        console.log('Progress:', loader.progress + '%');
+    },
+
+    /**
+     * use aliases
+     * @return {void}
+     */
+    onAssetsLoaded: function() {
+        var resources = this.loader.resources;
+        // this.playerImgL.baseTexture.mipmap = false;
+        // this.playerImgR.baseTexture.mipmap = false;
+        // this.loader.resources.ringTxt.destroy(true);
+        // PIXI.TextureCache['/client/img/bullet.png'].destroy(true);
+        this.ringTxt = resources.ringTxt.texture;
+        this.mapTxt = resources.mapTxt.texture;
+        // this.bgTextureTxt = new this.Texture.fromImg(cfg.bgImg);
+        // console.log(PIXI.loader.resources);
+        this.playerTxtList = [];
+        for (var i = 0; i < 3; i++) {
+            this.playerTxtList.push(PIXI.Texture.fromFrame('flappy' + i + '.png'));
+        }
+
+        this.fireballTxtList = [];
+        for (var i = 0; i < 6; i++) {
+            this.fireballTxtList.push(PIXI.Texture.fromFrame('fireball' + i + '.png'));
+        }
+        //Create a rectangle object that defines the position and
+        //size of the sub-image you want to extract from the texture
+        // var rectangle = new Rectangle(0, 0, 512, 512);
+        //
+        // var txt = resources.fireballTxtSet;
+        // //Tell the texture to use that rectangular section
+        // txt.frame = rectangle;
+        // this.ballTxtList.push(new PIXI)
+
+        this.onTexturesLoaded();
     },
 
     /**

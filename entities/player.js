@@ -1,5 +1,7 @@
 var Entity = require('../entities/entity'),
+    BallController = require('../controllers/ballcontroller'),
     cfg = require('../shared/config'),
+    ic = require('../shared/initCore'),
     lot = require('../shared/lot'),
     _ = require('underscore');
 
@@ -11,27 +13,20 @@ function Player(idSpec) {
     this.tickState = 0;
     this.tickScope = 0;
 
-    this.clear();
-
-    this.scope = {};
-
-    // this.inGame = false;
-    this.state = {
-        x: 0,
-        y: 0,
-        mass: 0,
-    };
-    //scope function of mass
-    this.setScope();
-
-    //this.name
-    this.pressLeft = false;
-    this.pressRight = false;
-    this.pressDash = false;
-    this.pressClick = false;
+    this.addInSpectator();
 }
 
 Player.prototype = _.extend(Object.create(Entity.prototype), {
+
+    addInSpectator: function() {
+        this.setState(ic.getInitSpectatorState());
+
+        this.id = -1;
+        this.name = undefined;
+        this.ballController = undefined;
+
+        this.reset();
+    },
 
     /**
      * when Player submit, add him in game
@@ -39,32 +34,20 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
      * @param {string} name
      */
     addInGame: function(id, name) {
-        this.state = {
-            x: 0,
-            y: 0,
-            vx: 0,
-            vy: 0,
-            ring: false,
-            mass: cfg.playerInitMass,
-            dashing: false,
+        this.setState(ic.getInitPlayerState());
 
-            startTime: new Date(),
-            lastRing: new Date(),
-            lastDash: new Date(),
-            canDash: false,
-            immunity: true,
-        };
-        this.setScope();
         this.id = id;
         this.name = name;
-        this.clear();
+        this.ballController = new BallController(this.id);
+
+        this.reset();
     },
 
     /**
      * variable to reset when new game
      * @return {void}
      */
-    clear: function() {
+    reset: function() {
         this.firstState = true;
         this.updatedBoard = true;
         this.pInScope = [];
@@ -76,7 +59,7 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
         this.foodsToRemove = []; //id, referrerId
     },
 
-    //Add
+
     addPlayerInScope: function(entity) {
         this.pInScope.push(entity);
     },
@@ -135,6 +118,7 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
 
     setState: function(state) {
         this.state = state;
+        this.setScope();
         this.pressLeft = false;
         this.pressRight = false;
         this.pressDash = false;
@@ -142,7 +126,8 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
     },
 
     /**
-     * update the scope when the mass changes
+     * update the scope when the mass changes...
+     * TODO: in setState
      */
     setScope: function() {
         this.scope = {
@@ -166,7 +151,12 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
         return this.scope;
     },
 
+    getBallController: function() {
+        return this.ballController;
+    },
+
     /**
+     * broadcast
      * if new in scope, send all the state.
      * @return {object} updatedState
      */
@@ -189,6 +179,7 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
     },
 
     /**
+     * broadcast
      * if already in scope, update pInScope.
      * only send what have changed.
      * @param  {int} idx    : index in pInScope
@@ -230,6 +221,7 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
     },
 
     /**
+     * broadcast
      * every tickState, get players to remove
      * @param  {object} states to broadcast
      * @return {void}
@@ -239,6 +231,7 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
         this.playersToRemove = [];
     },
 
+    //broadcast
     getFoodsToSpawn: function(states) {
         var playerScope = this.scope;
 
@@ -253,6 +246,7 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
         this.foodsToAdd = [];
     },
 
+    //broadcast
     getFoodsToEat: function(states) {
         for (var i = this.foodsToRemove.length; i--;) {
             var checkFood = this.foodsToRemove[i];

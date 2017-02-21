@@ -20,20 +20,40 @@ function TileController() {
     this.playerController = new PlayerController(getNextId);
     this.shootController = new ShootController(this.playerController.getEntities());
 
-    var players = this.playerController.getEntities();
 
-    for (var x = 0; x < cfg.tileAmountX; x++) {
-        var tilesRow = [];
-        for (var y = 0; y < cfg.tileAmountY; y++) {
-            var newTile = new Tile(x, y, players, getNextId);
-            tilesRow.push(newTile);
-        }
-        this.tiles.push(tilesRow);
-    }
+    this.buildTiles();
 }
 
 
 TileController.prototype = {
+    /**
+     * divide the world in Tiles
+     * @return {void}
+     */
+    buildTiles: function() {
+        var getNextId = function(flag) {
+            return this.getNextId(flag);
+        }.bind(this);
+        var players = this.playerController.getEntities();
+
+        for (var x = 0; x < cfg.tileAmountX; x++) {
+            var tilesRow = [];
+            for (var y = 0; y < cfg.tileAmountY; y++) {
+                var newTile = new Tile(x, y, players, getNextId);
+                tilesRow.push(newTile);
+            }
+            this.tiles.push(tilesRow);
+        }
+    },
+
+    /**
+     * get the Tile where (x,y) is.
+     * Tiles limits are endLimitRad
+     * pos + endLimitRad because (x,y) = 0 = the center of the map = mid tile
+     * @param  {float} x : world pos
+     * @param  {float} y
+     * @return {Tile}
+     */
     getTile: function(x, y) {
         var X = Math.floor(cfg.tileAmountX * (x + cfg.endLimitRad) / (2 * cfg.endLimitRad));
         var Y = Math.floor(cfg.tileAmountY * (y + cfg.endLimitRad) / (2 * cfg.endLimitRad));
@@ -41,13 +61,31 @@ TileController.prototype = {
         return this.tiles[X][Y];
     },
 
+    /**
+     * get the Tiles in scope of the player
+     * @param  {float} x
+     * @param  {float} y
+     * @return {list}   : list of Tile
+     */
     getTilesInScope: function(x, y) {
+        return this.getTiles(x, y, cfg.tileScopeAmountX, cfg.tileScopeAmountY);
+    },
+
+    /**
+     * from (x, y), center tile in (X, Y), get rangeX*rangeY Tiles.
+     * @param  {float} x
+     * @param  {float} y
+     * @param  {int} rangeX : odd
+     * @param  {int} rangeY : odd
+     * @return {list}        : list of Tile
+     */
+    getTiles: function(x, y, rangeX, rangeY) {
         var tilesInScope = [];
         var X = Math.floor(cfg.tileAmountX * (x + cfg.endLimitRad) / (2 * cfg.endLimitRad));
         var Y = Math.floor(cfg.tileAmountY * (y + cfg.endLimitRad) / (2 * cfg.endLimitRad));
 
-        var scopeX = (cfg.tileScopeAmountX - 1) / 2;
-        var scopeY = (cfg.tileScopeAmountY - 1) / 2;
+        var scopeX = (rangeX - 1) / 2;
+        var scopeY = (rangeY - 1) / 2;
         for (var i = -scopeX; i < scopeX; i++) {
             for (var j = -scopeY; j < scopeY; j++) {
                 if (X + i >= 0 && Y + j >= 0 &&

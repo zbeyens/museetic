@@ -14,12 +14,33 @@ var express = require('express'),
     logger = require('morgan'),
     helmet = require('helmet');
 
+// var setCustomCacheControl = function(res, path) {
+//     // remove when the app is stable
+//     // console.log("oh " + express.static.mime.lookup(path));
+//     if (express.static.mime.lookup(path) === 'text/html') {
+//         // Custom Cache-Control for HTML files.
+//         res.setHeader('Cache-Control', 'public, max-age=0');
+//     }
+// };
 
 app.use(helmet());
 app.use(logger('dev'));
 app.use(favicon(__dirname + '/client/img/flappy0.png'));
-app.use('/client', express.static(path.join(__dirname, '/client')));
-app.use('/shared', express.static(path.join(__dirname, '/shared')));
+app.use('/client', express.static(path.join(__dirname, '/client'), {
+    maxAge: '1h',
+    // setHeaders: setCustomCacheControl
+}));
+app.use('/shared', express.static(path.join(__dirname, '/shared'), {
+    maxAge: '1h',
+    // setHeaders: setCustomCacheControl
+}));
+// // Additional middleware which will set headers that we need on each request.
+// app.use(function(req, res, next) {
+//     //public to specify that the response is cacheable by clients and shared (proxy) caches.
+//     //instructs the client to cache it for up to ... seconds
+//     res.setHeader('Cache-Control', 'public, max-age=14400');
+//     next();
+// });
 
 var isProduction = process.env.NODE_ENV === 'production';
 if (!isProduction) {

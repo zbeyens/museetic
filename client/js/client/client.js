@@ -16,7 +16,7 @@ function Client(socket) {
     this.stateController = new StateController();
 
     this.selfId = -1;
-    this.leftSpectator = false;
+    this.inTransition = false;
 
     Receiver.call(this);
     Sender.call(this);
@@ -31,8 +31,8 @@ Client.prototype = _.extend(Object.create(Sender.prototype), Object.create(Recei
     },
 
     //Setters
-    setLeftSpectator: function(isLeftSpectator) {
-        this.leftSpectator = isLeftSpectator;
+    setInTransition: function(isInTransition) {
+        this.inTransition = isInTransition;
     },
 
     //Getters
@@ -50,11 +50,11 @@ Client.prototype = _.extend(Object.create(Sender.prototype), Object.create(Recei
     },
 
     /**
-     * if spectator: false
-     * else: true
+     * if received Clear: true
+     * else: false
      * @return {Boolean}
      */
-    isLeftSpectator: function() {
-        return this.leftSpectator;
+    isInTransition: function() {
+        return this.inTransition;
     },
 });

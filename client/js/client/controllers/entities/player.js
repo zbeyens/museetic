@@ -1,4 +1,5 @@
 var Entity = require('./entity'),
+    BallController = require('../ballcontroller'),
     Update = require('./../update'),
     cfg = require('../../../../../shared/config');
 
@@ -12,10 +13,11 @@ exports = module.exports = Player;
  * @param {int} id
  * @param {string} name
  */
-function Player(id, name) {
+function Player(id, name, ballAngle, ballStartTime) {
     Entity.call(this, id);
     this.name = name;
     // this.inputController = 1;
+    this.ballController = new BallController(id, ballAngle, ballStartTime);
 }
 
 Player.prototype = _.extend(Object.create(Entity.prototype), {
@@ -64,5 +66,9 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
         if (this.updates.length > cfg.clientMaxUpdateBuffer) {
             this.updates.splice(0, 1);
         }
-    }
+    },
+
+    getBallController: function() {
+        return this.ballController;
+    },
 });

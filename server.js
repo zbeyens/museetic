@@ -16,13 +16,17 @@ exports = module.exports = Server;
 function Server(wss) {
     this.wss = wss;
     this.lastBroadcast = 0; //test
-    this.stateController = new StateController(function(socket, states) {
+    var broadcastCallback = function(socket, states) {
         this.sendMessage(socket, new Packet.Update(states));
         var now = new Date();
         // console.log("upbate " + Date.now());
         // console.log(now - this.lastBroadcast);
         this.lastBroadcast = now;
-    }.bind(this));
+    }.bind(this);
+    var clearCallback = function(socket) {
+        this.sendMessage(socket, new Packet.Clear());
+    }.bind(this);
+    this.stateController = new StateController(broadcastCallback, clearCallback);
 
     Receiver.call(this);
 }
@@ -96,7 +100,7 @@ Server.prototype = _.extend(Object.create(Receiver.prototype), Object.create(Sen
         } else {
             console.log('Player ' + socket.id + ' disconnected');
         }
-        this.stateController.getTileController().getPlayerController().remove(socket.player);
+        this.stateController.getTileController().getPlayerController().remove(socket.player, true);
         this.stateController.removeSocket(socket);
     },
 

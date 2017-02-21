@@ -1,38 +1,37 @@
 var cfg = require('../../../shared/config'),
-    Fps = require('../../../shared/fps'),
     lot = require('../../../shared/lot'),
     Textures = require('./textures'),
-    Camera = require('./camera.js');
+    Camera = require('./camera'),
+    Hud = require('./hud');
 
 exports = module.exports = Canvas;
 
 function Canvas() {
     this.canvas = document.getElementById("ctx");
     this.preload();
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function(e) {
         this.resizeCamera();
     }.bind(this));
     this.resizeCamera();
+
+    this.assetsLoaded = false;
 }
 
-Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textures.prototype), {
+var dep = _.extend(Object.create(Camera.prototype),
+    Object.create(Textures.prototype), Object.create(Hud.prototype));
+
+Canvas.prototype = _.extend(dep, {
     preload: function() {
-        this.scale = 1;
-        this.scaleMass = 1;
         this.renderer = new PIXI.autoDetectRenderer(cfg.scopeInitX, cfg.scopeInitY, {
             view: this.canvas
         });
         //PIXI.RESOLUTION = window.devicePixelRatio;
         this.renderer.clearBeforeRender = false;
 
-        Textures.call(this);
+        this.preloadTextures();
         this.preloadStage();
+        Camera.call(this);
         this.preloadHud();
-
-        this.drawMap({
-            x: 0,
-            y: 0,
-        });
     },
 
     preloadStage: function() {
@@ -43,7 +42,21 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
         this.foodLayer = new PIXI.DisplayGroup(2, false);
         this.playerLayer = new PIXI.DisplayGroup(3, false);
         // this.textLayer = new PIXI.DisplayGroup(4, false);
+    },
 
+    onTexturesLoaded: function() {
+        this.preloadSprites();
+        this.drawMap({
+            x: 0,
+            y: 0,
+        });
+        this.assetsLoaded = true;
+
+        signPanelDiv.style.display = 'block';
+        this.canvas.style.display = 'block';
+    },
+
+    preloadSprites: function() {
         //Map
         this.map = new PIXI.extras.TilingSprite(this.mapTxt, cfg.mapSize, cfg.mapSize);
         this.map.displayGroup = this.limitLayer;
@@ -77,69 +90,16 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
         // });
     },
 
-    preloadHud: function() {
-        //we don't apply scale on HUD (but we do on stage): no blur
-        this.hud = new PIXI.Container();
 
-        //Board
-        this.board = document.getElementById('boardDiv');
-        this.leaderboard = document.getElementById('leaderboard');
-        this.entry = document.getElementById('entry');
-        var num = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-        this.entries = [];
-        for (var i = 0; i < 10; i++) {
-            this.entries.push(document.getElementById(num[i]));
-        }
-
-        this.textOpt = {
-            fontFamily: 'raleway',
-            fill: '#ffffff',
-            stroke: '#000000',
-        };
-
-        //FPS
-        this.fps = new Fps();
-        this.fpsText = new PIXI.Text('', this.textOpt);
-        this.hud.addChild(this.fpsText);
-        var self = this;
-        setInterval(function() {
-            self.fpsText.text = 'Fps: ' + self.fps.getFps();
-        }, 1000);
-
-        //Mass
-        this.score = new PIXI.Text('', this.textOpt);
-        this.hud.addChild(this.score);
-
-        //x, y
-        this.x = new PIXI.Text('', this.textOpt);
-        this.hud.addChild(this.x);
-        this.y = new PIXI.Text('', this.textOpt);
-        this.hud.addChild(this.y);
-
-        //Minimap
-        this.minimap = new PIXI.Graphics();
-        this.hud.addChild(this.minimap);
-        this.miniself = new PIXI.Graphics();
-        this.hud.addChild(this.miniself);
-
-        this.hud.visible = false;
-    },
-
-
-    getStyle: function(factor) {
-        return {
-            fontFamily: 'raleway',
-            fill: '#ffffff',
-            stroke: '#000000',
-            fontSize: Math.floor(factor * this.scale) + 'px',
-            strokeThickness: (2 * this.scale),
-        };
+    render: function() {
+        this.renderer.render(this.stage);
+        // this.renderer.render(this.foodContainer);
+        this.renderer.render(this.hud);
     },
 
     /////////
     //DRAW //
     /////////
-    //HUD
     drawBoard: function(board) {
         var len = board.length;
         for (var i = 0; i < len; i++) {
@@ -153,17 +113,6 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
         }
     },
 
-    drawHud: function(selfState) {
-        //Mass if modif
-        if (this.score.text != 'Mass : ' + selfState.mass) {
-            this.score.text = 'Mass : ' + selfState.mass;
-        }
-
-        //x,y
-        this.x.text = 'x: ' + Math.round(selfState.x);
-        this.y.text = 'y: ' + Math.round(selfState.y);
-    },
-
 
     //Stage
     drawMap: function(selfState) {
@@ -172,8 +121,8 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
         var x = this.canvas.width / 2 - selfState.x;
         var y = this.canvas.height / 2 - selfState.y;
         //origin at the center of the map
-        this.map.position.x = x - cfg.mapSize / 2;
-        this.map.position.y = y - cfg.mapSize / 2;
+        this.map.anchor.set(0.5);
+        this.map.position.set(x, y);
         this.map.alpha = 1;
         // this.bg.position.x = x / 20;
         // this.bg.position.y = y / 40;
@@ -203,6 +152,18 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
         this.miniself.drawCircle(miniX, miniY, cfg.miniselfRad * this.scale);
 
         this.debug.clear();
+
+        if (cfg.debugTileSize) {
+            this.debug.lineStyle(3, 0xFF0000);
+            var width = Math.floor(cfg.endLimitRad / cfg.tileAmountX);
+            var height = Math.floor(cfg.endLimitRad / cfg.tileAmountY);
+            this.debug.drawRect(x, y, width, height);
+            // var X = Math.floor(cfg.tileAmountX * (selfState.x + cfg.endLimitRad) / (2 * cfg.endLimitRad));
+            // var Y = Math.floor(cfg.tileAmountY * (selfState.y + cfg.endLimitRad) / (2 * cfg.endLimitRad));
+            // var xTile = this.canvas.width / 2 - (X - cfg.tileAmountX / 2) * cfg.endLimitRad / cfg.tileAmountX;
+            // var yTile = this.canvas.height / 2 - (Y - cfg.tileAmountY / 2) * cfg.endLimitRad / cfg.tileAmountY;
+            // this.debug.drawRect(xTile, yTile, width, height);
+        }
     },
 
     drawPlayer: function(player, selfState) {
@@ -291,6 +252,42 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
         player.spriteDash.width = size;
         player.spriteDash.height = size;
 
+        // player.link;
+        // var p1 = selfState;
+        // var p2 = player.state;
+        // var dist = lot.distEucl(p1.x, p1.y, p2.x, p2.y);
+        // // if (dist < 1000) {
+        // //グラデーションの生成
+        // var size = 1000;
+        // var can = this.createCanvas(size, size);
+        // var ctx = can.getContext('2d');
+        // var grad = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+        // grad.addColorStop(0, 'rgba(' + 102 + ',' + 217 + ',' + 239 + ',' + (1 - dist / 1000) + ')');
+        // grad.addColorStop(1, 'rgba(' + 249 + ',' + 38 + ',' + 114 + ',' + (1 - dist / 1000) + ')');
+        // ctx.strokeStyle = grad;
+        // //線の描画
+        // ctx.beginPath();
+        // ctx.moveTo(p1.x, p1.y);
+        // ctx.lineTo(p2.x, p2.y);
+        // ctx.closePath();
+        // ctx.stroke();
+        // if (player.link) {
+        //     this.stage.removeChild(player.link);
+        //     player.link.destroy(true);
+        //     this.txts.destroy(true);
+        // }
+        // this.txts = new PIXI.Texture.fromCanvas(can);
+        // player.link = new PIXI.Sprite(this.txts); // to delete
+        // player.link.anchor.set(0.5);
+        // player.link.displayGroup = this.playerLayer;
+        // player.link.position.x = (p1.x + p2.x) / 2;
+        // player.link.position.y = (p1.y + p2.y) / 2;
+        // this.stage.addChild(player.link);
+
+        // for (var prop in PIXI.utils.TextureCache) {
+        //     console.log(prop);
+        // }
+
         //ring
         size = lot.getRingSize(player.state.mass);
 
@@ -311,15 +308,61 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
 
         player.spriteRing.visible = false;
         // this.debug.clear();
-        this.debug.lineStyle(1, 0xFF0000);
+        this.debug.lineStyle(2, 0xFF0000);
         if (cfg.debugSelfHitbox) {
             var selfScope = lot.getSelfScope(player.state.mass);
             this.debug.drawCircle(x, y, selfScope);
         }
+        if (cfg.debugSelfScope) {
+            var width = Math.floor(cfg.tileScopeAmountX * cfg.endLimitRad / cfg.tileAmountX);
+            var height = Math.floor(cfg.tileScopeAmountY * cfg.endLimitRad / cfg.tileAmountY);
+            this.debug.drawRect(x - width / 4, y - height / 4, width / 2, height / 2);
+        }
+        // this.debug.drawCircle(x, y, lot.getRingRadius(player.state.mass));
         if (cfg.debugRingHitbox) {
             this.debug.drawCircle(x, y, lot.getRingMin(player.state.mass));
             this.debug.drawCircle(x, y, lot.getRingMax(player.state.mass));
         }
+    },
+
+    drawBall: function(ball, selfState) {
+        if (!ball.sprite) {
+            ball.sprite = new PIXI.extras.MovieClip(this.fireballTxtList);
+            ball.sprite.animationSpeed = 0.2;
+            ball.sprite.play();
+            ball.sprite.anchor.set(0.5);
+            //ball.sprite.alpha = 0;
+            ball.sprite.displayGroup = this.playerLayer;
+            this.stage.addChild(ball.sprite);
+        }
+        // if (!ball.sprite) {
+        //     //TODO: color ball + size
+        //     //NOTE: texture careful!
+        //
+        //     this.stage.addChild(ball.sprite);
+        // }
+        var size = lot.getBallSize(ball.state.mass);
+        ball.sprite.width = size;
+        ball.sprite.height = size;
+        var x = ball.state.x - selfState.x + this.canvas.width / 2;
+        var y = ball.state.y - selfState.y + this.canvas.height / 2;
+        ball.sprite.position.set(x, y);
+        ball.sprite.rotation = ball.state.angle + Math.PI / 2;
+        //
+        // if (ball.sprite.alpha < 1) {
+        //     ball.sprite.alpha += 0.05;
+        //     ball.sprite.alpha = Math.round(ball.sprite.alpha * 100) / 100;
+        //     ball.sprite.scale.set(ball.sprite.alpha);
+        // }
+
+        // if (cfg.debugFoodHitbox) {
+        // this.tunnel.clear();
+        this.debug.beginFill(0xFF0000);
+        // var radius = lot.getBallMass(ball.state.mass);
+        // this.debug.drawCircle(x, y, radius);
+        this.debug.beginFill(0xFF0000, 0);
+        // this.debug.drawCircle(x, y, cfg.foodEatenHitbox);
+        // }
     },
 
     drawFood: function(food, selfState) {
@@ -342,8 +385,11 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
 
         if (food.referrer) {
             var referrerState = food.referrer.state;
-            var dist = lot.inCircle(referrerState.x, referrerState.y, food.state.x, food.state.y);
-            var newScale = 1 - ((cfg.foodHitbox - cfg.foodEatenHitbox) / dist);
+            var dist = lot.distEucl(referrerState.x, referrerState.y, food.state.x, food.state.y);
+            var newScale = 1 - ((cfg.foodHitbox - cfg.foodEatenHitbox) / (2 * dist));
+            // food.sprite.alpha = newScale;
+            if (newScale < 0) newScale = 0;
+            // console.log(newScale);
             food.sprite.scale.set(newScale);
         }
 
@@ -355,7 +401,7 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
 
         if (cfg.debugFoodHitbox) {
             this.debug.lineStyle(1, 0xFF0000);
-            this.debug.drawCircle(x, y, cfg.foodHitbox);
+            this.debug.drawCircle(food.state.xReal - selfState.x + this.canvas.width / 2, food.state.yReal - selfState.y + this.canvas.height / 2, cfg.foodHitbox);
             // this.debug.drawCircle(x, y, cfg.foodEatenHitbox);
         }
     },
@@ -385,10 +431,20 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
 
 
     removeSprites: function(removedPlayers, removedFoods, removedShoots) {
+        // sprite.destroy(); - will destroy sprite, leaving PIXI.Texture and PIXI.BaseTexture untouched
+        // sprite.destroy(true); - will destroy sprite and PIXI.Texture; PIXI.BaseTexture remains untouched
+        // sprite.destroy(true, true); - will destroy sprite, PIXI.Texture and PIXI.BaseTexture
         for (var i = removedPlayers.length; i--;) {
+            var removedBalls = removedPlayers[i].getBallController().getEntities();
             if (removedPlayers[i].sprite) {
                 this.stage.removeChild(removedPlayers[i].sprite);
                 removedPlayers[i].sprite.destroy();
+            }
+            for (var j = removedBalls.length; j--;) {
+                if (removedBalls[j].sprite) {
+                    this.stage.removeChild(removedBalls[j].sprite);
+                    removedBalls[j].sprite.destroy();
+                }
             }
             if (removedPlayers[i].spriteRing) {
                 this.stage.removeChild(removedPlayers[i].spriteRing);
@@ -421,10 +477,14 @@ Canvas.prototype = _.extend(Object.create(Camera.prototype), Object.create(Textu
         }
     },
 
-    render: function() {
-        this.renderer.render(this.stage);
-        // this.renderer.render(this.foodContainer);
-        this.renderer.render(this.hud);
+    getStyle: function(factor) {
+        return {
+            fontFamily: 'raleway',
+            fill: '#ffffff',
+            stroke: '#000000',
+            fontSize: Math.floor(factor * this.scale) + 'px',
+            strokeThickness: (2 * this.scale),
+        };
     },
 
 });

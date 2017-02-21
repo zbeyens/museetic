@@ -1,46 +1,32 @@
-// THREExKeyboardState.js keep the current state of the keyboard.
-// It is possible to query it at any time. No need of an event.
-// This is particularly convenient in loop driven case, like in
-// 3D demos or games.
-//
-// # Usage
-//
-// **Step 1**: Create the object
-//
-// ```var keyboard    = new THREExKeyboardState();```
-//
-// **Step 2**: Query the keyboard state
-//
-// This will return true if shift and A are pressed, false otherwise
-//
-// ```keyboard.pressed("shift+A")```
-//
-// **Step 3**: Stop listening to the keyboard
-//
-// ```keyboard.destroy()```
-//
-// this library may be nice as standaline. independant from three.js
-// - rename it keyboardForGame
-//
-// # Code
-//
+/** ?
+ * The MIT License (MIT)
+Copyright (c) 2013 Jerome Etienne
 
-/** @namespace */
-// var THREEx = THREEx || {};
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
 
-/**
- * - it would be quite easy to push event-driven too
- *   - microevent.js for events handling
- *   - in this._onkeyChange, generate a string from the DOM event
- *   - use this as event name
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-exports = module.exports = THREExKeyboardState;
+exports = module.exports = Keyboard;
 
-function THREExKeyboardState() {
-    // to store the current state
+function Keyboard() {
+    // to store the current states: {keyCodes: boolean}
     this.keyCodes = {};
 
+    //used to oblige to keyUp after keyDown
     this.keyUp = {
         left: true,
         up: true,
@@ -49,12 +35,13 @@ function THREExKeyboardState() {
         space: true,
     };
 
-    this.ALIAS = {
+    this.alias = {
         /*'left': 37,
         'up': 38,
         'right': 39,
         'down': 40,*/
-        'left': 81,
+        'leftEU': 65,
+        'leftUS': 81,
         'up': 90,
         'right': 68,
         'down': 83,
@@ -65,16 +52,16 @@ function THREExKeyboardState() {
     };
 
     // create callback to bind/unbind keyboard events
-    this._onKeyDown = function(event) {
-        this._onKeyChange(event, true);
+    this.onKeyDown = function(e) {
+        this.onKeyChange(e, true);
     }.bind(this);
-    this._onKeyUp = function(event) {
-        this._onKeyChange(event, false);
+    this.onKeyUp = function(e) {
+        this.onKeyChange(e, false);
     }.bind(this);
 
     // bind keyEvents
-    document.addEventListener("keydown", this._onKeyDown, false);
-    document.addEventListener("keyup", this._onKeyUp, false);
+    document.addEventListener("keydown", this.onKeyDown, false);
+    document.addEventListener("keyup", this.onKeyUp, false);
     window.addEventListener("keydown", function(e) {
         // space and arrow keys
         if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
@@ -83,44 +70,51 @@ function THREExKeyboardState() {
     }, false);
 }
 
-/**
- * To stop listening of the keyboard events
- */
-THREExKeyboardState.prototype.destroy = function() {
-    // unbind keyEvents
-    document.removeEventListener("keydown", this._onKeyDown, false);
-    document.removeEventListener("keyup", this._onKeyUp, false);
-};
+Keyboard.prototype = {
+    /**
+     * To stop listening of the keyboard events
+     */
+    destroy: function() {
+        document.removeEventListener("keydown", this.onKeyDown, false);
+        document.removeEventListener("keyup", this.onKeyUp, false);
+    },
 
+    /**
+     * store in this.keyCodes, the keyboard dom event
+     * @param  {Event} e   : keyCode
+     * @param  {Boolean} pressed
+     * @return {void}
+     */
+    onKeyChange: function(e, pressed) {
+        // update this.keyCodes
+        var keyCode = e.keyCode;
+        this.keyCodes[keyCode] = pressed;
+    },
 
-/**
- * to process the keyboard dom event
- */
-THREExKeyboardState.prototype._onKeyChange = function(event, pressed) {
-    // update this.keyCodes
-    var keyCode = event.keyCode;
-    this.keyCodes[keyCode] = pressed;
-};
-
-
-
-/**
- * query keyboard state to know if a key is pressed of not
- *
- * @param {String} keyDesc the description of the key. format : modifiers+key e.g shift+A
- * @returns {Boolean} true if the key is pressed, false otherwise
- */
-THREExKeyboardState.prototype.pressed = function(keyDesc) {
-    var keys = keyDesc.split("+");
-    for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-        var pressed;
-        if (Object.keys(this.ALIAS).indexOf(key) != -1) {
-            pressed = this.keyCodes[this.ALIAS[key]];
-        } else {
-            pressed = this.keyCodes[key.toUpperCase().charCodeAt(0)];
+    /**
+     * query keyboard state to know if a key is pressed of not
+     * then reset it
+     *
+     * @param {String} keyDesc the description of the key. format : modifiers+key e.g shift+A
+     * @return {Boolean} true if the key is pressed, false otherwise
+     */
+    pressed: function(keyDesc) {
+        var keys = keyDesc.split("+");
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var pressed, keyCode;
+            if (Object.keys(this.alias).indexOf(key) != -1) {
+                keyCode = this.alias[key];
+            } else {
+                // if not in alias
+                keyCode = key.toUpperCase().charCodeAt(0);
+            }
+            pressed = this.keyCodes[keyCode];
+            if (!pressed) {
+                return false;
+            }
         }
-        if (!pressed) return false;
-    }
-    return true;
+        return true;
+    },
+
 };

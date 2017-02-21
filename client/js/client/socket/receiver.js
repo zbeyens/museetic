@@ -51,11 +51,17 @@ Receiver.prototype = {
 
     onMsgClear: function(msg) {
         this.stateController.clearEntities();
+
+        //if game over
+        if (this.selfId !== -1) {
+            this.selfId = -1;
+            this.inTransition = true;
+        }
     },
 
     /**
-     * leftSpectator, set selfId, clearEntities before joining game
-     * isSpectator false to stop spectator spawn
+     * inTransition, set selfId, clearEntities before joining game
+     * inTransition false to stop spectator spawn
      * @param  {Buffer} msg
      * @return {void}
      */
@@ -63,19 +69,20 @@ Receiver.prototype = {
         var buf = new BufferReader(msg);
         buf.addOffset(1);
         var id = buf.getUint16();
+        console.log(id);
         this.selfId = id;
-        this.leftSpectator = true;
+        this.inTransition = true;
     },
 
     /**
      * onUpdate, broadcast loop
-     * only if not clearing
      */
     onMsgUpdate: function(msg) {
         // cl
         var buf = new BufferReader(msg);
         buf.addOffset(1);
         var t = buf.getUint32();
+        console.log('receiv');
         // console.log(t - this.stateController.serverTime);
         if (this.stateController.rendering) {
             this.stateController.rendered -= (t - this.stateController.serverTime);
@@ -101,7 +108,7 @@ Receiver.prototype = {
             for (var i = 0; i < lenUpdatePs; i++) {
                 var id = buf.getUint16(),
                     state = {},
-                    name;
+                    name, ballAngle;
 
                 var flagsPlayer = buf.getFlags(),
                     nameFlag = flagsPlayer[0],
@@ -112,6 +119,9 @@ Receiver.prototype = {
                     massFlag = flagsPlayer[5];
                 state.ring = flagsPlayer[6];
                 state.dashing = flagsPlayer[7];
+
+                var flagsPlayer2 = buf.getFlags(),
+                    ballAngleFlag = flagsPlayer2[0];
 
                 if (nameFlag) {
                     name = buf.getStringUTF8();
@@ -134,10 +144,16 @@ Receiver.prototype = {
                     state.mass = buf.getUint32();
                 }
 
+                if (ballAngleFlag) {
+                    ballAngle = buf.getFloat32();
+                    console.log("angle " + ballAngle);
+                }
+
                 if (!nameFlag) {
                     updatePs.push([id, state]);
                 } else {
-                    updatePs.push([id, state, name]);
+                    console.log(id);
+                    updatePs.push([id, state, name, ballAngle]);
                 }
             }
             this.stateController.addPlayerUpdates(t, updatePs);

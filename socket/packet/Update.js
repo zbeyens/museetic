@@ -46,6 +46,7 @@ Update.prototype.form = function() {
     flagsMain.push(updateBoardFlag);
     buf.setFlags(flagsMain);
 
+    //NOTE: should do initPs packet for name and ballAngle (no flag)
     if (updatePsFlag) {
         buf.setUint8(updatePs.length);
         for (var i = 0; i < updatePs.length; i++) {
@@ -65,6 +66,9 @@ Update.prototype.form = function() {
                 vyFlag = vy === undefined ? 0 : 1,
                 massFlag = mass === undefined ? 0 : 1;
 
+            var ballAngle = updatePs[i][3],
+                ballAngleFlag = ballAngle === undefined ? 0 : 1;
+
             buf.setUint16(id);
             //flags
             var flagsPlayer = [];
@@ -77,6 +81,10 @@ Update.prototype.form = function() {
             flagsPlayer.push(ring);
             flagsPlayer.push(dashing);
             buf.setFlags(flagsPlayer);
+
+            var flagsPlayer2 = [];
+            flagsPlayer2.push(ballAngleFlag);
+            buf.setFlags(flagsPlayer2);
 
             if (nameFlag) {
                 buf.setStringUTF8(name);
@@ -97,6 +105,11 @@ Update.prototype.form = function() {
             }
             if (massFlag) {
                 buf.setUint32(mass);
+            }
+
+            if (ballAngleFlag) {
+                //NOTE: int16
+                buf.setFloat32(ballAngle);
             }
         }
     }

@@ -25,7 +25,6 @@ function StateController() {
         this.debug = new Debug();
     }
     this.lagCompensation = cfg.serverLagCompensation;
-    this.i = 0;
 }
 StateController.prototype = {
     /**
@@ -63,62 +62,54 @@ StateController.prototype = {
      * @return {void}
      */
     updatePlayerState: function(entity) {
-        if (this.wait > 0) {
-            this.wait -= this.deltaTime;
-        } else {
-            this.wait = 0;
 
-            // var lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time);
-            // var lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 3].time);
-            // var renderTime = this.renderTimethis.serverTime - 100;
-            // if (!this.firstInterpolation) {
-            //     renderTime = this.serverTime - 100 + deltaTime;
-            //     this.firstInterpolation = true;
-            // } else {
-            //     renderTime = this.serverTime - 100;
+
+        // var lastDeltaTime = (entity.updates[entity.updates.length - 1].time - entity.updates[entity.updates.length - 2].time);
+
+        var now = new Date();
+        var rendered = 0;
+        if (this.rendering) {
+            rendered = this.rendered + (now - this.lastRenderTime);
+        }
+        // console.log(rendered);
+        this.rendered = rendered;
+        this.lastRenderTime = now;
+        var renderTime = this.getRenderTime(rendered);
+
+        var pos, interpolationFactor, newState,
+            pos = entity.getInterpolatedUpdates(renderTime);
+
+        // OPTI: jittering solution?
+        if (!pos.previous && entity.isVisible()) {
+            console.log("Jittering");
+            // this.rendered = 0;
+            // this.rendering = false;
+            // newState = GamePhysics.getExtrapolatedPlayerState(entity.updates[entity.updates.length - 1], renderTime - entity.updates[entity.updates.length - 1].time);
+            // entity.setState(newState);
+        }
+        if (pos.previous && pos.target) {
+            interpolationFactor = this.getInterpolatedValue(pos.previous.time, pos.target.time, renderTime);
+            // console.log(pos.previous.ballStartTime);
+            // console.log(pos.previous.state.ballStartTime);
+            // console.log(pos.previous.state.ballAngle);
+            newState = GamePhysics.getInterpolatedEntityState(pos.previous.state, pos.target.state, interpolationFactor);
+            // newState = GamePhysics.getInterpolatedEntityState(entity.state, newState, this.smoothingFactor);
+            entity.setState(newState);
+
+            this.predictBallStates(entity, renderTime);
+
+            //only if interpolated
+            this.rendering = true;
+            // this.rendered = rendered;
+
+            //entities can be drawed after the first state interpolation
+            // if (!entity.isVisible()) {
+            //     entity.setVisible(true);
             // }
-            // console.log(renderTime);
-            var now = new Date();
-            var rendered = 0;
-            if (this.rendering) {
-                rendered = this.rendered + (now - this.lastRenderTime);
-            }
-            // console.log(rendered);
-            this.rendered = rendered;
-            this.lastRenderTime = now;
-            var renderTime = this.getRenderTime(rendered);
-
-            var pos, interpolationFactor, newState,
-                pos = entity.getInterpolatedUpdates(renderTime);
-
-            // OPTI: jittering solution?
-            if (!pos.previous && entity.isVisible()) {
-                console.log("Jittering");
-                // this.rendered = -this.interpolationTime;
-                // this.rendering = false;
-                // newState = GamePhysics.getExtrapolatedPlayerState(entity.updates[entity.updates.length - 1], renderTime - entity.updates[entity.updates.length - 1].time);
-                // entity.setState(newState);
-            }
-            if (pos.previous && pos.target) {
-                interpolationFactor = this.getInterpolatedValue(pos.previous.time, pos.target.time, renderTime);
-
-                newState = GamePhysics.getInterpolatedEntityState(pos.previous.state, pos.target.state, interpolationFactor);
-                // newState = GamePhysics.getInterpolatedEntityState(entity.state, newState, this.smoothingFactor);
-                entity.setState(newState);
-
-                //only if interpolated
-                this.rendering = true;
-                // this.rendered = rendered;
-
-                //entities can be drawed after the first state interpolation
-                // if (!entity.isVisible()) {
-                //     entity.setVisible(true);
-                // }
-            } else {
-                //remove after interpolationTime
-                if (entity.isToRemove()) {
-                    this.playerController.removeEntity(entity);
-                }
+        } else {
+            //remove after interpolationTime
+            if (entity.isToRemove()) {
+                this.playerController.removeEntity(entity);
             }
         }
     },
@@ -159,6 +150,26 @@ StateController.prototype = {
         // console.log(this.elapsedLastUpdate);
         // this.lastUpdateTime = now;
         // console.log(this.elapsedLastUpdate);
+    },
+
+    predictBallStates: function(player, renderTime) {
+        var ballController = player.getBallController();
+        var deltaTime = (renderTime - ballController.getBallLastTime()) / 1000.0;
+        ballController.setBallLastTime(renderTime);
+
+        var oldAngle = ballController.getBallAngle();
+        var newAngle = GamePhysics.getNewBallAngle(oldAngle, deltaTime);
+        ballController.setBallAngle(newAngle);
+
+        GamePhysics.checkNewBalls(player);
+        var balls = ballController.getEntities();
+        for (var i = 0; i < balls.length; i++) {
+            var ball = balls[i];
+            // console.log(i + ":" + ball.state.angle);
+
+            var newState = GamePhysics.getNewBallState(player.state, ball.state, newAngle, i);
+            ball.setState(newState);
+        }
     },
 
     predictShootStates: function(deltaTime) {
@@ -206,13 +217,18 @@ StateController.prototype = {
             var playerState = updatePs[i],
                 player;
 
-            var j = lot.idxOf(this.playerController.getEntities(), 'id', playerState[0]);
+            var id = playerState[0],
+                state = playerState[1];
+
+            var j = lot.idxOf(this.playerController.getEntities(), 'id', id);
             if (j >= 0) {
                 player = this.playerController.getEntities()[j];
             } else {
-                player = this.playerController.add(playerState[0], playerState[2]);
+                var name = playerState[2],
+                    ballAngle = playerState[3];
+                player = this.playerController.add(id, name, ballAngle, time);
             }
-            player.addUpdate(playerState[1], time);
+            player.addUpdate(state, time);
         }
         var entities = this.playerController.getEntities();
     },

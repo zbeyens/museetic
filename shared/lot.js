@@ -8,6 +8,28 @@ exports.getPlayerSize = function(mass) {
     return cfg.playerInitSize + Math.sqrt(mass) * cfg.playerFactor;
 };
 
+exports.getRingRadius = function(mass) {
+    return cfg.ringInitSize + Math.sqrt(mass) * cfg.ringFactor;
+};
+
+//sprite
+exports.getBallRadius = function(mass) {
+    return cfg.ballInitSize + Math.sqrt(mass) * cfg.ballFactor;
+};
+//core
+exports.getBallSize = function(mass) {
+    return cfg.ballSpriteInitSize + Math.sqrt(mass) * cfg.ballSpriteFactor;
+};
+
+exports.getBallPos = function(xc, yc, radius, angle) {
+    var x = xc + radius * Math.cos(angle);
+    var y = yc + radius * Math.sin(angle);
+    var pos = {
+        x: x,
+        y: y,
+    };
+    return pos;
+};
 //sprite
 exports.getRingSize = function(mass) {
     return cfg.ringInitSize + Math.sqrt(mass) * cfg.ringFactor;
@@ -68,7 +90,7 @@ exports.inRect = function(x, y, xc, yr, width, height) {
     }
 };
 
-exports.inCircle = function(xi, yi, xf, yf) {
+exports.distEucl = function(xi, yi, xf, yf) {
     return Math.sqrt(Math.pow(xf - xi, 2) + Math.pow(yf - yi, 2));
 };
 
@@ -89,6 +111,11 @@ exports.abs = function(number) {
     } else {
         return -number;
     }
+};
+
+exports.round = function(prec, float) {
+    var mul = Math.pow(10, prec);
+    return Math.round(float * mul) / mul;
 };
 
 exports.sizeObject = function(object) {

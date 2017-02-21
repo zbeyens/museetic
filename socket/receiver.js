@@ -69,9 +69,6 @@ Receiver.prototype = {
      * @return {void}
      */
     onMsgClear: function(socket) {
-        // if (socket.clearedSpectator) return;
-        // socket.clearedPlayer
-        // socket.clearing = true;
         this.sendMessage(socket, new Packet.Clear());
     },
 
@@ -89,6 +86,7 @@ Receiver.prototype = {
      * @return {void}
      */
     onMsgSubmit: function(socket, msg) {
+        console.log(socket.id);
         if (socket.id != -1) return;
 
         var buffer = new Uint8Array(msg).buffer;
@@ -101,7 +99,6 @@ Receiver.prototype = {
 
         var tileController = this.stateController.getTileController();
         tileController.getPlayerController().addInGame(socket.player, name);
-        socket.clearing = false;
         socket.id = socket.player.id;
         console.log('Player ' + socket.id + ' connected');
         this.sendMessage(socket, new Packet.Clear());

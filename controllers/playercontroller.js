@@ -40,7 +40,7 @@ PlayerController.prototype = _.extend(Object.create(EntityController.prototype),
      * @param  {Player} entity : player to remove
      * @return {void}
      */
-    remove: function(entity) {
+    remove: function(entity, disconnect) {
         //check if entity connected
         var idx = this.entities.indexOf(entity);
         if (idx == -1) return;
@@ -56,7 +56,9 @@ PlayerController.prototype = _.extend(Object.create(EntityController.prototype),
             }
         }
 
-        this.entities.splice(idx, 1);
+        if (disconnect) {
+            this.entities.splice(idx, 1);
+        }
     },
 
     setBestPlayer: function(bestPlayer) {

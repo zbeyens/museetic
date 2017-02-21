@@ -8,7 +8,7 @@ exports = module.exports = Food;
  * x, y: random position,
  * vr - random circular speed: Math.random()
  * angle 0: random circular direction
- * movingTime 0: when eating
+ * movingTime 0: limit time of moving (when eating)
  *
  * @param {int} id
  */

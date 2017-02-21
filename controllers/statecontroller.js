@@ -11,10 +11,11 @@ Instanciate a playercontroller and entitycontroller.
 
 exports = module.exports = StateController;
 
-function StateController(broadcastCallback) {
+function StateController(broadcastCallback, clearCallback) {
     this.lastUpdate = 0;
     this.sockets = [];
     this.broadcastCallback = broadcastCallback;
+    this.clearCallback = clearCallback;
 
     this.tileController = new TileController();
 
@@ -41,14 +42,39 @@ StateController.prototype = {
             var newState = GamePhysics.getNewPlayerState(player, physicsDelta, this.tileController);
             if (newState) {
                 player.setState(newState);
+                this.updateBallStates(player, physicsDelta);
             } else {
-                playerController.remove(player);
+                //remove the player other's scope. Add in spectator. Send Clear.
+                var idx = lot.idxOf(this.sockets, 'id', player.id);
+                playerController.remove(player, false);
+                player.addInSpectator();
+                if (idx > -1) {
+                    this.sockets[idx].id = player.id; //-1
+                    this.clearCallback(this.sockets[idx]);
+                }
             }
 
             var test = new Date() - now;
             if (test > 0) {
                 console.log("Ouch " + test);
             }
+        }
+    },
+
+    updateBallStates: function(player, physicsDelta) {
+        var ballController = player.getBallController();
+        var oldAngle = ballController.getBallAngle();
+        var newAngle = GamePhysics.getNewBallAngle(oldAngle, physicsDelta);
+        ballController.setBallAngle(newAngle);
+
+        //add new balls then update them directly (mass, angle)
+        GamePhysics.checkNewBalls(player);
+        var balls = ballController.getEntities();
+        for (var i = 0; i < balls.length; i++) {
+            var ball = balls[i];
+
+            var newState = GamePhysics.getNewBallState(player.state, ball.state, newAngle, i);
+            ball.setState(newState);
         }
     },
 
@@ -121,11 +147,10 @@ StateController.prototype = {
         }
     },
 
-    //Broadcast to players not clearing
+    //Broadcast to players
     broadcastState: function(localTime) {
         for (var i = this.sockets.length; i--;) {
             var socket = this.sockets[i];
-            if (socket.clearing) return;
             var player = socket.player;
 
             player.tickState++;
@@ -176,7 +201,6 @@ StateController.prototype = {
 
     getPlayersInScope: function(player, states) {
         var playerScope = player.getScope();
-
         var entities = this.tileController.getPlayerController().getEntities();
         for (var i = entities.length; i--;) {
             if (entities[i].id == -1) continue; //don't send spectators state
@@ -204,7 +228,8 @@ StateController.prototype = {
                         id: checkPlayer.id,
                         state: checkPlayer.state,
                     });
-                    states.updatePs.push([checkPlayer.id, updatedState, checkPlayer.name]);
+                    var ballAngle = checkPlayer.getBallController().getBallAngle();
+                    states.updatePs.push([checkPlayer.id, updatedState, checkPlayer.name, ballAngle]);
                 }
             }
 
