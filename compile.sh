@@ -1,1 +1,1 @@
-npm run build && git add . && git commit -m "." && git push
+npm run build && git add . && git commit -m "." && git push heroku master
