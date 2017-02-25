@@ -1,0 +1,16 @@
+@import "../../theme/variables.scss";
+
+
+.globalContainer {
+    font-family: $ff-app;
+}
+
+.contentContainer {
+    width: $width-container;
+
+    @extend %debug;
+}
+
+h1, h2, h3 {
+    font-family: $ffb-app;
+}

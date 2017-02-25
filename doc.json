@@ -1,0 +1,110 @@
+"axios": "^0.15.2",
+"bcrypt-nodejs": "0.0.3",
+"body-parser": "^1.15.2",
+"connect-flash": "^0.1.1",
+"connect-mongo": "^1.3.2",
+"cookie-parser": "^1.4.3", //not used...
+"express": "^4.14.0",
+"express-session": "^1.14.2", //put a persistent req.session to every subreq having the cookie session.id
+"googleapis": "^14.2.0",
+"http-proxy": "^1.15.2",
+"material-ui": "^0.16.4", //material-ui/styles/MuiThemeProvider
+"mongoose": "^4.6.8",
+"morgan": "^1.7.0",
+"passport": "^0.3.2",
+"passport-facebook": "^2.1.1",
+"passport-google-oauth": "^1.0.0",
+"passport-local": "^1.0.0",
+"react": "^15.4.0",
+"react-autobind": "^1.0.6",
+"react-dom": "^15.4.0", //React.DOM.render()
+"react-hot-loader": "^3.0.0-beta.6", //v3 beta, use AppContainer
+"react-redux": "^5.0.2", //Provider, connect()
+"react-router": "^3.0.0", //Router
+"react-router-redux": "^4.0.7", //routerReducer
+"react-tap-event-plugin": "^2.0.1", //not used...
+"redux": "^3.6.0", //combineReducers, bindActionCreators
+"redux-form": "^6.5.0", //formReducer
+"redux-logger": "^2.8.1", //pref redux-devtools
+"redux-promise-middleware": "^4.2.0", //enables robust handling of async code in redux (pending, fulfilled and rejected actions)
+"redux-saga": "^0.14.3", //to create sagas for api calls using generators. Best control of actions than thunk.
+"redux-thunk": "^2.2.0", //allows action creators return a function instead of an action (put condition, delay, etc)
+"serve-favicon": "^2.3.2", //express favicon
+"validator": "^6.1.0"
+
+
+"autoprefixer": "^6.7.2", //add vendor prefixes to css rules
+"babel-cli": "^6.23.0", //shell executable (i.e. node)
+"babel-core": "^6.18.2",
+"babel-eslint": "^7.1.1",
+"babel-loader": "^6.2.7", //transpile ES6 and ES7 to ES5
+"babel-plugin-transform-decorators-legacy": "^1.3.4", //to use decorators @connect etc.
+"babel-polyfill": "^6.23.0", //to use generators, async/await
+"babel-preset-es2015": "^6.18.0", //export,...
+"babel-preset-react": "^6.16.0",
+"babel-preset-stage-0": "^6.22.0", //staged features (0 to 3), --harmony on node to use them: spread operators,...
+"css-loader": "^0.26.1", //css -> css resolved (imports and url(...))
+"cssnano": "^3.10.0", //css processor used to optimize \ minimize the CSS
+"eslint": "^3.15.0",
+"eslint-config-airbnb": "^14.1.0", //lint ES6+Babel+JSX with .eslintrc
+"eslint-plugin-react": "^6.9.0",
+"extract-text-webpack-plugin": "^1.0.1", //production css build: js <style> extracted from the bundle
+"file-loader": "^0.9.0", //url-loader dependency...
+"node-sass": "^4.5.0", //sass-loader dependency
+"optimize-css-assets-webpack-plugin": "^1.3.0", //Solves extract-text-webpack-plugin CSS duplication problem
+"postcss-cssnext": "^2.9.0",
+"postcss-import": "^9.1.0",
+"postcss-loader": "^1.2.2", //postprocess css with Postcss plugins
+"postcss-reporter": "^3.0.0",
+"redux-devtools": "^3.3.2", //these 3 are redux-devtools UI
+"redux-devtools-dock-monitor": "^1.1.1", //these 3 are redux-devtools UI
+"redux-devtools-log-monitor": "^1.2.0", //these 3 are redux-devtools UI
+"sass-loader": "^5.0.1", //sass -> css
+"style-loader": "^0.13.1", //development css build: css resolved -> js <style>
+"url-loader": "^0.5.7", //png, jpg to output...
+"webpack": "^2.2.0", //v2
+"webpack-dev-middleware": "^1.10.0", //these 2 are not used with node
+"webpack-dev-server": "^1.16.2", //these 2 are not used with node
+"webpack-hot-middleware": "^2.16.1" //express middleware to let the server bundle
+
+"esnext": true //.jshintrc 
+
+MONGOOSE:
+limit, sort, select
+find []
+findOne (first found or null)
+findOneAndRemove
+findOneAndUpdate
+
+
+LIFECYCLE METHODS
+componentWillMount – Invoked ONLY once, on both client & server before rendering occurs.
+Add events there.
+componentDidMount – Invoked once, only on the client, after rendering occurs.
+shouldComponentUpdate – Return value determines whether component should update.
+componentWillUnmount – Invoked prior to unmounting component.
+Remove events there.
+
+SPECS
+getInitialState – Return value is the initial value for state.
+getDefaultProps – Sets fallback props values if props aren’t supplied.
+mixins – An array of objects, used to extend the current component’s functionality.
+
+Unidirectional Data Flow:
+a common parent component should manage the state and pass it down the chain via props.
+Your state should be updated using the setState method to ensure that a UI refresh will occur
+
+props: key, index (for array).
+refs
+
+------------------
+FLUX:
+It is simply a new kind of architecture that complements React and the concept of Unidirectional Data Flow.
+
+Components:
+Actions – Helper methods that facilitate passing data to the Dispatcher
+Dispatcher – The Dispatcher is basically the manager of this entire process.
+It is the central hub for your application.
+Receives actions and broadcasts payloads to registered callbacks
+Stores – Containers for application state & logic that have callbacks registered to the dispatcher
+Controller Views – React Components that grab the state from Stores and pass it down via props to child components.

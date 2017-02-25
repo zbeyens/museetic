@@ -1,0 +1,33 @@
+@import "./mixins.scss";
+@import "~bootstrap-sass/assets/stylesheets/_bootstrap-sprockets.scss";
+@import "~bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+/**
+ *  Define scss variables here.
+ *
+ *  Available options for Bootstrap:
+ *  http://getbootstrap.com/customize/
+ *
+ */
+
+// Custom Colors
+// $bg-color-app: rgb(245,247,250);
+$cyan: #33e0ff;
+$humility: #777;
+
+// Bootstrap Variables
+$brand-primary: darken(#428bca, 6.5%);
+$brand-secondary: #e25139;
+$brand-success: #5cb85c;
+$brand-warning: #f0ad4e;
+$brand-danger: #d9534f;
+$brand-info: #5bc0de;
+
+$text-color: #333;
+
+$width-container: 980px;
+
+$ff-size-museum: 1em;
+
+$ff-app: 'raleway';
+$ffb-app: 'raleway-bold';
+$ff-sans-serif: "Helvetica Neue", Helvetica, sans-serif;

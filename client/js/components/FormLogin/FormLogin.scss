@@ -1,0 +1,8 @@
+@import "../../theme/variables.scss";
+
+.formLogin {
+    padding: 15px;
+    padding-bottom: 0px;
+
+    @extend %debug;
+}

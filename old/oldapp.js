@@ -19,6 +19,19 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + '/client/index.html');
 });
 
+//take a pic and put it in uploads.
+// app.use(multer({
+//     dest: path.join(__dirname, '/client/img/uploads'),
+//     rename: function(fieldname, filename) {
+//         return filename;
+//     },
+// }));
+// app.post(‘/api/photo’,function(req,res){
+//  var newItem = new Item();
+//  newItem.img.data = fs.readFileSync(req.files.userPhoto.path)
+//  newItem.img.contentType = ‘image/png’;
+//  newItem.save();
+// });
 
 // app.param('name', function(req, res, next, name) {
 //     // check if the user with that name exists
@@ -42,6 +55,6 @@ app.post('/sms', function(req, res) {
 // var server = https.createServer(options, app);
 
 var server = http.createServer(app);
-server.listen(process.env.PORT || 3000, function() {
-    console.log('Listening on http://localhost:' + (process.env.PORT || 3000));
+server.listen(process.env.PORT || 5000, function() {
+    console.log('Listening on http://localhost:' + (process.env.PORT || 5000));
 });
