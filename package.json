@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "set NODE_ENV=development&& rm -f client/bundle/bundle.js && nodemon app.js --ignore /client",
-    "build": "set NODE_ENV=production&& webpack && babel app.js -d dist --presets es2015,stage-0 && node dist/app.js",
-    "serve": "set NODE_ENV=production&& node dist/app.js"
+    "build": "set NODE_ENV=production&& webpack",
+    "serve": "set NODE_ENV=production&& node app.js"
   },
   "repository": {
     "type": "git",
