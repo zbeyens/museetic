@@ -8,7 +8,7 @@ export function loadAuth() {
     return function(dispatch) {
         dispatch({
             type: "LOAD_REQUEST",
-        })
+        });
         return axios.get('/loadAuth')
             .then((res) => {
                 console.log("loaded");
@@ -25,7 +25,7 @@ export function loadAuth() {
                     payload: e,
                 });
             });
-    }
+    };
 }
 
 /**
@@ -62,8 +62,8 @@ export function signup(values) {
                     payload: e.response.data,
                 });
             });
-    }
-};
+    };
+}
 
 
 /**
@@ -73,7 +73,7 @@ export function signup(values) {
  */
 export function login(values) {
     return function(dispatch) {
-        var test = axios.post('/login', {
+        axios.post('/login', {
                 email: values.email,
                 password: values.password
             })
@@ -95,8 +95,8 @@ export function login(values) {
                     payload: e.response.data,
                 });
             });
-    }
-};
+    };
+}
 
 export function logout() {
     return function(dispatch) {
@@ -115,20 +115,20 @@ export function logout() {
                 //     payload: e,
                 // })
             });
-    }
+    };
 }
 
-export function loginFacebook() {
+export function loginFacebook(values) {
     return function(dispatch) {
         //size of the popup
-        var w = 500;
-        var h = 300;
+        const w = 500;
+        const h = 300;
         //screenXY: position of current monitor
         //screen: monitors
-        var left = window.screenX + (screen.width / 2) - (w / 2);
-        var top = window.screenY + (screen.height / 2) - (h / 2);
-        var win = window.open('/auth/facebook', 'popUpWindow', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-        var intervalID = setInterval(() => {
+        const left = window.screenX + (screen.width / 2) - (w / 2);
+        const top = window.screenY + (screen.height / 2) - (h / 2);
+        const win = window.open('/auth/facebook', 'popUpWindow', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+        const intervalID = setInterval(() => {
             if (win.closed) {
                 // console.log(this.props.dispatch());
 
@@ -137,8 +137,8 @@ export function loginFacebook() {
             }
         }, 100);
         axios.post('/signup', {
-                email: log.email,
-                password: log.password
+                email: values.email,
+                password: values.password
             })
             .then((res) => {
                 if (res.data.loggedIn) {
@@ -155,5 +155,5 @@ export function loginFacebook() {
                     payload: e,
                 });
             });
-    }
-};
+    };
+}

@@ -1,16 +1,14 @@
 import React, {Component} from 'react';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+// import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { loadAuth, login, logout } from '../../actions/authActions';
 
+import { loadAuth } from '../../actions/authActions';
 import {
     Navbar,
     LiDropdown,
     FormLogin,
-    DropdownMenu,
     LiLogout
 } from '../../components';
 // import OffNavbar from '../../components/OffNavbar.jsx';
@@ -28,11 +26,6 @@ import styles from './App.scss';
     }, dispatch)
 )
 class App extends Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
         //load auth if router did not loaded it
         if (this.props.user == null) {

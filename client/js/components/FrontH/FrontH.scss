@@ -1,21 +1,20 @@
 @import "../../theme/variables.scss";
 
 .homeFrontH {
-    @extend %debug;
-    @extend .col-md-5, .col-md-offset-1;
+    @extend %debug, .col-md-5, .col-md-offset-1;
 
     @media (max-width: $screen-md-min) {
+        margin: 0 auto;
         text-align: center;
+        width: 300px;
     }
 
 }
 
 .loginFrontH {
-    @extend .center-block;
+    @extend %debug, .center-block;
     text-align: center;
     width: 300px;
-
-    @extend %debug;
 }
 
 .signupFrontH {

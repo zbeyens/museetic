@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema({
     global: {
         dateReg: {
             type: Date,
-            'default': Date.now
+            default: Date.now
         }
     },
     local: {

@@ -1,21 +1,14 @@
-import React, {Component} from 'react';
+import React from 'react';
 import styles from './FrontH.scss';
 
+const FrontH = function(props) {
+	return (
+		<div className={styles[props.styleClass]}>
+			<h1>{props.title}</h1>
 
-class FrontH extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div className={styles[this.props.style]}>
-                <h1>{this.props.title}</h1>
-
-                {this.props.children}
-            </div>
-        );
-    }
-}
+			{props.children}
+		</div>
+	);
+};
 
 export default FrontH;

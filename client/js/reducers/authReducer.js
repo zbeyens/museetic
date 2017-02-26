@@ -30,6 +30,7 @@ export default function reducer(state = initialState, action) {
         case "LOGIN_SUCCESS":
             return {
                 ...state,
+                loaded: true,
                 user: action.payload
             };
         case "LOGIN_ERROR":
@@ -46,4 +47,4 @@ export default function reducer(state = initialState, action) {
     }
     //return initial state!
     return state;
-};
+}

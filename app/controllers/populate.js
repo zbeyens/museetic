@@ -1,14 +1,15 @@
-var Art = require('../models/art'),
+const Art = require('../models/art'),
     artsData = require('../../config/arts.json');
 
 module.exports = function() {
     //reset
-    Art.remove({}, function() {
+    Art.remove({}, () => {
         console.log("reset");
     });
 
     //populate
-    for (var i = 0; i < artsData.length; i++) {
+    let i;
+    for (i = 0; i < artsData.length; i++) {
         new Art(artsData[i]).save();
     }
 };

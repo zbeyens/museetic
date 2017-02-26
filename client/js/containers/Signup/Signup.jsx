@@ -1,25 +1,14 @@
-import React, {Component} from 'react';
-import {
-    FrontH,
-    FormSignup
-} from '../../components';
-// import styles from './Signup.scss';
+import React from 'react';
+import {FrontH, FormSignup} from '../../components';
 
-
-class Signup extends Component {
-
-    render() {
-
-        return (
-            <div>
-                <FrontH
-                    style="signupFrontH"
-                    title="Inscription">
-                    <FormSignup />
-                </FrontH>
-            </div>
-        );
-    }
-}
+const Signup = function() {
+	return (
+		<div>
+			<FrontH styleClass="signupFrontH" title="Inscription">
+				<FormSignup/>
+			</FrontH>
+		</div>
+	);
+};
 
 export default Signup;

@@ -1,44 +1,30 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import {
-    FrontWelcome,
-    FrontH,
-    FormSignup,
-    FrontArtTrend,
-} from '../../components';
-// import styles from './Home.scss';
+import {FrontWelcome, FrontH, FormSignup, FrontArtTrend} from '../../components';
 
-@connect(
-    state => ({
-        user: state.auth.user,
-    })
-)
+@connect(state => ({user: state.auth.user}))
 class Home extends Component {
 
-    render() {
-        const { user } = this.props;
+	render() {
+		const {user} = this.props;
 
-        return (
-            <div>
-                {!user &&
+		return (
+			<div>
+				{!user &&
                     <div>
-                        <FrontWelcome />
-                        <FrontH
-                            style="homeFrontH"
-                            title="Inscription">
-                            <FormSignup />
-                        </FrontH>
-                    </div>
+    					<FrontWelcome/>
+    					<FrontH styleClass="homeFrontH" title="Inscription">
+    						<FormSignup/>
+    					</FrontH>
+    				</div>
                 }
-                {user &&
-                    <FrontArtTrend>
-
-                    </FrontArtTrend>
+				{user &&
+                    <FrontArtTrend/>
                 }
-            </div>
-        );
-    }
+			</div>
+		);
+	}
 }
 
 export default Home;

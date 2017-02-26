@@ -23,5 +23,5 @@ export function fetchArtTrend() {
                 //     payload: e,
                 // });
             });
-    }
+    };
 }
