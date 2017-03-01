@@ -4,5 +4,7 @@
     padding: 15px;
     padding-bottom: 0px;
 
-    @extend %debug;
+    form button {
+        margin-bottom: 12px;
+    }
 }

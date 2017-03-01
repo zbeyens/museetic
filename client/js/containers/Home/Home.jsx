@@ -1,7 +1,20 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {FrontWelcome, FrontH, FormSignup, FrontArtTrend} from '../../components';
+import {
+    BtnComment,
+    BtnContainer,
+    BtnInfo,
+    BtnLike,
+    BtnShare,
+    BtnSkip,
+    DividerText,
+    FrontWelcome,
+    FrontH,
+    FormSignup,
+    FrontArtTrend,
+    ModalArt,
+} from '../../components';
 
 @connect(state => ({user: state.auth.user}))
 class Home extends Component {
@@ -14,13 +27,30 @@ class Home extends Component {
 				{!user &&
                     <div>
     					<FrontWelcome/>
-    					<FrontH styleClass="homeFrontH" title="Inscription">
+    					<FrontH styleName="homeFrontH" title="Inscription">
     						<FormSignup/>
     					</FrontH>
     				</div>
                 }
 				{user &&
-                    <FrontArtTrend/>
+                    <FrontArtTrend>
+                        <DividerText/>
+                        <BtnContainer>
+                            <BtnInfo />
+                            <BtnSkip />
+                            <BtnLike />
+                            <BtnComment />
+                            <BtnShare />
+                        </BtnContainer>
+                        <ModalArt>
+                            <DividerText/>
+                            <BtnContainer>
+                                <BtnSkip />
+                                <BtnLike />
+                                <BtnShare />
+                            </BtnContainer>
+                        </ModalArt>
+                    </FrontArtTrend>
                 }
 			</div>
 		);

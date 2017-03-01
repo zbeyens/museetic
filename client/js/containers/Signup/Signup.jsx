@@ -4,7 +4,7 @@ import {FrontH, FormSignup} from '../../components';
 const Signup = function() {
 	return (
 		<div>
-			<FrontH styleClass="signupFrontH" title="Inscription">
+			<FrontH styleName="signupFrontH" title="Inscription">
 				<FormSignup/>
 			</FrontH>
 		</div>

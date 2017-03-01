@@ -1,6 +1,6 @@
 const initialState = {
     loading: false,
-    loaded: false,
+    loaded: false, //true if user != null
     user: null,
     loginError: null,
     signupError: null,
@@ -42,6 +42,7 @@ export default function reducer(state = initialState, action) {
         case "LOGOUT_SUCCESS":
             return {
                 ...state,
+                loaded: true,
                 user: false
             };
     }

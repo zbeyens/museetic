@@ -1,34 +1,38 @@
 @import "../../theme/variables.scss";
 
-.FrontArtTrend {
-    @extend .center-block, .thumbnail, %debug;
-    // text-align: center;
-    overflow: auto; //expand parent div to the height of the childs.
+.frontArtTrend {
+    overflow-x: hidden;
 
-    width: 450px;
+    width: 600px;
     padding: 0px 20px 20px 20px;
+    @extend .center-block, .thumbnail;
+    // overflow: auto; //expand parent div to the height of the childs.
+
+    text-align: center;
 
     font-size: $ff-size-museum;
-    // height: 1000px;
-    img {
-        position: relative;
-        margin: 0;
-        margin-top: 10px;
 
-        width: 100%;
-        height: auto;
-
-        border-radius: 6px;
+    h3 span {
+        border-bottom: 1px solid $color-underline;
     }
+}
 
-    div {
-        position: relative;
+.imgContainer {
+    overflow: hidden;
 
-        width: 100%;
-        margin-top: 10px;
+    width: 560px;
+    height: 380px;
+}
 
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        // border: 1px solid;
-    }
+.imgCenter {
+    position: relative;
+    //center the img with overflow hidden
+    left: 50%;
+
+    width: auto;
+    height: 100%;
+    margin-left: -100%;
+
+    vertical-align: middle;
+    // border-radius: 6px;
 }

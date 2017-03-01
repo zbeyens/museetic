@@ -4,12 +4,12 @@ import promise from "redux-promise-middleware";
 
 import reducer from "../reducers";
 
+//styles.css bundle in production
 const head = document.head;
 const link = document.createElement('link');
 link.type = 'text/css';
 link.rel = 'stylesheet';
 link.href = 'client/bundle/styles.css';
-
 head.appendChild(link);
 
 const enhancer = applyMiddleware(promise(), thunk);

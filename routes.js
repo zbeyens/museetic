@@ -1,140 +1,186 @@
-const populate = require('./app/controllers/populate'),
-    path = require('path');
+const artController = require('./app/controllers/artController'),
+	userController = require('./app/controllers/userController'),
+	path = require('path'),
+	async = require('async');
 
 function isLoggedOut(req, res, next) {
-    // if user is authenticated (req.user) in the session, carry on
-    if (req.isAuthenticated()) {
-        return res.sendStatus(403);
-    }
+	// if user is authenticated (req.user) in the session, carry on
+	if (req.isAuthenticated()) {
+		return res.sendStatus(403);
+	}
 
-    return next();
+	return next();
 }
 
 function isLoggedIn(req, res, next) {
-    // if user is authenticated in the session, carry on
-    if (!req.isAuthenticated()) {
-        return res.sendStatus(403);
-    }
+	// if user is authenticated in the session, carry on
+	if (!req.isAuthenticated()) {
+		return res.sendStatus(403);
+	}
 
-    return next();
+	return next();
 }
 
+/**
+* get userInfo to send
+* @param  {Object} user from db
+* @return {Object}      userInfo to send
+*/
 const getUserInfo = function(user) {
-    const userInfo = {};
-    userInfo.email = user.local.email;
-    userInfo.name = user.local.name;
-    return userInfo;
-};
-
-const getArtTrendInfo = function() {
-    const artInfo = {};
-    artInfo.picture = '/client/img/uploads/pic1.jpg';
-    artInfo.title = "Le bureau de Jules Bordet - Musée de la Médecine";
-    artInfo.desc = `Ce bureau en bois a appartenu à Jules Bordet (1870-1961) et a été légué au Musée de la Médecine par son petit-fils, André Govaerts, professeur d’immunologie à l’Université libre de Bruxelles.
-
-Docteur en médecine à l’ULB en 1892, Jules Bordet débute ses travaux de recherche à Paris, dans le laboratoire d’élie Metchnikoff à l’Institut Pasteur. Huit ans plus tard, il quitte la capitale française pour fonder le même Institut dans le Brabant, qu'il dirige de 1901 à 1940. Bordet y fait des recherches en immunologie et démontre que deux substances entrent en compte dans la bactériolyse (destruction des bactéries). La première est une substance chimique agissant spécifiquement contre la bactérie, développée par le corps comme réaction de l’immunisation ; la seconde est une substance thermolabile, contenue dans tous les sérums, qu’il appelle « alexine » (du grec alexein, repousser). Aujourd’hui, ces deux substances sont connues respectivement sous le nom d’« anticorps » et de « complément ».
-
-En 1894, Pfeiffer démontre que les propriétés bactériolytiques du sérum immunisé servent au diagnostic du choléra en laboratoire. Reprenant son concept et le modifiant, Bordet prouve que le test peut être fait dans une éprouvette. À l’aide de ces données, il développe, avec son confrère Octave Gengou, le test de fixation du complément, qui permet de dépister premièrement la syphilis (réaction Bordet-Wassermann), puis plusieurs autres maladies contagieuses. En 1906, Bordet et Gengou découvrent également le coccobacille de la coqueluche (Bordetella pertussis).
-
-Les nombreux travaux que Jules Bordet consacre à la bactériologie et à l’immunologie sont couronnés en 1919 par le Prix Nobel de physiologie ou médecine. Jules Bordet est ainsi le premier scientifique belge à être récompensé par ce prix prestigieux. En 1924, il intègre la direction scientifique du Centre des Tumeurs de l’hôpital Brugmann à Bruxelles et, en 1935, un nouvel institut porte son nom. Enfin, en 1933, il est appelé à présider le Conseil scientifique de l’Institut Pasteur de Paris. Le Musée de la Médecine est aujourd’hui fier d’exposer le bureau de Jules Bordet, éminent professeur de l’ULB, premier prix Nobel belge de Médecine et scientifique du plus haut niveau, dont le travail fut déterminant pour le diagnostic et le traitement de plusieurs maladies contagieuses dangereuses.
-
-Bureau de Jules Bordet Bois, 177 x 86 cm, XIXe s. – Inv. MM-1996-028`;
-    return artInfo;
+	const userInfo = {};
+	userInfo.email = user.local.email;
+	userInfo.name = user.local.name;
+	return userInfo;
 };
 
 function successRedirectSocial(req, res) {
-    res.send('<html><head><script type="text/javascript">window.close();</script></head></html>');
+	res.send('<html><head><script type="text/javascript">window.close();</script></head></html>');
 }
 
 module.exports = function(app, passport) {
-    const isProduction = process.env.NODE_ENV === 'production';
+	// const isProduction = process.env.NODE_ENV === 'production';
 
-    if (!isProduction) {
-        app.get('/populate', (req, res) => {
-            populate();
-            res.redirect("/");
-        });
-    }
+	//NOTE
+	// if (!isProduction) {
+	app.get('/populate', (req, res) => {
+		artController.resetArts();
+		res.redirect("/");
+	});
+	// }
 
-    //Facebook
-    app.get('/auth/facebook', passport.authenticate('facebook', {
-        scope: ['email'],
-        authType: 'rerequest',
-        display: 'popup',
-    }));
-    // handle the callback after facebook has authenticated the user
-    app.get('/auth/facebook/callback', passport.authenticate('facebook', {
-        // successRedirectSocial: '/auth/facebook/success',
-        failureRedirect: '/',
-    }), successRedirectSocial, isLoggedIn);
+	//Facebook
+	app.get('/auth/facebook', passport.authenticate('facebook', {
+		scope: ['email'],
+		authType: 'rerequest',
+		display: 'popup'
+	}));
+	// handle the callback after facebook has authenticated the user
+	app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+		// successRedirectSocial: '/auth/facebook/success',
+		failureRedirect: '/'
+	}), successRedirectSocial, isLoggedIn);
 
-    app.get('/loadAuth', (req, res, next) => {
-        console.log("load:");
-        if (req.isAuthenticated()) {
-            return res.send(getUserInfo(req.user));
-        } else {
-            return res.send(false);
-        }
-    });
+	app.get('/loadAuth', (req, res, next) => {
+		console.log("load:");
+		if (req.isAuthenticated()) {
+			return res.send(getUserInfo(req.user));
+		} else {
+			return res.send(false);
+		}
+	});
 
-    //headers: cookie: 'PHPSESSID=k1rhunhmmp0kdoiaha3gjc4gi0; connect.sid=s%3AVYdD_qIvhfNsLxYdWcdL1z4VFSmG4iNR.MgLRp27o7YsxQwNq3a%2BW98r96gLvFdmmbDfDL0IPT1M' }
-    //sessionID: 'VYdD_qIvhfNsLxYdWcdL1z4VFSmG4iNR',
+	//headers: cookie: 'PHPSESSID=k1rhunhmmp0kdoiaha3gjc4gi0; connect.sid=s%3AVYdD_qIvhfNsLxYdWcdL1z4VFSmG4iNR.MgLRp27o7YsxQwNq3a%2BW98r96gLvFdmmbDfDL0IPT1M' }
+	//sessionID: 'VYdD_qIvhfNsLxYdWcdL1z4VFSmG4iNR',
 
-    //Local
-    app.post('/signup', isLoggedOut, (req, res, next) => {
-        passport.authenticate('local-signup', (err, user, info) => {
-            console.log(info);
-            console.log(req.session);
-            if (err) return res.sendStatus(500);
+	//Local
+	app.post('/signup', isLoggedOut, (req, res, next) => {
+		passport.authenticate('local-signup', (err, user, info) => {
+			console.log(info);
+			console.log(req.session);
+			if (err)
+				return res.sendStatus(500);
 
-            //invalid logs
-            if (!user) {
-                return res.status(400).send(info);
-            }
-            //req.user is put.
-            req.login(user, (e) => {
-                if (e) return res.sendStatus(500);
-                return res.send(getUserInfo(user));
-                // return next();
-            });
-        })(req, res, next);
-    });
+			//invalid logs
+			if (!user) {
+				return res.status(400).send(info);
+			}
+			//req.user is put.
+			req.login(user, (e) => {
+				if (e)
+					return res.sendStatus(500);
+				return res.send(getUserInfo(user));
+				// return next();
+			});
+		})(req, res, next);
+	});
 
-    //req.login automatically invoked with passport.authenticate.
-    app.post('/login', isLoggedOut, (req, res, next) => {
-        passport.authenticate('local-login', (err, user, info) => {
-            if (err) return res.sendStatus(500);
+	//req.login automatically invoked with passport.authenticate.
+	app.post('/login', isLoggedOut, (req, res, next) => {
+		passport.authenticate('local-login', (err, user, info) => {
+			if (err)
+				return res.sendStatus(500);
 
-            //invalid logs
-            if (!user) {
-                return res.status(400).send(info);
-            }
-            console.log("login!");
-            //req.user is put.
-            req.login(user, (e) => {
-                if (e) return res.sendStatus(500);
-                return res.send(getUserInfo(user));
-                // return next();
-            });
-        })(req, res, next);
-    });
+			//invalid logs
+			if (!user) {
+				return res.status(400).send(info);
+			}
+			console.log("login!");
+			//req.user is put.
+			req.login(user, (e) => {
+				if (e)
+					return res.sendStatus(500);
+				return res.send(getUserInfo(user));
+				// return next();
+			});
+		})(req, res, next);
+	});
 
-    app.post('/logout', isLoggedIn, (req, res) => {
-        console.log('Disconnected');
-        req.logout(); //req.user=null.
-        req.session.destroy();
-        res.sendStatus(200);
-    });
+	app.post('/logout', isLoggedIn, (req, res) => {
+		console.log('Disconnected');
+		req.logout(); //req.user=null.
+		req.session.destroy();
+		res.sendStatus(200);
+	});
 
-    app.get('/arttrend', isLoggedIn, (req, res) => {
-        console.log("sending artTrend");
+	app.get('/arttrend', isLoggedIn, (req, res) => {
+		async.waterfall([
+			//findArtCurrent from req.user
+			(cb) => {
+				const findArtCurrent = userController.findArtCurrent(req.user);
+				findArtCurrent.then((user) => {
+					cb(null, user.arts);
+				}).catch((err) => {
+					cb(err);
+				});
+			}, //countArts to pick randomly one art
+			(userArts, cb) => {
+				const countArts = artController.count();
+				countArts.then((count) => {
+					cb(null, count, userArts); //
+				}).catch((err) => {
+					cb(err);
+				});
+			}, //findNextArts (random)
+			(countArts, userArts, cb) => {
+				const findNextArt = artController.findNextArt(countArts, userArts.current);
+				findNextArt.then((nextArt) => {
+					cb(null, nextArt);
+				}).catch((err) => {
+					cb(err);
+				});
+			}, //updateArtCurrent from req.user
+			(nextArt, cb) => {
+				const updateArtCurrent = userController.updateArtCurrent(req.user._id, nextArt._id);
+				updateArtCurrent.then((user) => {
+					res.send(nextArt);
+					cb(null, 'done');
+				}).catch((err) => {
+					cb(err);
+				});
+			}
+		], (err, results) => {
+			console.log(err);
+		});
+		console.log("sending artTrend");
+	});
 
-        const artTrendInfo = getArtTrendInfo();
-        res.send(artTrendInfo);
-    });
+	//user current=1? find art=2, set user current=2
 
-    //Main - after all our routing
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '/index.html'));
-    });
+	// app.get('/skipArt', isLoggedIn, (req, res) => {
+	//     const user = req.user;
+	//     console.log(user.arts.current);
+	//     // if (!user.arts.current) {
+	//     //     userController.
+	//     // }
+	// 	console.log("sending artTrend");
+	// 	artController.findArtTrend((art) => {
+	// 		console.log(art);
+	// 		res.send(art);
+	// 	});
+	// });
+
+	//Main - after all our routing
+	app.get('*', (req, res) => {
+		res.sendFile(path.join(__dirname, '/index.html'));
+	});
 };

@@ -8,13 +8,14 @@ mongoose.Promise = global.Promise;
 // _food: { type: Schema.Types.ObjectId, ref: 'Food' }
 const artSchema = mongoose.Schema({
 
-    picture: String,
-    desc: String,
+	picture: String,
+	title: String,
+	desc: String,
 
-    dateReg: {
-        type: Date,
-        'default': Date.now
-    }
+	dateReg: {
+		type: Date,
+		default: Date.now
+	}
 
 });
 

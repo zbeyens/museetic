@@ -3,7 +3,7 @@ import styles from './FrontH.scss';
 
 const FrontH = function(props) {
 	return (
-		<div className={styles[props.styleClass]}>
+		<div className={styles[props.styleName]}>
 			<h1>{props.title}</h1>
 
 			{props.children}

@@ -2,11 +2,7 @@ import React, {Component} from 'react';
 import { Link } from 'react-router';
 import styles from './Navbar.scss';
 
-class Navbar extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
+class Navbar extends Component {
     render() {
         // <img src="https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/13729036_10210364491130439_6817853708507415078_n.jpg?oh=b13eeb5c58dea5499352596c7cc9bf67&oe=58C3A542" id="bandimg"/>
         // <FlatButton />
@@ -19,9 +15,9 @@ class Navbar extends React.Component {
 
         return (
                 <nav className={"navbar navbar-default container-fluid " + styles.navbarGlobal}>
-                    <div className={"center-block "  + styles.navbarContainer}>
+                    <div className={"center-block " + styles.navbarContainer}>
                         <div className="navbar-header">
-                            <Link to='/'>
+                            <Link to="/">
                                 <span className={"navbar-brand " + styles.bandMuseetic}>
                                     Museetic
                                 </span>

@@ -9,6 +9,7 @@
 
 html {
     height: 100%;
+
     background-color: rgb(245,247,250);
 }
 body, #root {
@@ -20,10 +21,13 @@ body, #root {
     background-color: rgb(245,247,250);
 }
 
+button:focus {
+    /*remove the blue border*/
+    outline: 0 !important;
+}
 
-/*logo image*/
-.cafe {
-    background: url("client/img/cafe.png");
+h3, h4 {
+    font-family: "roboto";
 }
 
 /*pic*/
@@ -32,51 +36,41 @@ body, #root {
     padding: 1px;
 }
 
-/*Divider*/
-.or {
-    position: relative;
-
-    margin: 1em 0;
-    padding: 0.5em 0;
-
-    color: #bdb8b8;
-
-    font-size: 1em;
-}
-.orHr {
-    height: 1px;
-    margin: 0;
-
-    background-color: #d2cece;
-}
-.orSpan {
-    position: absolute;
-    top: -0.2em;
-    left: 50%;
-
-    display: block;
-
-    width: 2.5em;
-    margin-left: -1.5em;
-
-    text-align: center;
-
-    background-color: white;
-}
-
 
 /*social buttons*/
 .socialDiv {
     padding-bottom: 7px;
 }
 
-/*input form*/
-#user_username, #user_password{
-    margin: 10px 0;
-}
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0;
 
-/*button connect*/
-.dropdown-button {
-    clear: left; height: 32px;
-    margin: 0 0 12px;font-size: 13px;
+  text-align: center;
+
+  border-radius: 15px;
+
+  font-size: 12px;
+  line-height: 1.428571429;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+
+  border-radius: 25px;
+
+  font-size: 18px;
+  line-height: 1.33;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+
+  border-radius: 35px;
+
+  font-size: 24px;
+  line-height: 1.33;
 }

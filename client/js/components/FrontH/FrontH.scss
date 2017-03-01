@@ -1,7 +1,7 @@
 @import "../../theme/variables.scss";
 
 .homeFrontH {
-    @extend %debug, .col-md-5, .col-md-offset-1;
+    @extend .col-md-5, .col-md-offset-1;
 
     @media (max-width: $screen-md-min) {
         margin: 0 auto;
@@ -12,7 +12,7 @@
 }
 
 .loginFrontH {
-    @extend %debug, .center-block;
+    @extend .center-block;
     text-align: center;
     width: 300px;
 }

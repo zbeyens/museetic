@@ -7,8 +7,6 @@
 
 .contentContainer {
     width: $width-container;
-
-    @extend %debug;
 }
 
 h1, h2, h3 {

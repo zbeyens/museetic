@@ -1,7 +1,7 @@
-var FacebookStrategy = require('passport-facebook').Strategy,
+const FacebookStrategy = require('passport-facebook').Strategy,
     LocalStrategy = require('passport-local').Strategy,
     validator = require('validator'),
-    User = require('../models/users'),
+    User = require('../models/user'),
     cfgAuth = require('../../config/auth');
 
 /**
@@ -19,7 +19,7 @@ module.exports = function(passport) {
      * then we can recover the user later
      * OPTI: can store more than the id in the session if it needs multiple API calls.
      */
-    passport.serializeUser(function(user, done) {
+    passport.serializeUser((user, done) => {
         done(null, user.id);
     });
 
@@ -28,8 +28,8 @@ module.exports = function(passport) {
      * from this, we recover the user from the database.
      * then we put req.user (authentication) for every subreq.
      */
-    passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
+    passport.deserializeUser((id, done) => {
+        User.findById(id, (err, user) => {
             done(err, user);
         });
     });
@@ -46,13 +46,13 @@ module.exports = function(passport) {
         //Once an access token is no longer valid,
         //we need to create a new one by using the refresh token.
         //send: user
-        function(token, refreshToken, profile, done) {
+        (token, refreshToken, profile, done) => {
             // asynchronous
-            process.nextTick(function() {
+            process.nextTick(() => {
                 // find the user in the database based on their facebook id
                 User.findOne({
                     'facebook.id': profile.id
-                }, function(err, user) {
+                }, (err, user) => {
                     // if the user is found, then log them in
                     if (user) {
                         console.log(user);
@@ -61,9 +61,8 @@ module.exports = function(passport) {
                             //if the user finally accepts to give email
                             if (profile.emails) {
                                 user.facebook.email = profile.emails[0].value;
-                                user.save(function(err) {
-                                    if (err)
-                                        throw err;
+                                user.save((e) => {
+                                    if (e) throw e;
                                     return done(null, user);
                                 });
                             }
@@ -72,7 +71,7 @@ module.exports = function(passport) {
                         return done(null, user); // user found, return that user
                     } else {
                         // if there is no user found with that facebook id, create them
-                        var newUser = new User();
+                        const newUser = new User();
 
                         // set all of the facebook information in our user model
                         newUser.facebook.id = profile.id; // set the users facebook id
@@ -87,9 +86,8 @@ module.exports = function(passport) {
                         }
 
                         // save our user to the database
-                        newUser.save(function(err) {
-                            if (err)
-                                throw err;
+                        newUser.save((e) => {
+                            if (e) throw e;
                             return done(null, newUser);
                         });
                     }
@@ -106,8 +104,7 @@ module.exports = function(passport) {
             passwordField: 'password',
             passReqToCallback: true // allows us to pass back the entire request to the callback
         },
-        function(req, email, password, done) {
-
+        (req, email, password, done) => {
             if (!validator.isEmail(email)) {
                 console.log("Email invalide");
                 return done(null, false, {
@@ -117,11 +114,11 @@ module.exports = function(passport) {
 
             // asynchronous
             // User.findOne wont fire unless data is sent back
-            process.nextTick(function() {
+            process.nextTick(() => {
                 // check existence of mail
                 User.findOne({
                     'local.email': email
-                }, function(err, user) {
+                }, (err, user) => {
                     // if there are any errors, return the error
                     if (err) return done(err);
 
@@ -132,15 +129,15 @@ module.exports = function(passport) {
                         });
                     } else {
                         // create the user
-                        var newUser = new User();
+                        const newUser = new User();
 
                         newUser.local.name = req.body.name;
                         newUser.local.email = email;
                         newUser.local.password = newUser.generateHash(password);
 
                         // save the user
-                        newUser.save(function(err) {
-                            if (err) throw err;
+                        newUser.save((e) => {
+                            if (e) throw e;
                             return done(null, newUser);
                         });
                     }
@@ -154,8 +151,7 @@ module.exports = function(passport) {
             passwordField: 'password',
             passReqToCallback: true
         },
-        function(req, email, password, done) {
-
+        (req, email, password, done) => {
             if (!validator.isEmail(email)) {
                 console.log("Email invalide");
                 return done(null, false, {
@@ -165,7 +161,7 @@ module.exports = function(passport) {
 
             User.findOne({
                 'local.email': email
-            }, function(err, user) {
+            }, (err, user) => {
                 if (err) return done(err);
 
                 // if no user is found, return the message
@@ -186,7 +182,6 @@ module.exports = function(passport) {
 
                 return done(null, user);
             });
-
         }
     ));
 };

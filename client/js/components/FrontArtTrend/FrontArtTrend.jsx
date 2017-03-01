@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
 import { fetchArtTrend } from '../../actions/artActions';
 import styles from './FrontArtTrend.scss';
 
@@ -15,10 +14,6 @@ import styles from './FrontArtTrend.scss';
     }, dispatch)
 )
 class FrontArtTrend extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
         if (this.props.artTrend == null) {
             this.props.fetchArtTrend();
@@ -26,26 +21,22 @@ class FrontArtTrend extends Component {
     }
 
     render() {
-        const { artTrend } = this.props;
-        // console.log(this.props.art);
+        const { artTrend, children } = this.props;
 
         return (
-                <div className={styles.FrontArtTrend}>
-                    {artTrend &&
-                        <div>
-                            <h3>Musées de l'ULB</h3>
+            <div className={styles.frontArtTrend}>
+                {artTrend &&
+                    <div>
+                        <h3><span>Musées de l'ULB</span></h3>
+                        <h4>{artTrend.title}</h4>
 
-                            <strong>
-                                {artTrend.title}
-                            </strong>
-
-                            <img src={artTrend.picture} alt="" />
-                            <div className="">
-                                {artTrend.desc}
-                            </div>
+                        <div className={styles.imgContainer}>
+                            <img className={styles.imgCenter} src={artTrend.picture} alt="" />
                         </div>
+                        {children}
+                    </div>
                 }
-                </div>
+            </div>
         );
     }
 }

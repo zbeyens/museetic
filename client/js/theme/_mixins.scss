@@ -1,1 +1,33 @@
 @import "./placeholders.scss";
+
+@mixin dividerText($clr) {
+    position: relative;
+
+    margin: 1em 0;
+    padding: 0.5em 0;
+
+    color: #bdb8b8;
+
+    font-size: 1em;
+    hr {
+        height: 1px;
+        margin: 0;
+
+        background-color: #d2cece;
+    }
+
+    span {
+        position: absolute;
+        top: -0.2em;
+        left: 50%;
+
+        display: block;
+
+        width: 2.5em;
+        margin-left: -1.5em;
+
+        text-align: center;
+
+        background-color: $clr;
+    }
+}

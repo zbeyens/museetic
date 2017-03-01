@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {
     FrontH,
-    FormLogin
+    FormLogin,
+    DividerText,
 } from '../../components';
-// import styles from './Login.scss';
 
 
 class Login extends Component {
@@ -12,9 +12,11 @@ class Login extends Component {
         return (
             <div>
                 <FrontH
-                    style="loginFrontH"
+                    styleName="loginFrontH"
                     title="Connexion">
-                    <FormLogin />
+                    <FormLogin>
+                        <DividerText styleName="dividerTextFront" text="or"/>
+                    </FormLogin>
                 </FrontH>
             </div>
         );

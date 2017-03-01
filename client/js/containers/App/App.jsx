@@ -9,6 +9,7 @@ import {
     Navbar,
     LiDropdown,
     FormLogin,
+    DividerText,
     LiLogout
 } from '../../components';
 // import OffNavbar from '../../components/OffNavbar.jsx';
@@ -44,7 +45,9 @@ class App extends Component {
                         <Navbar>
                             {!user &&
                                 <LiDropdown a="Vous avez déjà un compte ? Connexion">
-                                    <FormLogin />
+                                    <FormLogin>
+                                        <DividerText styleName="dividerTextWhite" text="or"/>
+                                    </FormLogin>
                                 </LiDropdown>
                             }
                             {user &&

@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "set NODE_ENV=development&& rm -f client/bundle/bundle.js && nodemon app.js --ignore /client",
+    "server": "set NODE_ENV=production&& nodemon app.js",
     "build": "set NODE_ENV=production&& webpack",
     "serve": "set NODE_ENV=production&& node app.js"
   },
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/zbeyens/museetic#readme",
   "dependencies": {
+    "async": "^2.1.5",
     "axios": "^0.15.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",

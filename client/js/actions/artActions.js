@@ -1,13 +1,7 @@
 import axios from "axios";
-// import {
-//     browserHistory
-// } from 'react-router';
 
 export function fetchArtTrend() {
     return function(dispatch) {
-        // dispatch({
-        //     type: "LOAD_REQUEST",
-        // })
         return axios.get('/arttrend')
             .then((res) => {
                 console.log("fetched art");
@@ -18,10 +12,6 @@ export function fetchArtTrend() {
             })
             .catch((e) => {
                 console.log(e);
-                // dispatch({
-                //     type: "LOAD_ERROR",
-                //     payload: e,
-                // });
             });
     };
 }

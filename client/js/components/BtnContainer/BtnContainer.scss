@@ -1,0 +1,16 @@
+@import "../../theme/variables.scss";
+
+.btnContainer {
+    @extend .center-block;
+
+    button {
+        margin: 0px 5px 0 5px;
+
+        transition: transform 0.3s ease;
+        transform:scale(1,1);
+    }
+    button:hover {
+        transition: transform 0.5s ease;
+        transform:scale(1.15,1.15);
+    }
+}

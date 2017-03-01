@@ -17,20 +17,20 @@ class FacebookButton extends Component {
 
         const url = '/auth/facebook';
         const name = 'facebook_login';
-        var w = 500;
-        var h = 500;
+        const w = 500;
+        const h = 500;
         // //screenXY: position of current monitor
         // //screen: monitors
-        var wLeft = window.screenLeft ? window.screenLeft : window.screenX;
-        var wTop = window.screenTop ? window.screenTop : window.screenY;
-        var left = wLeft + (window.innerWidth / 2) - (w / 2);
-        var top = wTop + (window.innerHeight / 2) - (h / 2);
+        const wLeft = window.screenLeft ? window.screenLeft : window.screenX;
+        const wTop = window.screenTop ? window.screenTop : window.screenY;
+        const left = wLeft + (window.innerWidth / 2) - (w / 2);
+        const top = wTop + (window.innerHeight / 2) - (h / 2);
         const specs = 'width='+w+',height='+h+',top='+top+', left='+left;
-        var win = window.open(url, name, specs);
-        // var left = window.screenX + (screen.width/2)-(w/2);
-        // var top = window.screenY + (screen.height/2)-(h/2);
-        // var win = window.open('/auth/facebook','popUpWindow', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
-        var intervalID = setInterval(() => {
+        const win = window.open(url, name, specs);
+        // const left = window.screenX + (screen.width/2)-(w/2);
+        // const top = window.screenY + (screen.height/2)-(h/2);
+        // const win = window.open('/auth/facebook','popUpWindow', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+        const intervalID = setInterval(() => {
             if (win.closed) {
                 this.props.dispatch(loadAuth());
                 //***** DO MY after login code.********
@@ -44,8 +44,9 @@ class FacebookButton extends Component {
             <div className={this.props.divClass}>
 
                 <button className="btn btn-block btn-social btn-facebook"
-                    onClick={this.clickHandler}>
-                    <i className="fa fa-facebook"></i> {this.props.buttonText}
+                    onClick={this.clickHandler}
+                    disabled="disabled">
+                    <i className="fa fa-facebook"/> {this.props.buttonText}
                 </button>
 
             </div>
@@ -56,24 +57,25 @@ class FacebookButton extends Component {
 
 export default FacebookButton;
 
-function setCookie(name,value,days) {
-    var date = new Date();
-    date.setTime(date.getTime()+(days*24*60*60*1000));
-    var expires = "; expires="+date.toGMTString();
-    document.cookie = name+"="+value+expires+"; path=/";
-}
-
-function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
-}
-
-function deleteCookie(name) {
-    setCookie(name,"",-1);
-}
+// function setCookie(name,value,days) {
+//     const date = new Date();
+//     date.setTime(date.getTime()+(days*24*60*60*1000));
+//     const expires = "; expires="+date.toGMTString();
+//     document.cookie = name+"="+value+expires+"; path=/";
+// }
+//
+// function getCookie(name) {
+//     const nameEQ = name + "=";
+//     const ca = document.cookie.split(';');
+//     let i;
+//     for (i=0; i < ca.length; i++) {
+//         let c = ca[i];
+//         while (c.charAt(0) ===' ') c = c.substring(1,c.length);
+//         if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
+//     }
+//     return null;
+// }
+//
+// function deleteCookie(name) {
+//     setCookie(name,"",-1);
+// }

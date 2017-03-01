@@ -1,8 +1,6 @@
 @import "../../theme/variables.scss";
 
 .frontWelcome {
-    @extend %debug;
-
     @media (max-width: $screen-md-min) {
         text-align: center;
     }
