@@ -163,6 +163,7 @@
         "no-trailing-spaces": 0,        // disallow trailing whitespace at the end of lines
         "no-underscore-dangle": 0,      // disallow dangling underscores in identifiers
         "object-curly-spacing": 0,
+        "object-shorthand": 0,
         "one-var": 0,                   // allow just one var statement per function (off by default)
         // "operator-assignment": 0,       // require assignment operator shorthand where possible or prohibit it entirely (off by default)
         // "padded-blocks": 0,             // enforce padding within blocks (off by default)

@@ -1,0 +1,13 @@
+@import "../../theme/variables.scss";
+
+.inputGroup {
+    padding-top: 3px;
+}
+
+.inputSearch {
+    // color
+    // height: 30px !important;
+}
+.inputSearch:focus {
+    background-color: white;
+}

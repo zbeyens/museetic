@@ -1,23 +1,23 @@
 const express = require('express'),
-    app = express(),
-    bodyParser = require('body-parser'),
-    // cookieParser = require('cookie-parser'), //not needed with passport
-    session = require('express-session'),
-    MongoStore = require('connect-mongo')(session),
-    logger = require('morgan'),
-    http = require('http'),
-    // httpProxy = require('http-proxy'), https = require('https'),
-    path = require('path'),
-    // fs = require('fs'),
-    favicon = require('serve-favicon'),
-    // chalk = require('chalk'), multer = require('multer'), //upload pic
-    // server-side
-    passport = require('passport'),
-    mongoose = require('mongoose');
+	session = require('express-session'),
+	app = express(),
+	bodyParser = require('body-parser'),
+	// cookieParser = require('cookie-parser'), //not needed with passport
+	MongoStore = require('connect-mongo')(session),
+	logger = require('morgan'),
+	http = require('http'),
+	// httpProxy = require('http-proxy'), https = require('https'),
+	path = require('path'),
+	// fs = require('fs'),
+	favicon = require('serve-favicon'),
+	// chalk = require('chalk'), multer = require('multer'), //upload pic
+	// server-side
+	passport = require('passport'),
+	mongoose = require('mongoose');
 
 const cfgDb = require('./config/database.js'),
-    cfgPassport = require('./app/controllers/passport.js'),
-    routes = require('./routes.js');
+	cfgPassport = require('./app/controllers/passport.js'),
+	routes = require('./routes/routes.js');
 const isProduction = process.env.NODE_ENV === 'production';
 
 cfgDb(mongoose);
@@ -36,8 +36,8 @@ app.use(bodyParser.urlencoded({extended: true})); //support url-encoded bodies
 // newItem.img.contentType = ‘image/png’;  newItem.save(); });
 
 app.use((req, res, next) => {
-    // console.log(req);
-    next();
+	// console.log(req);
+	next();
 });
 
 /**
@@ -56,15 +56,15 @@ app.use((req, res, next) => {
  * to avoid memory leakage.
  */
 app.use(session({
-    //secure: true //if https
-    secret: 'onepassword', //to sign the cookie
-    store: new MongoStore({mongooseConnection: mongoose.connection}),
-    resave: true, //i.e. update maxAge at each subseq req.
-    saveUninitialized: false, //no session for visitor.
-    rolling: true, //Force the session (if any) cookie to be set on every response (reset expiration timeout).
-    cookie: { //settings of the cookie to send.
-        maxAge: 3600000 * 24 * 90 //3 months
-    }
+	//secure: true //if https
+	secret: 'onepassword', //to sign the cookie
+	store: new MongoStore({mongooseConnection: mongoose.connection}),
+	resave: true, //i.e. update maxAge at each subseq req.
+	saveUninitialized: false, //no session for visitor.
+	rolling: true, //Force the session (if any) cookie to be set on every response (reset expiration timeout).
+	cookie: { //settings of the cookie to send.
+		maxAge: 3600000 * 24 * 90 //3 months
+	}
 }));
 // if ( req.body.remember ) {     var hour = 3600000; req.session.cookie.maxAge
 // = 14 * 24 * hour; //2 weeks } else { req.session.cookie.expires = false; }
@@ -73,33 +73,33 @@ app.use(passport.session()); // persistent login sessions
 
 // Additional middleware which will set headers that we need on each request.
 app.use((req, res, next) => {
-    // Disable caching so we'll always get the latest comments.
-    res.setHeader('Cache-Control', 'no-cache');
-    next();
+	// Disable caching so we'll always get the latest comments.
+	res.setHeader('Cache-Control', 'no-cache');
+	next();
 });
 
 if (!isProduction) {
-    //dev
-    const webpack = require('webpack'),
-        webpackDevMiddleware = require('webpack-dev-middleware'),
-        webpackHotMiddleware = require('webpack-hot-middleware'),
-        webpackConfig = require('./webpack.config');
+	//dev
+	const webpack = require('webpack'),
+		webpackDevMiddleware = require('webpack-dev-middleware'),
+		webpackHotMiddleware = require('webpack-hot-middleware'),
+		webpackConfig = require('./webpack.config');
 
-    const compiler = webpack(webpackConfig);
-    app.use(webpackDevMiddleware(compiler, {
-        hot: true,
-        noInfo: true,
-        filename: webpackConfig.output.filename,
-        publicPath: webpackConfig.output.publicPath,
-        stats: {
-            colors: true
-        }
-    }));
-    app.use(webpackHotMiddleware(compiler, {
-        log: console.log,
-        path: '/__webpack_hmr',
-        heartbeat: 10 * 1000
-    }));
+	const compiler = webpack(webpackConfig);
+	app.use(webpackDevMiddleware(compiler, {
+		hot: true,
+		noInfo: true,
+		filename: webpackConfig.output.filename,
+		publicPath: webpackConfig.output.publicPath,
+		stats: {
+			colors: true
+		}
+	}));
+	app.use(webpackHotMiddleware(compiler, {
+		log: console.log,
+		path: '/__webpack_hmr',
+		heartbeat: 10 * 1000
+	}));
 }
 
 routes(app, passport);
@@ -125,5 +125,5 @@ routes(app, passport);
 
 const server = http.createServer(app);
 server.listen(process.env.PORT || 5000, () => {
-    console.log('Listening on http://localhost:' + (process.env.PORT || 5000));
+	console.log('Listening on http://localhost:' + (process.env.PORT || 5000));
 });

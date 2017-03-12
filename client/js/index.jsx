@@ -3,9 +3,12 @@ import {render} from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 import {syncHistoryWithStore} from 'react-router-redux';
 import {browserHistory} from 'react-router';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import Root from './Root';
 import configureStore from './store/configureStore';
 
+// Needed for onTouchTap
+injectTapEventPlugin();
 if (module.hot) {
 	module.hot.accept();
 }

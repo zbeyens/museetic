@@ -14,26 +14,15 @@ class Navbar extends Component {
         // </button>
 
         return (
-                <nav className={"navbar navbar-default container-fluid " + styles.navbarGlobal}>
-                    <div className={"center-block " + styles.navbarContainer}>
-                        <div className="navbar-header">
-                            <Link to="/">
-                                <span className={"navbar-brand " + styles.bandMuseetic}>
-                                    Museetic
-                                </span>
-                            </Link>
-                        </div>
-
-
-                        <div className="collapse navbar-collapse" id="bs-navbar-collapse-1">
-                            <ul className="nav navbar-nav navbar-right">
-                                {this.props.children}
-                            </ul>
-                        </div>
-
-
+            <nav className={"navbar navbar-default " + styles.navbarGlobal}>
+                <div className={"container-fluid center-block " + styles.navbarContainer}>
+                    <div className={"navbar-header " + styles.navHeader}>
+                        <Link to="/"><span className={"navbar-brand " + styles.bandMuseetic}>Museetic</span></Link>
                     </div>
-                </nav>
+
+                    {this.props.children}
+                </div>
+            </nav>
         );
     }
 }

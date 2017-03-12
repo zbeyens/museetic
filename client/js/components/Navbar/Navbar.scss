@@ -1,9 +1,12 @@
 @import "../../theme/variables.scss";
 
+.navHeader {
+    padding-top: 7px;
+    padding-left: 40px;
+}
+
 /*The band of the navbar*/
 .bandMuseetic {
-    padding-left: 40px;
-
     user-select: none;
 
     color: $color-brand !important;
@@ -14,14 +17,13 @@
 }
 
 .navbarGlobal {
-    // min-height: 10px;
-    padding: 0;
 
     background-color: white;
 }
 
 // col need float:none to be centered
 .navbarContainer {
+    min-height: 56px !important;
     width: $width-container;
 
     background-color: white;

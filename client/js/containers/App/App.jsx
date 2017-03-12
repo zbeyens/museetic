@@ -6,11 +6,12 @@ import { connect } from 'react-redux';
 
 import { loadAuth } from '../../actions/authActions';
 import {
-    Navbar,
-    LiDropdown,
-    FormLogin,
     DividerText,
-    LiLogout
+    FormLogin,
+    InputSearch,
+    LiDropdown,
+    LiLogout,
+    Navbar,
 } from '../../components';
 // import OffNavbar from '../../components/OffNavbar.jsx';
 // import OnNavbar from '../../components/OnNavbar.jsx';
@@ -49,6 +50,9 @@ class App extends Component {
                                         <DividerText styleName="dividerTextWhite" text="or"/>
                                     </FormLogin>
                                 </LiDropdown>
+                            }
+                            {user &&
+                                <InputSearch />
                             }
                             {user &&
                                 <LiDropdown a={user.name}>

@@ -6,10 +6,10 @@ const ObjectId = mongoose.Schema.ObjectId;
 const userSchema = mongoose.Schema({
 
 	arts: {
-        current: {
-            type: ObjectId,
-            ref: 'Art'
-        },
+		current: {
+			type: ObjectId,
+			ref: 'Art'
+		},
 		skipped: [
 			{
 				type: ObjectId,
@@ -23,22 +23,23 @@ const userSchema = mongoose.Schema({
 			}
 		]
 	},
-	dateReg: {
-		type: Date,
-		default: Date.now
-	},
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    role: String, //admin, manager
+    dateReg: {
+        type: Date,
+        default: Date.now
+    },
 	local: {
-		name: {
-			type: String,
-			required: true,
-			trim: true
-		},
-		email: {
-			type: String,
-			required: true,
-			unique: true,
-			trim: true
-		},
 		password: {
 			type: String,
 			required: true
@@ -47,17 +48,12 @@ const userSchema = mongoose.Schema({
 	facebook: {
 		id: String,
 		token: String,
-		name: String,
-		email: String,
 		picture: String
 	},
 	google: {
 		id: String,
 		token: String,
-		email: String,
-		name: String
-	}
-
+	},
 });
 
 // generating a hash

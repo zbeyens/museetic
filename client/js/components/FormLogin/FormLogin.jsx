@@ -51,7 +51,8 @@ class FormLogin extends Component {
                         type="text"
                         placeholder="Adresse e-mail"
                         errorAsync={loginError && loginError.email}
-                        size="30"/>
+                        size="30"
+                    />
                     <Field
                         component={renderField}
                         className="form-control"
@@ -59,7 +60,8 @@ class FormLogin extends Component {
                         type="password"
                         placeholder="Mot de passe"
                         errorAsync={loginError && loginError.password}
-                        size="30"/>
+                        size="30"
+                    />
 
                     { pristine &&
                         <Link to="/login">

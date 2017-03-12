@@ -1,6 +1,7 @@
 "axios": "^0.15.2",
 "bcrypt-nodejs": "0.0.3",
 "body-parser": "^1.15.2",
+"bootstrap-sass": "^3.3.7", //to include bootstrap in sass?
 "connect-flash": "^0.1.1",
 "connect-mongo": "^1.3.2",
 "cookie-parser": "^1.4.3", //not used...
@@ -28,9 +29,9 @@
 "redux-logger": "^2.8.1", //pref redux-devtools
 "redux-promise-middleware": "^4.2.0", //enables robust handling of async code in redux (pending, fulfilled and rejected actions)
 "redux-saga": "^0.14.3", //to create sagas for api calls using generators. Best control of actions than thunk.
-"redux-thunk": "^2.2.0", //allows action creators return a function instead of an action (put condition, delay, etc)
+"redux-thunk": "^2.2.0", //not used? allows action creators return a function instead of an action (put condition, delay, etc)
 "serve-favicon": "^2.3.2", //express favicon
-"validator": "^6.1.0"
+"validator": "^6.1.0" //validator + sanitizer
 
 
 "autoprefixer": "^6.7.2", //add vendor prefixes to css rules
@@ -67,7 +68,7 @@
 "webpack-dev-server": "^1.16.2", //these 2 are not used with node
 "webpack-hot-middleware": "^2.16.1" //express middleware to let the server bundle
 
-"esnext": true //.jshintrc 
+"esnext": true //.jshintrc
 
 MONGOOSE:
 limit, sort, select
