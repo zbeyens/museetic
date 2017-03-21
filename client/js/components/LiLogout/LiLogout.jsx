@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 // import List from 'material-ui/List/List';
 // import ListItem from 'material-ui/List/ListItem';
 // import Avatar from 'material-ui/Avatar';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -26,21 +26,8 @@ class LiLogout extends Component {
     }
 
     render() {
-        // {this.props.buttonText}
-        // <List>
-        //     <ListItem
-        //         href="/profile"
-        //         primaryText="Brendan Lim"
-        //         size={10}
-        //         leftAvatar={
-        //             <Avatar size={40} src="client/img/cafe.png" />
-        //         }>
-        //     </ListItem>
-        // </List>
-        // <Link to="/">
-        // </Link>
         return (
-            <li><a href="#" onClick={this.onLogout}>Se déconnecter</a></li>
+            <li><a href="javascript:" onClick={this.onLogout}>Se déconnecter</a></li>
         );
     }
 

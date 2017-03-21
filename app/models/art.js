@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
+const ObjectId = mongoose.Schema.ObjectId;
+
 // // starting the name with an underscore is simply a convention
 // // to denote this field as a reference
 // // the type instructs Mongoose to set this up as a reference
@@ -10,12 +12,20 @@ const artSchema = mongoose.Schema({
 
 	picture: String,
 	title: String,
+    author: String,
 	desc: String,
 
 	dateReg: {
 		type: Date,
 		default: Date.now
-	}
+	},
+
+    likes: [
+        {
+            type: ObjectId,
+            ref: 'User'
+        }
+    ]
 
 });
 

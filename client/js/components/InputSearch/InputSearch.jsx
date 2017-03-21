@@ -1,27 +1,25 @@
 import React, {Component} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { browserHistory } from 'react-router';
 import AutoComplete from 'material-ui/AutoComplete';
+import IconButton from 'material-ui/IconButton';
 
 // import { AutoComplete } from 'redux-form-material-ui';
-import { search, updateInput } from '../../actions/searchActions';
-import searchValidation from './searchValidation';
+import { fetchSuggestions, fetchUserProfile, updateInput } from '../../actions/userActions';
 import styles from './InputSearch.scss';
 
-@reduxForm({
-    form: 'search',
-    validate: searchValidation,
-})
+
 @connect(
     state => ({
-        inputTime: state.search.inputTime,
-        loading: state.search.loading,
-        users: state.search.users,
-        value: state.search.value,
+        inputTime: state.user.inputTime,
+        loading: state.user.loading,
+        suggestions: state.user.suggestions,
+        value: state.user.value,
     }),
     dispatch => bindActionCreators({
-        search,
+        fetchSuggestions,
+        fetchUserProfile,
         updateInput
     }, dispatch)
 )
@@ -37,52 +35,53 @@ class InputSearch extends Component {
         this.searchInterval = setInterval(() => {
             if (!this.props.loading || new Date() - this.props.inputTime < 350) return;
 
-            this.props.search(this.props.value);
+            this.props.fetchSuggestions(this.props.value);
         }, 100);
     }
 
-    onSubmit(values) {
-        // this.props.reset();
-        console.log(values);
-        this.props.search(values);
+    onSubmit(chosenRequest, index) {
+        //NOTE: index=-1 if enter
+        if (!chosenRequest) return;
+        const chosenUser = this.props.suggestions[index];
+
+        this.props.fetchUserProfile(chosenUser._id);
+        const param = encodeURIComponent(chosenUser._id);
+        browserHistory.push('/user/' + param);
     }
 
-    onUpdateInput(value) {
-        this.props.updateInput(value);
+    onUpdateInput(searchText, dataSource, params) {
+        this.props.updateInput(searchText);
     }
 
     render() {
-        const { handleSubmit, users } = this.props;
-        console.log(users);
+        const { suggestions } = this.props;
+        //config for Object list i.e. suggestions = [{name, _id}]
+        const dataSourceConfig = {
+            text: 'name',
+            value: '_id',
+        };
 
-        // <Field
-        //     name="search"
-        //     component={AutoComplete}
-        //     hintText="Rechercher"
-        //     dataSource={users}
-        //     onUpdateInput={this.onUpdateInput}
-        //     className={"form-control " + styles.inputSearch}
-        //     type="text"
-        //     placeholder="Rechercher"
-        //     size="30"
-        // />
         return (
-            <form className="navbar-form navbar-left" onSubmit={handleSubmit(this.onSubmit)}>
+            <form className="navbar-form navbar-left" onSubmit={this.onSubmit}>
                 <div className={"input-group input-group-sm " + styles.inputGroup}>
                     <AutoComplete
                         className={styles.inputSearch}
+                        onNewRequest={this.onSubmit}
                         onUpdateInput={this.onUpdateInput}
                         hintText="Rechercher"
-                        dataSource={users}
+                        dataSource={suggestions}
+                        dataSourceConfig={dataSourceConfig}
                         filter={AutoComplete.noFilter}
                         openOnFocus
                         fullWidth
                     />
 
                     <span className="input-group-btn">
-                        <button className="btn btn-info" type="submit">
-                            <i className="fa fa-search"/>
-                        </button>
+                        <div>
+                            <IconButton
+                                iconClassName={"fa fa-search " + styles.iconButton}
+                            />
+                        </div>
                     </span>
                 </div>
             </form>

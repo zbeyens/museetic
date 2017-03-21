@@ -1,16 +1,7 @@
 const User = require('../models/user');
 // const mongoose = require('mongoose');
 
-exports.likeArt = (user, artId, nextArtId) => {
-	User.findByIdAndUpdate(user._id, {
-		'arts.current': nextArtId,
-		$push: {
-			"arts.liked": artId
-		}
-	}, (err, model) => {
-		console.log(err);
-	});
-};
+
 
 exports.updateArtCurrent = (userId, nextArtId) => {
 	return User.findByIdAndUpdate(userId, {
@@ -35,16 +26,18 @@ exports.findArtCurrent = (user) => {
  */
 exports.searchUsersByName = (name) => {
 	const inter = "[^0-9a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]+";
-    const pureName = name.replace(new RegExp(inter, 'g'), " ");
-    const values = pureName.split(" ");
-    console.log(values);
-    let regex = '';
-    for (let i = 0; i < values.length; i++) {
-        regex += '(?=.*\\b' + values[i] + ')';
-    }
+	const pureName = name.replace(new RegExp(inter, 'g'), " ");
+	const values = pureName.split(" ");
+	console.log(values);
+	let regex = '';
+	for (let i = 0; i < values.length; i++) {
+		regex += '(?=.*\\b' + values[i] + ')';
+	}
 	return User.find({
-        name: new RegExp(regex, 'i') //case insensitive
-    }, {
-        name: 1
-    }).exec();
+		name: new RegExp(regex, 'i') //case insensitive
+	}, 'name').exec();
+};
+
+exports.findUserById = (id) => {
+	return User.findById(id, 'dateReg name role').exec();
 };

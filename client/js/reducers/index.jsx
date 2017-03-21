@@ -4,13 +4,21 @@ import { reducer as formReducer } from 'redux-form';
 
 import auth from './authReducer';
 import art from './artReducer';
-import search from './searchReducer';
+import user from './userReducer';
 
-export default combineReducers({
+const appReducer = combineReducers({
     art,
     auth,
-    search,
+    user,
 
     form: formReducer,
     routing: routerReducer // Add the reducer to your store on the `routing` key
 });
+
+const rootReducer = (state, action) => {
+    if (action.type === 'LOGOUT_SUCCESS') {
+        state = undefined;
+    }
+    return appReducer(state, action);
+};
+export default rootReducer;

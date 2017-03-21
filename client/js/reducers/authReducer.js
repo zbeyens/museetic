@@ -39,12 +39,14 @@ export default function reducer(state = initialState, action) {
                 loginError: action.payload
             };
 
-        case "LOGOUT_SUCCESS":
+        case "LOGOUT_SUCCESS": {
+            console.log("koko");
             return {
-                ...state,
+                ...initialState,
                 loaded: true,
                 user: false
             };
+        }
     }
     //return initial state!
     return state;

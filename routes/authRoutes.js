@@ -14,6 +14,7 @@ function isLoggedOut(req, res, next) {
 */
 const getUserInfo = (user) => {
 	const userInfo = {};
+    userInfo._id = user._id;
 	userInfo.email = user.email;
 	userInfo.name = user.name;
 	return userInfo;
@@ -99,6 +100,7 @@ module.exports = (app, passport, isLoggedIn) => {
 		console.log('Disconnected');
 		req.logout(); //req.user=null.
 		req.session.destroy();
-		res.sendStatus(200);
+
+        res.sendStatus(200);
 	});
 };

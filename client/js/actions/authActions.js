@@ -1,7 +1,5 @@
 import axios from "axios";
-import {
-    browserHistory
-} from 'react-router';
+import {browserHistory} from 'react-router';
 // import { SubmissionError } from 'redux-form';
 
 export function loadAuth() {
@@ -78,6 +76,8 @@ export function login(values) {
                 password: values.password
             })
             .then((res) => {
+                console.log(res.data);
+
                 dispatch({
                     type: "LOGIN_SUCCESS",
                     payload: res.data
@@ -106,14 +106,11 @@ export function logout() {
                     type: "LOGOUT_SUCCESS",
                 });
 
+                browserHistory.push('/login');
                 // localStorage.setItem('token', null);
             })
             .catch((e) => {
                 console.log('error logout');
-                // dispatch({
-                //     type: "LOGIN_ERROR",
-                //     payload: e,
-                // })
             });
     };
 }

@@ -1,7 +1,7 @@
-var webpack = require('webpack');
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const webpack = require('webpack');
+const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 // webpack -p
 // for HMR without reload, put this at this entry point:
@@ -9,14 +9,15 @@ var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 //     module.hot.accept();
 // }
 
-var BUILD_DIR = path.resolve(__dirname, 'client/bundle'); //rename to public
-var APP_DIR = path.resolve(__dirname, 'client/js');
-var SRC = path.resolve(__dirname, 'client');
-var NODE_MODULES = path.resolve(__dirname, "node_modules");
-var env = process.env.NODE_ENV;
-var isProd = process.env.NODE_ENV === "production";
+const BUILD_DIR = path.resolve(__dirname, 'client/bundle'); //rename to public
+// const APP_DIR = path.resolve(__dirname, 'client/js');
+const SRC = path.resolve(__dirname, 'client');
+const NODE_MODULES = path.resolve(__dirname, "node_modules");
+const env = process.env.NODE_ENV;
+const isProd = process.env.NODE_ENV === "production";
+const isDevServer = process.env.NODE_ENV === "devserver";
 
-var config = {
+const config = {
     entry: [
         //connect to the server to receive bundle rebuild notifications
         'babel-polyfill',
@@ -50,7 +51,7 @@ var config = {
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-                'NODE_ENV': JSON.stringify(env)
+                NODE_ENV: JSON.stringify(env)
             }
         }),
         new webpack.LoaderOptionsPlugin({
@@ -129,6 +130,26 @@ if (isProd) {
         // new webpack.optimize.DedupePlugin(),
         // smallest id length for often used ids, DEFAULT
         // new webpack.optimize.OccurrenceOrderPlugin()
+    );
+} else if (isDevServer) {
+    config.module.rules.push({
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            loader: 'css-loader?minimize&modules&importLoaders=1!postcss-loader',
+        }),
+    }, {
+        test: /\.(sass|scss)$/,
+        loader: ExtractTextPlugin.extract({
+            fallback: "style-loader",
+            loader: 'css-loader?minimize&modules&importLoaders=1!postcss-loader!sass-loader'
+        })
+    });
+    config.plugins.push(
+        new ExtractTextPlugin({
+            allChunks: true,
+            filename: 'styles.css'
+        })
     );
 } else {
     config.entry.push('webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true');

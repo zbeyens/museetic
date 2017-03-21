@@ -3,6 +3,7 @@ mongoose.Promise = global.Promise;
 const bcrypt = require('bcrypt-nodejs');
 const ObjectId = mongoose.Schema.ObjectId;
 
+
 const userSchema = mongoose.Schema({
 
 	arts: {
@@ -16,12 +17,6 @@ const userSchema = mongoose.Schema({
 				ref: 'Art'
 			}
 		],
-		liked: [
-			{
-				type: ObjectId,
-				ref: 'Art'
-			}
-		]
 	},
     name: {
         type: String,

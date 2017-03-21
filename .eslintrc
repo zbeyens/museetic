@@ -88,7 +88,7 @@
         // "no-proto": 0,              // disallow usage of __proto__ property
         // "no-redeclare": 0,          // disallow declaring the same variable more then once
         // "no-return-assign": 0,      // disallow use of assignment in return statement
-        // "no-script-url": 0,         // disallow use of javascript: urls.
+        "no-script-url": 0,         // disallow use of javascript: urls.
         "no-self-assign": 1,        // disallow assignments where both sides are exactly the same
         // "no-self-compare": 0,       // disallow comparisons where both sides are exactly the same (off by default)
         // "no-sequences": 0,          // disallow use of comma operator

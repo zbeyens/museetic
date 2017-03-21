@@ -5,7 +5,7 @@ const BtnInfo = function(props) {
         <button
             className="btn btn-info btn-circle btn-lg dropdown-button"
             data-toggle="modal"
-            data-target="#modalArt">
+            data-target={"#" + props.art._id}>
             <i className="fa fa-info"/>
         </button>
     );

@@ -12,17 +12,17 @@ import { fetchArtTrend } from '../../actions/artActions';
 class BtnSkip extends Component {
     constructor(props) {
         super(props);
-        this.onSkip = this.onSkip.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    onSkip() {
+    handleSubmit() {
         this.props.fetchArtTrend();
     }
 
     render() {
         return (
             <button className="btn btn-info btn-circle btn-lg dropdown-button"
-                onClick={this.onSkip}>
+                onClick={this.handleSubmit}>
                 <i className="fa fa-refresh"/>
             </button>
         );

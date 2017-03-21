@@ -1,7 +1,7 @@
 export {default as BtnComment} from './BtnComment/BtnComment.jsx';
 export {default as BtnContainer} from './BtnContainer/BtnContainer.jsx';
 export {default as BtnInfo} from './BtnInfo/BtnInfo.jsx';
-export {default as BtnLike} from './BtnLike/BtnLike.jsx';
+export {default as BtnLikeArt} from './BtnLikeArt/BtnLikeArt.jsx';
 export {default as BtnShare} from './BtnShare/BtnShare.jsx';
 export {default as BtnSkip} from './BtnSkip/BtnSkip.jsx';
 export {default as DividerText} from './DividerText/DividerText.jsx';
@@ -10,6 +10,7 @@ export {default as FrontWelcome} from './FrontWelcome/FrontWelcome.jsx';
 export {default as FrontH} from './FrontH/FrontH.jsx';
 export {default as FormSignup} from './FormSignup/FormSignup.jsx';
 export {default as FrontArtTrend} from './FrontArtTrend/FrontArtTrend.jsx';
+export {default as GridListArt} from './GridListArt/GridListArt.jsx';
 export {default as InputSearch} from './InputSearch/InputSearch.jsx';
 export {default as LiDropdown} from './LiDropdown/LiDropdown.jsx';
 export {default as LiLogout} from './LiLogout/LiLogout.jsx';

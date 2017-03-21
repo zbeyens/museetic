@@ -25,6 +25,11 @@ button:focus {
     /*remove the blue border*/
     outline: 0 !important;
 }
+a:focus {
+    /*remove the blue border*/
+    outline: 0 !important;
+    text-decoration: none !important;
+}
 
 h3, h4 {
     font-family: "roboto";
@@ -44,34 +49,34 @@ h3, h4 {
 
 
 .btn-circle {
-  width: 30px;
-  height: 30px;
-  padding: 6px 0;
+    width: 30px;
+    height: 30px;
+    padding: 6px 0;
 
-  text-align: center;
+    text-align: center;
 
-  border-radius: 15px;
+    border-radius: 15px;
 
-  font-size: 12px;
-  line-height: 1.428571429;
+    font-size: 12px;
+    line-height: 1.428571429;
 }
 .btn-circle.btn-lg {
-  width: 50px;
-  height: 50px;
-  padding: 10px 16px;
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
 
-  border-radius: 25px;
+    border-radius: 25px;
 
-  font-size: 18px;
-  line-height: 1.33;
+    font-size: 18px;
+    line-height: 1.33;
 }
 .btn-circle.btn-xl {
-  width: 70px;
-  height: 70px;
-  padding: 10px 16px;
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
 
-  border-radius: 35px;
+    border-radius: 35px;
 
-  font-size: 24px;
-  line-height: 1.33;
+    font-size: 24px;
+    line-height: 1.33;
 }

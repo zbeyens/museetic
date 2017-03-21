@@ -18,27 +18,19 @@ const express = require('express'),
 const cfgDb = require('./config/database.js'),
 	cfgPassport = require('./app/controllers/passport.js'),
 	routes = require('./routes/routes.js');
-const isProduction = process.env.NODE_ENV === 'production';
+const isDev = process.env.NODE_ENV !== 'production';
 
 cfgDb(mongoose);
 cfgPassport(passport);
+
 //all client static files served before session.
-app.use('/client', express.static(path.join(__dirname, '/client'), {maxAge: '1h'}));
+app.use('/client', express.static(path.join(__dirname, 'client')));
 app.use(favicon(path.join(__dirname, '/client/img/museum.png')));
 app.use(logger('dev'));
 app.use(bodyParser.json()); //support json-encoded bodies
 app.use(bodyParser.urlencoded({extended: true})); //support url-encoded bodies
-// app.use(cookieParser()); // read cookies (needed for auth) take a pic and put
-// it in uploads. app.use(multer({     dest: path.join(__dirname,
-// '/client/img/uploads'),     rename: function(fieldname, filename) { return
-// filename;     }, })); app.post(‘/api/photo’,function(req,res){  var newItem =
-// new Item();  newItem.img.data = fs.readFileSync(req.files.userPhoto.path)
-// newItem.img.contentType = ‘image/png’;  newItem.save(); });
+// app.use(cookieParser()); // read cookies (needed for auth) take a pic and put it in uploads.
 
-app.use((req, res, next) => {
-	// console.log(req);
-	next();
-});
 
 /**
  * !!! the cookie is session.id (signed with the secret)
@@ -78,7 +70,7 @@ app.use((req, res, next) => {
 	next();
 });
 
-if (!isProduction) {
+if (isDev) {
 	//dev
 	const webpack = require('webpack'),
 		webpackDevMiddleware = require('webpack-dev-middleware'),
