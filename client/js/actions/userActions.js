@@ -8,7 +8,12 @@ import { browserHistory } from 'react-router';
  */
 export function fetchUserProfile(id) {
     return function(dispatch) {
-        console.log(id);
+        dispatch({
+            type: "FETCH_ARTS_REQUEST"
+        });
+        dispatch({
+            type: "FETCH_USER_PROFILE_REQUEST"
+        });
         const param = encodeURIComponent(id);
 		axios.get('/search?q=' + param).then((res) => {
 			console.log("fetched users");
@@ -16,7 +21,7 @@ export function fetchUserProfile(id) {
 			const profile = res.data;
             if (profile) {
                 dispatch({
-                    type: "FETCH_ARTS_PROFILE_SUCCESS",
+                    type: "FETCH_ARTS_SUCCESS",
                     payload: profile.arts
                 });
                 dispatch({

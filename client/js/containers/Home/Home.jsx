@@ -2,12 +2,11 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import {
-    // BtnComment,
-    // BtnContainer,
-    // BtnInfo,
-    // BtnLikeArt,
-    // BtnShare,
-    // BtnSkip,
+    BtnContainer,
+    BtnSkip,
+    BtnLikeArt,
+    BtnComment,
+    BtnShare,
     DividerText,
     FrontWelcome,
     FrontH,
@@ -16,11 +15,14 @@ import {
     // ModalArt,
 } from '../../components';
 
-@connect(state => ({user: state.auth.user}))
+@connect(state => ({
+    user: state.auth.user,
+    currentArt: state.art.currentArt,
+}))
 class Home extends Component {
 
     render() {
-        const {user} = this.props;
+        const {user, currentArt} = this.props;
 
         return (
             <div>
@@ -35,6 +37,12 @@ class Home extends Component {
                 {user &&
                     <FrontArtTrend>
                         <DividerText/>
+                        <BtnContainer>
+                            <BtnSkip />
+                            <BtnLikeArt art={currentArt}/>
+                            <BtnComment art={currentArt}/>
+                            <BtnShare art={currentArt}/>
+                        </BtnContainer>
                     </FrontArtTrend>
                 }
             </div>

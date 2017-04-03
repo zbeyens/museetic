@@ -15,6 +15,11 @@ export default function reducer(state = initialState, action) {
                 suggestions: action.payload,
             };
         }
+        case "FETCH_USER_PROFILE_REQUEST":
+            return {
+                ...state,
+                userProfile: null,
+            };
         case "FETCH_USER_PROFILE_SUCCESS":
             return {
                 ...state,

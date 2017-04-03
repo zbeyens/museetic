@@ -7,15 +7,13 @@ import Paper from 'material-ui/Paper';
 import { fetchUserProfile } from '../../actions/userActions';
 import {
     GridListArt,
-    ModalArt,
 } from '../../components';
 import styles from './UserProfile.scss';
 
 @connect(
     state => ({
         userProfile: state.user.userProfile,
-        artsProfile: state.art.artsProfile,
-        len: state.art.len,
+        listArts: state.art.listArts,
     }),
     dispatch => bindActionCreators({
         fetchUserProfile,
@@ -27,11 +25,11 @@ class UserProfile extends Component {
     }
 
     render() {
-        const { artsProfile, userProfile } = this.props;
+        const { listArts, userProfile } = this.props;
 
         return (
             <div>
-                {userProfile &&
+                {userProfile && listArts &&
                     <div className="row">
                         <Paper className={"col-xs-3 " + styles.leftContainer} zDepth={1}>
                             <div className={styles.picContainer}>
@@ -62,13 +60,7 @@ class UserProfile extends Component {
 
                                     <div className="tab-content">
                                         <div role="tabpanel" className="tab-pane fade in active" id="home">
-                                            <GridListArt list={artsProfile}/>
-                                            {artsProfile.map(art => (
-                                                <ModalArt
-                                                    key={art._id}
-                                                    art={art}
-                                                />
-                                            ))}
+                                            <GridListArt list={listArts}/>
                                         </div>
                                     </div>
 

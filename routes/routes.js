@@ -1,7 +1,7 @@
 const path = require('path'),
     authRoutes = require('./authRoutes'),
     userRoutes = require('./userRoutes'),
-    artTrendRoutes = require('./artTrendRoutes');
+    artRoutes = require('./artRoutes');
 
 function isLoggedIn(req, res, next) {
 	// if user is authenticated in the session, carry on
@@ -14,7 +14,7 @@ function isLoggedIn(req, res, next) {
 
 module.exports = (app, passport) => {
     authRoutes(app, passport, isLoggedIn);
-    artTrendRoutes(app, isLoggedIn);
+    artRoutes(app, isLoggedIn);
     userRoutes(app, isLoggedIn);
 
 	//Main - after all our routing

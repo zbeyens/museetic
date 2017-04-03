@@ -1,20 +1,32 @@
 import React, {Component} from 'react';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {GridList, GridTile} from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
 import Clear from 'material-ui/svg-icons/content/clear';
 
-import { likeArtProfile } from '../../actions/artActions';
+import { likeArtProfile, openDialog } from '../../actions/artActions';
 import styles from './GridListArt.scss';
 
 @connect(
     state => ({}),
     dispatch => bindActionCreators({
-        likeArtProfile
+        likeArtProfile,
+        openDialog,
     }, dispatch)
 )
 class GridListArt extends Component {
+    constructor(props) {
+        super(props);
+        this.handleOpen = this.handleOpen.bind(this);
+    }
+
+    handleOpen(art) {
+        browserHistory.push('/art/' + art._id);
+        this.props.openDialog(art);
+    }
+
     render() {
         const artsProfile = this.props.list;
 
@@ -28,14 +40,14 @@ class GridListArt extends Component {
                         <GridTile
                             key={art._id}
                             title={<a
-                                href="#"
+                                href="javascript:"
                                 className={styles.a}
-                                data-toggle="modal"
-                                data-target={"#" + art._id}
+                                onClick={() => this.handleOpen(art)}
                                 key={art._id}>{art.title}
                             </a>}
                             subtitle={<span>de <b>{art.author}</b></span>}
                             actionIcon={
+                                this.props.mycollection &&
                                 <IconButton onClick={() => this.props.likeArtProfile(art._id, i)}>
                                     <Clear color="white" />
                                 </IconButton>

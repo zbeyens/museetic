@@ -1,35 +1,63 @@
 const initialState = {
-	artTrend: null,
-    artsProfile: null
+	currentArt: null,
+    listArts: null,
+    open: false,
 };
 
 export default function reducer(state = initialState, action) {
 	switch (action.type) {
-		case "ARTTREND_SUCCESS":
+		case "FETCH_ARTTREND_REQUEST":
 			return {
 				...state,
-				artTrend: action.payload
+				currentArt: null,
 			};
-		case "LIKE_ART_TREND_SUCCESS":
+		case "FETCH_ARTTREND_SUCCESS":
 			return {
 				...state,
-				artTrend: {
-					...state.artTrend,
+				currentArt: action.payload
+			};
+		case "LIKE_ART_SUCCESS":
+			return {
+				...state,
+				currentArt: {
+					...state.currentArt,
 					likes: action.payload
 				}
 			};
 		case "UNLIKE_ART_PROFILE_SUCCESS": {
-            const artsProfile = [...state.artsProfile];
-            artsProfile.splice(action.payload, 1);
+            const listArts = [...state.listArts];
+            listArts.splice(action.payload, 1);
             return {
                 ...state,
-                artsProfile: artsProfile,
+                listArts: listArts,
             };
         }
-		case "FETCH_ARTS_PROFILE_SUCCESS":
+		case "FETCH_ARTS_REQUEST":
 			return {
 				...state,
-				artsProfile: action.payload
+				listArts: null,
+			};
+		case "FETCH_ARTS_SUCCESS":
+			return {
+				...state,
+				listArts: action.payload
+			};
+		case "FETCH_ART_SUCCESS":
+			return {
+				...state,
+				currentArt: action.payload,
+                open: true,
+			};
+		case "OPEN_ART":
+			return {
+				...state,
+				open: true,
+                currentArt: action.payload,
+			};
+		case "CLOSE_ART":
+			return {
+				...state,
+				open: false,
 			};
 	}
 

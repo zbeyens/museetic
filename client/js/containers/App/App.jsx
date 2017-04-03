@@ -11,6 +11,7 @@ import {
     InputSearch,
     LiDropdown,
     LiLogout,
+    LiMyCollection,
     Navbar,
 } from '../../components';
 // import OffNavbar from '../../components/OffNavbar.jsx';
@@ -44,21 +45,30 @@ class App extends Component {
                 <div className={styles.globalContainer}>
                     {loaded &&
                         <Navbar>
-                            {!user &&
-                                <LiDropdown a="Vous avez déjà un compte ? Connexion">
-                                    <FormLogin>
-                                        <DividerText styleName="dividerTextWhite" text="or"/>
-                                    </FormLogin>
-                                </LiDropdown>
-                            }
                             {user &&
                                 <InputSearch />
                             }
-                            {user &&
-                                <LiDropdown a={user.name}>
-                                    <LiLogout />
-                                </LiDropdown>
-                            }
+
+                            <ul className={"nav navbar-nav " + styles.nav} >
+                                {user &&
+                                    <LiMyCollection />
+                                }
+                            </ul>
+
+                            <ul className={"nav navbar-nav navbar-right " + styles.nav}>
+                                {!user &&
+                                    <LiDropdown a="Vous avez déjà un compte ? Connexion">
+                                        <FormLogin>
+                                            <DividerText styleName="dividerTextWhite" text="or"/>
+                                        </FormLogin>
+                                    </LiDropdown>
+                                }
+                                {user &&
+                                    <LiDropdown a={user.name}>
+                                        <LiLogout />
+                                    </LiDropdown>
+                                }
+                            </ul>
                         </Navbar>
                     }
 

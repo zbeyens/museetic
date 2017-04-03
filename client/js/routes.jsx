@@ -2,9 +2,11 @@ import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 import {
     App,
+    Art,
     Home,
     Signup,
     Login,
+    MyCollection,
     NotFound,
     UserProfile,
 } from './containers';
@@ -52,14 +54,18 @@ export default(store) => {
 
     return (
         <div>
-                <Route path="/" component={App}>
-                    <IndexRoute component={Home}/>
-                    <Route path="signup" component={Signup} onEnter={requireLogout}/>
-                    <Route path="login" component={Login} onEnter={requireLogout}/>
-                    <Route path="user/:id" component={UserProfile} onEnter={requireLogin}/>
+            <Route path="/" component={App}>
+                <IndexRoute component={Home}/>
+                <Route path="signup" component={Signup} onEnter={requireLogout}/>
+                <Route path="login" component={Login} onEnter={requireLogout}/>
 
-                    <Route path="*" component={NotFound} status={404}/>
-                </Route>
+                <Route path="mycollection" component={MyCollection} onEnter={requireLogin}/>
+                <Route path="user/:id" component={UserProfile} onEnter={requireLogin}/>
+
+                <Route path="art/:id" component={Art} />
+
+                <Route path="*" component={NotFound} status={404}/>
+            </Route>
         </div>
     );
 };

@@ -15,6 +15,10 @@ exports.resetArts = () => {
 	}
 };
 
+exports.findById = (id) => {
+    return Art.findById(id, 'picture title author desc likes').exec();
+};
+
 exports.count = () => {
 	return Art.count().exec();
 };

@@ -12,7 +12,37 @@ module.exports = (app, isLoggedIn) => {
         res.redirect("/");
     });
     // }
-    app.get('/arttrend', isLoggedIn, (req, res) => {
+
+    app.get('/fetchArt', (req, res) => {
+        const artId = decodeURIComponent(req.query.id);
+
+        const findById = artController.findById(artId);
+        findById.then((art) => {
+            res.send(art);
+        }).catch((err) => {
+            res.sendStatus(500);
+        });
+    });
+
+    app.get('/fetchmycollection', isLoggedIn, (req, res) => {
+        const findByLikes = artController.findByLikes(req.user._id);
+        findByLikes.then((arts) => {
+            res.send(arts);
+        }).catch((err) => {
+            res.sendStatus(500);
+        });
+    });
+
+    app.get('/fetchArtTrend', isLoggedIn, (req, res) => {
+        const findArtCurrent = userController.findArtCurrent(req.user);
+        findArtCurrent.then((user) => {
+            res.send(user.arts.current);
+        }).catch((err) => {
+            res.sendStatus(500);
+        });
+    });
+
+    app.get('/skipArt', isLoggedIn, (req, res) => {
         async.waterfall([
             //findArtCurrent from req.user
             (cb) => {
@@ -54,8 +84,9 @@ module.exports = (app, isLoggedIn) => {
                 res.sendStatus(500);
             }
         });
-        console.log("sending artTrend");
+        console.log("sending currentArt");
     });
+
 
     app.get('/likeart', isLoggedIn, (req, res) => {
         const userId = req.user._id;
@@ -103,19 +134,4 @@ module.exports = (app, isLoggedIn) => {
             }
         });
     });
-
-    //user current=1? find art=2, set user current=2
-
-    // app.get('/skipArt', isLoggedIn, (req, res) => {
-    //     const user = req.user;
-    //     console.log(user.arts.current);
-    //     // if (!user.arts.current) {
-    //     //     userController.
-    //     // }
-    // 	console.log("sending artTrend");
-    // 	artController.findArtTrend((art) => {
-    // 		console.log(art);
-    // 		res.send(art);
-    // 	});
-    // });
 };

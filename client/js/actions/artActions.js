@@ -1,12 +1,64 @@
 import axios from "axios";
 
+export function fetchArt(id) {
+    return function(dispatch) {
+        const param = encodeURIComponent(id);
+        axios.get('/fetchArt?id=' + param)
+        .then((res) => {
+            dispatch({
+                type: "FETCH_ART_SUCCESS",
+                payload: res.data,
+            });
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
 export function fetchArtTrend() {
     return function(dispatch) {
-        axios.get('/arttrend')
+        dispatch({
+            type: "FETCH_ARTTREND_REQUEST",
+        });
+        axios.get('/fetchArtTrend')
         .then((res) => {
-            console.log("fetched art");
             dispatch({
-                type: "ARTTREND_SUCCESS",
+                type: "FETCH_ARTTREND_SUCCESS",
+                payload: res.data,
+            });
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
+export function skipArt() {
+    return function(dispatch) {
+        axios.get('/skipArt')
+        .then((res) => {
+            dispatch({
+                type: "FETCH_ARTTREND_SUCCESS",
+                payload: res.data,
+            });
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
+export function fetchMyCollection() {
+    return function(dispatch) {
+        dispatch({
+            type: "FETCH_ARTS_REQUEST"
+        });
+
+        axios.get('/fetchmycollection')
+        .then((res) => {
+            dispatch({
+                type: "FETCH_ARTS_SUCCESS",
                 payload: res.data,
             });
         })
@@ -17,18 +69,17 @@ export function fetchArtTrend() {
 }
 
 /**
- * recv artTrend.likes: check if selfUser id is inside to like or unlike
- * @param  {ObjectId} id : artId
- */
-export function likeArtTrend(id) {
+* recv currentArt.likes: check if selfUser id is inside to like or unlike
+* @param  {ObjectId} id : artId
+*/
+export function likeArt(id) {
     return function(dispatch) {
         const param = encodeURIComponent(id);
         axios.get('/likeart?id=' + param)
         .then((res) => {
             console.log("liked art");
-            console.log(res.data);
             dispatch({
-                type: "LIKE_ART_TREND_SUCCESS",
+                type: "LIKE_ART_SUCCESS",
                 payload: res.data.likes,
             });
         })
@@ -39,9 +90,9 @@ export function likeArtTrend(id) {
 }
 
 /**
- * recv artTrend.likes: check if selfUser id is inside to like or unlike
- * @param  {ObjectId} id : artId
- */
+* recv currentArt.likes: check if selfUser id is inside to like or unlike
+* @param  {ObjectId} id : artId
+*/
 export function likeArtProfile(id, i) {
     return function(dispatch) {
         const param = encodeURIComponent(id);
@@ -54,7 +105,7 @@ export function likeArtProfile(id, i) {
                     type: "UNLIKE_ART_PROFILE_SUCCESS",
                     payload: i,
                 });
-            } else {
+            } else { //NOTE: not used
                 dispatch({
                     type: "LIKE_ART_PROFILE_SUCCESS",
                     payload: {
@@ -66,6 +117,23 @@ export function likeArtProfile(id, i) {
         })
         .catch((e) => {
             console.log(e);
+        });
+    };
+}
+
+export function openDialog(currentArt) {
+    return function(dispatch) {
+        dispatch({
+            type: "OPEN_ART",
+            payload: currentArt,
+        });
+    };
+}
+
+export function closeDialog() {
+    return function(dispatch) {
+        dispatch({
+            type: "CLOSE_ART",
         });
     };
 }

@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchArtTrend } from '../../actions/artActions';
+import { skipArt } from '../../actions/artActions';
 
 @connect(
     state => ({}),
     dispatch => bindActionCreators({
-        fetchArtTrend
+        skipArt
     }, dispatch)
 )
 class BtnSkip extends Component {
@@ -16,7 +16,7 @@ class BtnSkip extends Component {
     }
 
     handleSubmit() {
-        this.props.fetchArtTrend();
+        this.props.skipArt();
     }
 
     render() {

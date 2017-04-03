@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// import { likeArt } from '../../actions/artActions';
+import { likeArt } from '../../actions/artActions';
 
 @connect(
     state => ({
         user: state.auth.user,
     }),
-    dispatch => bindActionCreators({}, dispatch)
+    dispatch => bindActionCreators({
+        likeArt,
+    }, dispatch)
 )
 class BtnLikeArt extends Component {
     constructor(props) {

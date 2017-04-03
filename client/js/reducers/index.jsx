@@ -19,6 +19,13 @@ const rootReducer = (state, action) => {
     if (action.type === 'LOGOUT_SUCCESS') {
         state = undefined;
     }
+    //store the previous route
+    if (action.type === '@@router/LOCATION_CHANGE') {
+        const route = state.routing.locationBeforeTransitions;
+        if (route) {
+            state.routing.previousRoute = route.pathname;
+        }
+    }
     return appReducer(state, action);
 };
 export default rootReducer;

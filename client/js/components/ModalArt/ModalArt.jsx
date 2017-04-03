@@ -1,44 +1,61 @@
 import React, {Component} from 'react';
+import { browserHistory } from 'react-router';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Dialog from 'material-ui/Dialog';
 
-import {
-    BtnComment,
-    BtnContainer,
-    BtnShare,
-    DividerText,
-} from '../';
+import { closeDialog } from '../../actions/artActions';
 import styles from './ModalArt.scss';
 
+@connect(
+    state => ({
+        currentArt: state.art.currentArt,
+        open: state.art.open,
+        previousRoute: state.routing.previousRoute,
+    }),
+    dispatch => bindActionCreators({
+        closeDialog,
+    }, dispatch)
+)
 class ModalArt extends Component {
+    constructor(props) {
+        super(props);
+        this.handleClose = this.handleClose.bind(this);
+    }
+
+    handleClose() {
+        this.props.closeDialog();
+        if (this.props.previousRoute) {
+            browserHistory.push(this.props.previousRoute);
+        } else {
+            browserHistory.push('/');
+        }
+    }
+
     render() {
         const { art, children } = this.props;
 
         return (
-            <div className="modal fade" id={art._id} tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div className="modal-dialog" role="document">
-                    <div className="modal-content">
-                        <div className={styles.modalArt + " modal-body"}>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 
-                            <h3 className="modal-title" id="myModalLabel"><span>{art.title}</span></h3>
-                            <h4>{art.author}</h4>
+            <Dialog
+                modal={false}
+                open={this.props.open}
+                onRequestClose={this.handleClose}
+                autoScrollBodyContent
+                contentStyle={{maxWidth: '900px'}}>
 
-                            <div className={styles.imgContainer}>
-                                <img className={styles.imgCenter} src={art.picture} alt="" />
-                            </div>
-                            <div className={styles.descContainer}>
-                                {art.desc}
-                            </div>
+                <h3><span>{art.title}</span></h3>
+                <h4>{art.author}</h4>
 
-                            <DividerText/>
-                            <BtnContainer>
-                                {children}
-                                <BtnComment art={art}/>
-                                <BtnShare art={art}/>
-                            </BtnContainer>
-                        </div>
-                    </div>
+                <div className={styles.imgContainer}>
+                    <img className={styles.imgCenter} src={art.picture} alt="" />
                 </div>
-            </div>
+                <div className={styles.descContainer}>
+                    {art.desc}
+                </div>
+
+                {children}
+            </Dialog>
         );
     }
 }

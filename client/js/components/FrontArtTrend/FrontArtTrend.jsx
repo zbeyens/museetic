@@ -1,65 +1,62 @@
 import React, {Component} from 'react';
 // import { Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
 
 import {
-    BtnContainer,
-    BtnSkip,
-    BtnLikeArt,
-    BtnComment,
-    BtnShare,
-    ModalArt,
+
+    HTitle,
 } from '../';
-import { fetchArtTrend, likeArtTrend } from '../../actions/artActions';
+import { fetchArtTrend, openDialog } from '../../actions/artActions';
 import styles from './FrontArtTrend.scss';
 
 @connect(
     state => ({
-        artTrend: state.art.artTrend
+        currentArt: state.art.currentArt,
     }),
     dispatch => bindActionCreators({
         fetchArtTrend,
-        likeArtTrend,
+        openDialog,
     }, dispatch)
 )
 class FrontArtTrend extends Component {
+    constructor(props) {
+        super(props);
+        this.handleOpen = this.handleOpen.bind(this);
+    }
+
     componentDidMount() {
-        if (this.props.artTrend == null) {
-            this.props.fetchArtTrend();
-        }
+        this.props.fetchArtTrend();
+    }
+
+    handleOpen(art) {
+        browserHistory.push('/art/' + art._id);
+        this.props.openDialog(art);
     }
 
     render() {
-        const { artTrend, children } = this.props;
+        const { currentArt, children } = this.props;
 
         return (
             <Paper className={styles.frontArtTrend} zDepth={1}>
-                {artTrend &&
+                {currentArt &&
                     <div>
-                        <h3><span>{artTrend.title}</span></h3>
-                        <h4>{artTrend.author}</h4>
+                        <HTitle title={currentArt.title} />
+                        <h4>{currentArt.author}</h4>
 
-                        <a href="#" data-toggle="modal" data-target={"#" + artTrend._id}>
+                        <a href="javascript:" onClick={() => this.handleOpen(currentArt)}>
                             <div className={styles.imgContainer}>
-                                <img className={styles.imgCenter} src={artTrend.picture} alt="" />
+                                <img className={styles.imgCenter} src={currentArt.picture} alt="" />
                             </div>
                         </a>
+
                         {children}
-                        <BtnContainer>
-                            <BtnSkip />
-                            <BtnLikeArt art={artTrend} likeArt={this.props.likeArtTrend}/>
-                            <BtnComment art={artTrend}/>
-                            <BtnShare art={artTrend}/>
-                        </BtnContainer>
-                        <ModalArt art={artTrend}>
-                            <BtnSkip />
-                            <BtnLikeArt art={artTrend} likeArt={this.props.likeArtTrend}/>
-                        </ModalArt>
                     </div>
                 }
             </Paper>
+
         );
     }
 }
