@@ -12,9 +12,10 @@ exports = module.exports = Food;
  *
  * @param {int} id
  */
-function Food(id) {
+function Food(id, mass) {
     Entity.call(this, id);
     this.state.movingTime = 0;
+    this.mass = mass;
 }
 
 Food.prototype = Object.create(Entity.prototype);

@@ -300,7 +300,7 @@ StateController.prototype = {
                 } else {
                     if (lot.inRect(checkFood.state.x, checkFood.state.y, player.state.x, player.state.y, playerScope.minScopeWInit, playerScope.minScopeHInit)) {
                         player.addFoodInScope(checkFood);
-                        states.foodsScopeInit.push([checkFood.id, checkFood.state]);
+                        states.foodsScopeInit.push([checkFood.id, checkFood.state, checkFood.mass]);
                     }
                 }
             }

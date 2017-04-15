@@ -8,12 +8,12 @@ function FoodController() {
 }
 
 FoodController.prototype = _.extend(EntityController.prototype, {
-    add: function(id) {
+    add: function(id, mass) {
         // REVIEW: check how did I handle double food
         // if (lot.idxOf(this.entities, 'id', id) > -1) {
         //     console.log("Double food");
         // }
-        var food = new Food(id);
+        var food = new Food(id, mass);
         this.entities.push(food);
         return food;
     }

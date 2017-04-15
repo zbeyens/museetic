@@ -3,8 +3,10 @@ var entity = require('./entity'),
 
 exports = module.exports = Food;
 
-function Food(id) {
+function Food(id, mass) {
     entity.call(this, id);
+    
+    this.mass = mass;
 }
 
 Food.prototype = Object.create(entity.prototype);

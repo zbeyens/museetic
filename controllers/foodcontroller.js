@@ -14,10 +14,10 @@ function FoodController(players, getNextId) {
 }
 
 FoodController.prototype = _.extend(Object.create(EntityController.prototype), {
-    add: function() {
+    add: function(mass) {
         var id = this.getNextId(3);
 
-        var newFood = new Food(id);
+        var newFood = new Food(id, mass);
         this.entities.push(newFood);
 
         for (var i = this.players.length; i--;) {

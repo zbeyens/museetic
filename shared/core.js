@@ -71,7 +71,7 @@ exports.getNewPlayerState = function(player, deltaTime, tileController) {
     newState.dashRange = state.dashRange;
     newState.dashDone = state.dashDone;
 
-    var selfScope = lot.getSelfScope(newState.mass);
+    var selfRadius = lot.getSelfRadius(newState.mass);
 
     processInputs(player, newState, tileController, shootController);
     checkImmunity(newState);
@@ -84,16 +84,16 @@ exports.getNewPlayerState = function(player, deltaTime, tileController) {
 
     //only foods on these tiles !
     var newTiles = tileController.getTiles(newState.x, newState.y, cfg.tileFoodRange, cfg.tileFoodRange);
-    checkFoodsEating(newState, newTiles, selfScope, player);
+    checkFoodsEating(newState, newTiles, selfRadius, player);
     // checkRing(newState);
 
     if (newState.dashing) return newState;
 
-    if (checkBallKill(newState, tileController, playerController, selfScope, id)) {
+    if (checkBallKill(newState, tileController, playerController, selfRadius, id)) {
         return processKilled();
     }
-    // if (checkBallKill(newState, tileController, playerController, selfScope, id) ||
-    //     checkShootsKill(newState, tileController, shootController, selfScope, id))
+    // if (checkBallKill(newState, tileController, playerController, selfRadius, id) ||
+    //     checkShootsKill(newState, tileController, shootController, selfRadius, id))
 
     return newState;
 };
@@ -167,7 +167,10 @@ var applySpawnFoods = function(tileController) {
     for (var j = 0; j < cfg.foodSpawnAmount; j++) {
         var foodState = ic.getInitFoodState();
         var tile = tileController.getTile(foodState.x, foodState.y);
-        var newFood = tile.getFoodController().add();
+        
+        var massIndex = lot.randomIntFromInterval(0, cfg.foodMasses.length - 1);
+        var mass = cfg.foodMasses[massIndex];
+        var newFood = tile.getFoodController().add(mass);
         newFood.setState(foodState);
     }
 };
@@ -237,7 +240,7 @@ var dashEndMove = function(newState, angle) {
     };
 };
 
-var checkFoodsEating = function(newState, newTiles, selfScope, player) {
+var checkFoodsEating = function(newState, newTiles, selfRadius, player) {
     //food eat and mass gain
     for (var i = newTiles.length; i--;) {
         var newTile = newTiles[i];
@@ -250,15 +253,16 @@ var checkFoodsEating = function(newState, newTiles, selfScope, player) {
             // console.log("ohoh");
 
             var distPlayerFood = lot.distEucl(food.state.x, food.state.y, newState.x, newState.y);
-            if (distPlayerFood < selfScope + cfg.foodHitbox) {
-                newState.mass += cfg.foodMass;
+            const foodHitbox = lot.getFoodRadius(food.mass);
+            if (distPlayerFood < selfRadius + foodHitbox) {
+                newState.mass += food.mass;
                 foodController.remove(food, player.id);
             }
         }
     }
 };
 
-var checkBallKill = function(newState, tileController, playerController, selfScope, id) {
+var checkBallKill = function(newState, tileController, playerController, selfRadius, id) {
     var players = playerController.getEntities();
     for (var j = players.length; j--;) {
         var killer = players[j];
@@ -273,26 +277,26 @@ var checkBallKill = function(newState, tileController, playerController, selfSco
             var ball = balls[i];
             //if active
 
-            if (checkKill(newState, tileController, selfScope, ball)) return true;
+            if (checkKill(newState, tileController, selfRadius, ball)) return true;
         }
     }
 };
 
-var checkShootsKill = function(newState, tileController, shootController, selfScope, id) {
+var checkShootsKill = function(newState, tileController, shootController, selfRadius, id) {
     var shoots = shootController.getEntities();
     for (var j = shoots.length; j--;) {
         var shoot = shoots[j];
         if (shoot.referrerId !== id && shoot.state.ring) {
-            if (checkKill(newState, tileController, selfScope, shoot)) return true;
+            if (checkKill(newState, tileController, selfRadius, shoot)) return true;
         }
     }
 };
 
-var checkKill = function(newState, tileController, selfScope, ball) {
+var checkKill = function(newState, tileController, selfRadius, ball) {
     var distPlayerBall = lot.distEucl(ball.state.x, ball.state.y, newState.x, newState.y);
     var ballRadius = lot.getBallRadius(ball.state.mass);
 
-    if (selfScope + ballRadius > distPlayerBall) {
+    if (selfRadius + ballRadius > distPlayerBall) {
         for (var i = 0; i < 20; i++) {
             // spawnFood(newState, tileController, i);
         }
@@ -301,12 +305,12 @@ var checkKill = function(newState, tileController, selfScope, ball) {
     }
 };
 
-// var checkKill = function(newState, tileController, selfScope, killer) {
+// var checkKill = function(newState, tileController, selfRadius, killer) {
 //     var distPlayers = lot.distEucl(killer.state.x, killer.state.y, newState.x, newState.y);
 //     var minScope = lot.getRingMin(killer.state.mass);
 //     var maxScope = lot.getRingMax(killer.state.mass);
 //
-//     if (minScope - selfScope < distPlayers && distPlayers < selfScope + maxScope) {
+//     if (minScope - selfRadius < distPlayers && distPlayers < selfRadius + maxScope) {
 //         for (var i = 0; i < 20; i++) {
 //             spawnFood(newState, tileController, i);
 //         }
@@ -321,7 +325,8 @@ var spawnFood = function(newState, tileController, iangle) {
         y: newState.y + Math.sin(Math.PI * iangle / 10) * lot.getRingMin(newState.mass),
     };
     var tileFood = tileController.getTile(foodState.x, foodState.y);
-    var newFood = tileFood.getFoodController().add();
+    //NOTE size
+    var newFood = tileFood.getFoodController().add(cfg.foodMasses[2]);
     newFood.setState(foodState);
 };
 
@@ -451,7 +456,6 @@ exports.getNewFoodState = function(food, deltaTime) {
     newState.angle = state.angle;
     newState.vr = state.vr;
     newState.movingTime = state.movingTime;
-
 
     if (food.referrer === undefined) {
         newState.angle = (state.angle + newState.vr * cfg.foodRotationSpeed * deltaTime) % (2 * Math.PI);

@@ -1,66 +1,82 @@
 //temporary
-var Fps = require('../../../shared/fps');
+const Fps = require('../../../shared/fps'),
+    cfg = require('../../../shared/config');
 
-exports = module.exports = Hud;
 
-function Hud() {}
-
-Hud.prototype = {
-    preloadHud: function() {
+export default class Hud {
+    constructor(cv) {
+        this.cv = cv;
+        this.canvas = cv.canvas;
+    }
+    
+    preloadHud() {
         //we don't apply scale on HUD (but we do on stage): no blur
-        this.hud = new PIXI.Container();
+        this.container = new PIXI.Container();
 
         //Board
-        this.board = document.getElementById('boardDiv');
-        this.leaderboard = document.getElementById('leaderboard');
-        this.entry = document.getElementById('entry');
-        var num = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+        // const board = document.getElementById('boardDiv');
+        // const leaderboard = document.getElementById('leaderboard');
+        const num = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
         this.entries = [];
-        for (var i = 0; i < 10; i++) {
+        for (let i = 0; i < 10; i++) {
             this.entries.push(document.getElementById(num[i]));
         }
-
-        this.textOpt = {
-            fontFamily: 'raleway',
-            fill: '#ffffff',
-            stroke: '#000000',
-        };
-
+        
         //FPS
         this.fps = new Fps();
-        this.fpsText = new PIXI.Text('', this.textOpt);
-        this.hud.addChild(this.fpsText);
-        setInterval(function() {
+        this.fpsText = new PIXI.Text('', cfg.textOpt);
+        this.container.addChild(this.fpsText);
+        setInterval(() => {
             this.fpsText.text = 'Fps: ' + this.fps.getFps();
-        }.bind(this), 1000);
-
+        }, 1000);
+        
         //Mass
-        this.score = new PIXI.Text('', this.textOpt);
-        this.hud.addChild(this.score);
-
+        this.score = new PIXI.Text('', cfg.textOpt);
+        this.container.addChild(this.score);
+        
         //x, y
-        this.x = new PIXI.Text('', this.textOpt);
-        this.hud.addChild(this.x);
-        this.y = new PIXI.Text('', this.textOpt);
-        this.hud.addChild(this.y);
-
+        this.x = new PIXI.Text('', cfg.textOpt);
+        this.container.addChild(this.x);
+        this.y = new PIXI.Text('', cfg.textOpt);
+        this.container.addChild(this.y);
+        
         //Minimap
         this.minimap = new PIXI.Graphics();
-        this.hud.addChild(this.minimap);
+        this.container.addChild(this.minimap);
         this.miniself = new PIXI.Graphics();
-        this.hud.addChild(this.miniself);
+        this.container.addChild(this.miniself);
+        
+        this.container.visible = false;
+    }
 
-        this.hud.visible = false;
-    },
-
-    drawHud: function(selfState) {
+    //DOM
+    drawBoard(board) {
+        const len = board.length;
+        for (let i = 0; i < len; i++) {
+            this.entries[i].textContent = (i + 1) + '. ' + board[i];
+        }
+        
+        if (len < 10) {
+            for (let i = len; i < 10; i++) {
+                this.entries[i].textContent = '';
+            }
+        }
+    }
+    
+    drawHud(selfState) {
         //Mass if modif
-        if (this.score.text != 'Mass : ' + selfState.mass) {
+        if (this.score.text !== 'Mass : ' + selfState.mass) {
             this.score.text = 'Mass : ' + selfState.mass;
         }
-
         //x,y
         this.x.text = 'x: ' + Math.round(selfState.x);
         this.y.text = 'y: ' + Math.round(selfState.y);
-    },
-};
+        
+        //minimap
+        const miniX = this.canvas.width + (selfState.x * cfg.minimapRad / cfg.midLimitRad - 60) * this.cv.cam.scale;
+        const miniY = this.canvas.height + (selfState.y * cfg.minimapRad / cfg.midLimitRad - 60) * this.cv.cam.scale;
+        this.miniself.clear();
+        this.miniself.beginFill(0x000000, 0.5);
+        this.miniself.drawCircle(miniX, miniY, cfg.miniselfRad * this.cv.cam.scale);
+    }
+}

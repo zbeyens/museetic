@@ -1,44 +1,55 @@
 {
-  "name": "flappio",
-  "version": "0.3.0",
-  "description": "Flapp.io game",
-  "author": "Miyud <zbeyens@ulb.ac.be>",
-  "main": "app.js",
-  "scripts": {
-    "start": "set NODE_ENV=development&& rm -f client/bundle/bundle.js && node app.js",
-    "webpack": "set NODE_ENV=production&& webpack",
-    "serve": "set NODE_ENV=production&& node app.js"
-  },
-  "dependencies": {
-    "crypto": "0.0.3",
-    "express": "^4.13.4",
-    "helmet": "^2.1.2",
-    "morgan": "^1.7.0",
-    "node-uuid": "^1.4.7",
-    "sanitizer": "^0.1.3",
-    "serve-favicon": "^2.3.2",
-    "serve-static": "^1.11.2",
-    "socket.io": "~1.4.5",
-    "underscore": "^1.8.3",
-    "uws": "^0.12.0",
-    "ws": "^1.1.1"
-  },
-  "devDependencies": {
-    "babel-core": "^6.18.2",
-    "babel-loader": "^6.2.7",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-react": "^6.16.0",
-    "babel-preset-stage-0": "^6.16.0",
-    "cross-env": "^3.1.4",
-    "css-loader": "^0.26.1",
-    "file-loader": "^0.9.0",
-    "nodemon": "^1.11.0",
-    "postcss-loader": "^1.2.2",
-    "react-hot-loader": "^3.0.0-beta.6",
-    "style-loader": "^0.13.1",
-    "url-loader": "^0.5.7",
-    "webpack": "^1.14.0",
-    "webpack-dev-middleware": "^1.9.0",
-    "webpack-hot-middleware": "^2.15.0"
-  }
+    "name": "flappio",
+    "version": "0.4.0",
+    "description": "io game",
+    "author": "Miyud <zbeyens@ulb.ac.be>",
+    "license": "SEE LICENSE IN LICENSE",
+    "main": "app.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/zbeyens/flapzd.git"
+    },
+    "bugs": {
+        "url": "https://github.com/zbeyens/flapzd/issues"
+    },
+    "scripts": {
+        "start": "set NODE_ENV=development&& rm -f client/bundle/bundle.js && node app.js",
+        "webpack": "set NODE_ENV=production&& webpack",
+        "serve": "set NODE_ENV=production&& node app.js"
+    },
+    "dependencies": {
+        "crypto": "0.0.3",
+        "eslint-plugin-import": "^2.2.0",
+        "eslint-plugin-jsx-a11y": "^4.0.0",
+        "express": "^4.13.4",
+        "helmet": "^3.5.0",
+        "morgan": "^1.7.0",
+        "sanitizer": "^0.1.3",
+        "serve-favicon": "^2.3.2",
+        "socket.io": "~1.7.3",
+        "underscore": "^1.8.3",
+        "ws": "^2.2.3"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.23.0",
+        "babel-core": "^6.18.2",
+        "babel-eslint": "^7.1.1",
+        "babel-loader": "^6.2.7",
+        "babel-preset-es2015": "^6.18.0",
+        "babel-preset-react": "^6.16.0",
+        "babel-preset-stage-0": "^6.16.0",
+        "cross-env": "^4.0.0",
+        "css-loader": "^0.28.0",
+        "eslint": "^3.15.0",
+        "eslint-config-airbnb": "^14.1.0",
+        "eslint-plugin-react": "^6.9.0",
+        "file-loader": "^0.11.1",
+        "nodemon": "^1.11.0",
+        "postcss-loader": "^1.2.2",
+        "style-loader": "^0.16.1",
+        "url-loader": "^0.5.7",
+        "webpack": "^2.2.0",
+        "webpack-dev-middleware": "^1.10.0",
+        "webpack-hot-middleware": "^2.15.0"
+    }
 }

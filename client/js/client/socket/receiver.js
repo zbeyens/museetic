@@ -82,7 +82,6 @@ Receiver.prototype = {
         var buf = new BufferReader(msg);
         buf.addOffset(1);
         var t = buf.getUint32();
-        console.log('receiv');
         // console.log(t - this.stateController.serverTime);
         if (this.stateController.rendering) {
             this.stateController.rendered -= (t - this.stateController.serverTime);
@@ -202,7 +201,8 @@ Receiver.prototype = {
                 state.yReal = buf.getFloat32();
                 state.x = state.xReal;
                 state.y = state.yReal;
-                foodsScopeInit.push([id, state]);
+                var mass = buf.getUint8();
+                foodsScopeInit.push([id, state, mass]);
             }
             this.stateController.updateFoodInitStates(foodsScopeInit);
         }

@@ -1,98 +1,86 @@
-var webpack = require('webpack');
-var path = require('path');
+const webpack = require('webpack');
+const path = require('path');
 
-// webpack -p
-// for HMR without reload, put this at this entry point:
-// if (module.hot) {
-//     module.hot.accept();
-// }
+const BUILD_DIR = path.resolve(__dirname, 'client/bundle'); //rename to public
+// const APP_DIR = path.resolve(__dirname, 'client/js');
+// const SRC = path.resolve(__dirname, 'client');
+// const NODE_MODULES = path.resolve(__dirname, "node_modules");
+const env = process.env.NODE_ENV;
+const isProd = process.env.NODE_ENV === "production";
+// const isDevServer = process.env.NODE_ENV === "devserver";
 
-var BUILD_DIR = path.resolve(__dirname, 'client/bundle'); //rename to public
-var APP_DIR = path.resolve(__dirname, 'client/js');
-var SRC = path.resolve(__dirname, 'client');
-var NODE_MODULES = path.resolve(__dirname, "node_modules");
-
-var config = {
+const config = {
     entry: [
         //connect to the server to receive bundle rebuild notifications
-        //app
         './client/js/game.js',
     ],
-
+    
     output: {
         filename: 'bundle.js',
         //path of the bundle, otherwise it's stocked in memory
         path: BUILD_DIR,
         // location of hot update
         publicPath: '/client/bundle',
-        //remove the annoying hash
-        // hotUpdateChunkFilename: 'hot/hot-update.js',
-        // hotUpdateMainFilename: 'hot/hot-update.json'
     },
-    postcss: [
-        require('autoprefixer')
-    ],
-    // watch: true,
-    // progress: true,
-    // target: 'node',
-
+    
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['.js', '.jsx']
     },
-
+    
     module: {
+        rules: [{
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            loaders: ['babel-loader'],
+        }]
         //JSX transpiling via babel-loader
-        loaders: [{
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loaders: ['babel-loader'],
-            }, {
-                test: [
-                    /\.png$/,
-                    /\.jpg$/
-                ],
-                loader: "url-loader"
-            }, {
-                test: /\.css$/,
-                include: [
-                    NODE_MODULES,
-                    SRC
-                ],
-                loader: 'style-loader!css-loader!postcss-loader',
-            }
-
-        ]
+        // test: [
+        //     /\.png$/,
+        //     /\.jpg$/
+        // ],
+        // loader: "url-loader"
     },
-
+    
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-                'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+                NODE_ENV: JSON.stringify(env)
             }
-        }),
+        })
     ]
 };
 
-if (process.env.NODE_ENV === 'production') {
+if (isProd) {
+    config.devtool = "source-map";
     config.plugins.push(
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                screw_ie8: true,
-                warnings: false
-            },
+        new webpack.LoaderOptionsPlugin({
+            minimize: true
         }),
-        // remove duplicate files
-        new webpack.optimize.DedupePlugin(),
-        // smallest id length for often used ids
-        new webpack.optimize.OccurrenceOrderPlugin()
+        new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true, //true for minimized code or want correct line numbers for uglifyjs warnings
+            compress: {
+                warnings: false, //true to debug
+                screw_ie8: true,
+                conditionals: true,
+                unused: true,
+                comparisons: true,
+                sequences: true,
+                dead_code: true,
+                evaluate: true,
+                if_return: true,
+                join_vars: true,
+            },
+            output: {
+                comments: false,
+            },
+        })
     );
 } else {
     config.entry.push('webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true');
     config.plugins.push(
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.HotModuleReplacementPlugin()
+        // new webpack.NoErrorsPlugin()
     );
 }
-
 
 module.exports = config;

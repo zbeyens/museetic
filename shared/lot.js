@@ -4,12 +4,16 @@ exports.getScaleMass = function(mass) {
     return 1 - Math.sqrt(mass) * cfg.scaleMassFactor;
 };
 
-exports.getPlayerSize = function(mass) {
-    return cfg.playerInitSize + Math.sqrt(mass) * cfg.playerFactor;
-};
-
 exports.getRingRadius = function(mass) {
     return cfg.ringInitSize + Math.sqrt(mass) * cfg.ringFactor;
+};
+
+exports.getFoodRadius = function(mass) {
+    return cfg.foodInitSize + Math.sqrt(mass) * cfg.foodFactor;
+};
+
+exports.getFoodSpriteRadius = function(mass) {
+    return cfg.foodSpriteInitSize + Math.sqrt(mass) * cfg.foodSpriteFactor;
 };
 
 //sprite
@@ -47,8 +51,12 @@ exports.getRingFreq = function(mass) {
     return cfg.ringFreqInit - Math.sqrt(mass) * cfg.ringFreqFactor;
 };
 
-exports.getSelfScope = function(mass) {
-    return cfg.selfScopeInitSize + Math.sqrt(mass) * cfg.selfScopeFactor;
+exports.getSelfRadius = function(mass) {
+    return cfg.selfRadiusInitSize + Math.sqrt(mass) * cfg.selfRadiusFactor;
+};
+
+exports.getPlayerSpriteRadius = function(mass) {
+    return cfg.playerSpriteInitSize + Math.sqrt(mass) * cfg.playerSpriteFactor;
 };
 
 exports.getScope = function(playerScope, checkMass) {
@@ -141,4 +149,14 @@ exports.sizeObject = function(object) {
         }
     }
     return bytes;
+};
+
+exports.getStyle = function(factor, scale) {
+    return {
+        fontFamily: 'raleway',
+        fill: '#ffffff',
+        stroke: '#000000',
+        fontSize: Math.floor(factor * scale) + 'px',
+        strokeThickness: (2 * scale),
+    };
 };

@@ -138,16 +138,21 @@ Update.prototype.form = function() {
         }
     }
 
+    //[0] id
+    //[1] state
+    //[2] mass
     if (foodsScopeInitFlag) {
         buf.setUint16(foodsScopeInit.length);
         for (var i = 0; i < foodsScopeInit.length; i++) {
             var id = foodsScopeInit[i][0],
                 x = foodsScopeInit[i][1].x,
-                y = foodsScopeInit[i][1].y;
+                y = foodsScopeInit[i][1].y,
+                mass = foodsScopeInit[i][2];
             //id
             buf.setUint16(id);
             buf.setFloat32(x);
             buf.setFloat32(y);
+            buf.setUint8(mass);
         }
     }
 

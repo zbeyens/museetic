@@ -195,7 +195,6 @@ StateController.prototype = {
         var entities = this.foodController.getEntities();
         for (var i = entities.length; i--;) {
             var food = entities[i];
-
             var newState = GamePhysics.getNewFoodState(food, deltaTime);
             if (newState) {
                 food.setState(newState);
@@ -233,33 +232,26 @@ StateController.prototype = {
         var entities = this.playerController.getEntities();
     },
 
-    updateShootStates: function(dataInit) {
-        this.initStates(dataInit, this.shootController);
+    updateShootStates: function(entitiesToAdd) {
+        for (var i = entitiesToAdd.length; i--;) {
+            var entityToAdd = entitiesToAdd[i];
+
+            var newEntity = this.shootController.add(entityToAdd[0]);
+            newEntity.setState(entityToAdd[1]);
+        }
     },
 
     /**
-     * call initStates with foodController
-     * @param  {list} dataInit : all foods to init
+     * add an Food after lerp
+     * @param  {list} entitiesToAdd : all foods to init
      * @return {void}
      */
-    updateFoodInitStates: function(dataInit) {
-        this.initStates(dataInit, this.foodController);
-    },
-
-    /**
-     * add an Entity after lerp
-     * @param  {list} states : all entities to init
-     * @param  {object} controller
-     * @return {void}
-     */
-    initStates: function(states, controller) {
-        var self = this;
-
-        for (var i = states.length; i--;) {
-            var entityState = states[i];
-
-            var newEntity = controller.add(entityState[0]);
-            newEntity.setState(entityState[1]);
+    updateFoodInitStates: function(entitiesToAdd) {
+        // console.log();
+        for (var i = entitiesToAdd.length; i--;) {
+            var entityToAdd = entitiesToAdd[i];
+            var newEntity = this.foodController.add(entityToAdd[0], entityToAdd[2]);
+            newEntity.setState(entityToAdd[1]);
         }
     },
 

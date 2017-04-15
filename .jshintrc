@@ -1,4 +1,5 @@
 {
     "shadow": true,
-    "loopfunc": true
+    "loopfunc": true,
+    "esversion": 6
 }

@@ -1,7 +1,8 @@
-var Client = require('./client/client'),
-    GamePhysics = require('../../shared/core'),
+import Canvas from './canvas/canvas';
+
+const Client = require('./client/client'),
+    // GamePhysics = require('../../shared/core'),
     GameLoop = require('./gameloop'),
-    Canvas = require('./canvas/canvas'),
     Keyboard = require('./keyboard'),
     Mouse = require('./mouse'),
     cfg = require('../../shared/config');
@@ -14,11 +15,11 @@ getInterpolatedState (onInterpolation)
 
 function Game() {
     this.gameloop = new GameLoop();
-    this.canvas = new Canvas();
+    this.cv = new Canvas();
     this.keyboard = new Keyboard();
-    this.mouse = new Mouse(this.canvas.canvas);
-    var HOST = location.origin.replace(/^http/, 'ws');
-    var ws = new WebSocket(HOST);
+    this.mouse = new Mouse(this.cv.canvas);
+    const HOST = location.origin.replace(/^http/, 'ws');
+    const ws = new WebSocket(HOST);
     ws.binaryType = 'arraybuffer';
     ws.onopen = function(event) {
         //NOTE: lost one day because of setTimeout(0): first msg not received
@@ -29,17 +30,17 @@ function Game() {
 
 Game.prototype = {
     startGame: function() {
-        var selfId = this.client.getSelfId();
-        var selfMass = 0;
-        var lastTs = null;
-        var deltaTime = 0;
+        let selfId = this.client.getSelfId();
+        let selfMass = 0;
+        let lastTs = null;
+        let deltaTime = 0;
 
         this.gameloop.start(
             //Update Loop
-            function() {
-                var stateController = this.client.getStateController();
+            () => {
+                const stateController = this.client.getStateController();
 
-                var nowTs = new Date();
+                const nowTs = new Date();
                 lastTs = lastTs || nowTs;
                 deltaTime = (nowTs - lastTs);
                 lastTs = nowTs;
@@ -61,72 +62,72 @@ Game.prototype = {
                 if (selfId === -1) return;
 
                 this.processInputs();
-            }.bind(this),
+            },
             //Render Loop
-            function() {
-                if (!this.canvas.assetsLoaded) return;
+            () => {
+                if (!this.cv.assetsLoaded) return;
 
-                if (selfId != -1) {
-                    this.canvas.smoothResize(deltaTime);
+                if (selfId !== -1) {
+                    this.cv.cam.smoothResize(deltaTime);
                 }
 
-                var stateController = this.client.getStateController(),
+                const stateController = this.client.getStateController(),
                     playerController = stateController.getPlayerController(),
                     foodController = stateController.getFoodController(),
                     shootController = stateController.getShootController();
 
                 this.removeRemovedEntitiesSprites(playerController, foodController, shootController);
-                var players = playerController.getEntities(),
+                const players = playerController.getEntities(),
                     foods = foodController.getEntities(),
                     shoots = shootController.getEntities();
 
                 //if the client is in game or spectator, render
-                var selfState = playerController.getEntityState(selfId);
+                const selfState = playerController.getEntityState(selfId);
                 if (selfState.mass !== undefined) {
                     //if mass changes, resize
                     if (selfState.mass !== selfMass) {
                         selfMass = selfState.mass;
-                        this.canvas.resizeMass(selfMass);
+                        this.cv.cam.resizeMass(selfMass);
                     }
 
-                    this.canvas.drawMap(selfState);
+                    this.cv.vmap.drawMap(selfState);
 
-                    for (var i = foods.length; i--;) {
-                        var food = foods[i];
+                    for (let i = foods.length; i--;) {
+                        const food = foods[i];
                         if (!food.isVisible()) continue;
-                        this.canvas.drawFood(food, selfState);
+                        this.cv.vfood.drawFood(food, selfState);
                     }
-                    for (var i = shoots.length; i--;) {
-                        var shoot = shoots[i];
+                    for (let i = shoots.length; i--;) {
+                        const shoot = shoots[i];
                         if (!shoot.isVisible()) continue;
-                        this.canvas.drawShoot(shoot, selfState);
+                        this.cv.vshoot.drawShoot(shoot, selfState);
                     }
-                    for (var i = players.length; i--;) {
-                        var player = players[i];
+                    for (let i = players.length; i--;) {
+                        const player = players[i];
                         if (!player.isVisible()) continue;
-                        this.canvas.drawPlayer(player, selfState);
+                        this.cv.vplayer.drawPlayer(player, selfState);
 
                         // if (!player.state.immunity) {
-                        var balls = player.getBallController().getEntities();
-                        for (var j = balls.length; j--;) {
-                            var ball = balls[j];
+                        const balls = player.getBallController().getEntities();
+                        for (let j = balls.length; j--;) {
+                            const ball = balls[j];
                             // if (!ball.isVisible()) continue;
-                            this.canvas.drawBall(ball, selfState);
+                            this.cv.vball.drawBall(ball, selfState);
                         }
                         // }
                     }
 
-                    this.canvas.drawHud(selfState);
+                    this.cv.hud.drawHud(selfState);
                     if (playerController.isUpdatedBoard()) {
-                        this.canvas.drawBoard(playerController.getBoard());
+                        this.cv.hud.drawBoard(playerController.getBoard());
                         playerController.setUpdatedBoard(false);
                     }
 
-                    this.canvas.render();
+                    this.cv.render();
                 }
 
-                this.canvas.fps.setFps(new Date());
-            }.bind(this)
+                this.cv.hud.fps.setFps(new Date());
+            }
         );
     },
 
@@ -136,11 +137,11 @@ Game.prototype = {
     },
 
     processKeyboard: function() {
-        var leftEU = this.keyboard.pressed('leftEU');
-        var leftUS = this.keyboard.pressed('leftUS');
-        var left = leftEU || leftUS;
-        var right = this.keyboard.pressed('right');
-        var space = this.keyboard.pressed('space');
+        const leftEU = this.keyboard.pressed('leftEU');
+        const leftUS = this.keyboard.pressed('leftUS');
+        const left = leftEU || leftUS;
+        const right = this.keyboard.pressed('right');
+        const space = this.keyboard.pressed('space');
 
         if (left && this.keyboard.keyUp.left) {
             this.client.onInput(10);
@@ -179,11 +180,11 @@ Game.prototype = {
             this.mouse.click = false;
         }
 
-        var wheeled = this.mouse.wheeled();
+        const wheeled = this.mouse.wheeled();
         if (wheeled > 0) {
-            this.canvas.zoomIn(wheeled);
+            this.cv.cam.zoomIn(wheeled);
         } else if (wheeled < 0) {
-            this.canvas.zoomOut(-wheeled);
+            this.cv.cam.zoomOut(-wheeled);
         }
     },
 
@@ -192,9 +193,11 @@ Game.prototype = {
      * @return {int} new id of the client
      */
     updateNewGame: function() {
+        const signPanelDiv = document.getElementById('signPanelDiv'); 
+        const hudDiv = document.getElementById('hudDiv'); 
         signPanelDiv.style.display = 'none';
         hudDiv.style.visibility = 'visible';
-        this.canvas.hud.visible = true;
+        this.cv.hud.container.visible = true;
         this.mouse.running = true;
 
         this.client.setInTransition(false);
@@ -202,9 +205,11 @@ Game.prototype = {
     },
 
     updateGameOver: function() {
+        const signPanelDiv = document.getElementById('signPanelDiv'); 
+        const hudDiv = document.getElementById('hudDiv'); 
         signPanelDiv.style.display = 'block';
         hudDiv.style.visibility = 'hidden';
-        this.canvas.hud.visible = false;
+        this.cv.hud.container.visible = false;
         this.mouse.running = false;
 
         this.client.setInTransition(false);
@@ -212,17 +217,17 @@ Game.prototype = {
     },
 
     removeRemovedEntitiesSprites: function(playerController, foodController, shootController) {
-        this.canvas.removeSprites(playerController.getRemovedEntities(), foodController.getRemovedEntities(), shootController.getRemovedEntities());
+        this.cv.removeSprites(playerController.getRemovedEntities(), foodController.getRemovedEntities(), shootController.getRemovedEntities());
         playerController.clearRemovedEntities();
         shootController.clearRemovedEntities();
         foodController.clearRemovedEntities();
     }
 };
 
-var signForm = document.getElementById("sign-form");
+const signForm = document.getElementById("sign-form");
 signForm.onsubmit = function(e) {
     e.preventDefault();
     return false;
 };
 
-var game = new Game();
+const game = new Game();

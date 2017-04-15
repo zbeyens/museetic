@@ -240,7 +240,7 @@ Player.prototype = _.extend(Object.create(Entity.prototype), {
 
             if (lot.inRect(checkFood.state.x, checkFood.state.y, this.state.x, this.state.y, playerScope.minScopeWInit, playerScope.minScopeHInit)) {
                 this.addFoodInScope(checkFood);
-                states.foodsScopeInit.push([checkFood.id, checkFood.state]);
+                states.foodsScopeInit.push([checkFood.id, checkFood.state, checkFood.mass]);
             }
         }
         this.foodsToAdd = [];

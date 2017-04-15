@@ -1,0 +1,222 @@
+OVERALL:
+-a total of ~111 sprites: 34 types + 1 background
+-Mainly cartoon design 256x256 and 512x512, typical example with less thickness on the outlines: 
+https://graphicriver.net/item/sky-creatures-game-assets/7534018
+-Shadows are appreciated but not much light effect because the background is dark.
+-As the player can choose the color of the character,
+
+2 versions are needed for each colored sprites (only Body and Wings):
+1-version with only black/white outlines (with different opacity for the shadows) so I can put 1 color inside them by myselves. 
+You can keep parts consisting in only one color (i.e. black and white).
+2-example colored version so I can see the result.
+-Photoshop project for post-editing.
+
+PART 1: CHARACTERS (42 sprites)
+---------------------------------
+The game is about characters flying in the sky like Flappy Bird.
+These characters can dash (and being invincible) straight ahead during 2 secondes.
+
+The skin of these characters can be customizable in 4 parts:
+1) Body: the whole form of the character. 
+2) Wings
+3) Face: can be eyes+eyebrows+nose/mouth/beak,...
+4) Hat
+
+PART 2: SKILLS (68 sprites)
+---------------------------
+There is 4 elements: fire, water, thunder, earth.
+Player can choose one of these element before the game.
+
+1) Balls
+2) Invincible dash effect
+3) Rings: characters can spawn a protecting ring around them.
+
+PART 3: BACKGROUND (1 sprite)
+------------------
+It is a repetitive, geometrical background.
+It needs to be dark because there are colored light in the game.
+
+More details will be provided if hired.
+
+
+
+
+
+
+
+OVERALL:
+-a total of ~111 sprites: 34 types + 1 background
+-Mainly cartoon design 256x256 and 512x512, typical example with less thickness on the outlines: 
+https://graphicriver.net/item/sky-creatures-game-assets/7534018
+-Shadows are appreciated but not much light effect because the background is dark.
+-As the player can choose the color of the character,
+
+2 versions are needed for each colored sprites (only Body and Wings):
+1-version with only black/white outlines (with different opacity for the shadows) so I can put 1 color inside them by myselves. 
+You can keep parts consisting in only one color (i.e. black and white).
+2-example colored version so I can see the result.
+-Photoshop project for post-editing.
+
+
+
+PART 1: CHARACTERS (42 sprites)
+---------------------------------
+The game is about characters flying in the sky like Flappy Bird.
+
+The skin of these characters can be customizable in 4 parts:
+1) Body: the whole form of the character. 
+Requirements: 
+-256x256
+-If colored, 2 versions (colored and uncolored)
+-!!! They ALL have the same hitbox, so the global shape should be the same (i.e. oval).
+But overflowing parts don't have hitbox, so you can choose any (not too high) shape.
+These overflowing parts can be: hairs, paws/legs, Face (peak, eyes),...
+-4 main parts in the same sprite (not all required): 1 oval body, 1 tail, hairs/ears/antennas/... on top of the body (not the wings!), legs/paws below the body
+
+8 Samples:
+-Bird
+
+-Dragon: like this 
+https://graphicriver.net/item/flappy-dragon-game-character-sprite-sheets/11608042
+
+-Dragonfly: like this
+https://graphicriver.net/item/dragonfly-game-character-sprite-sheets/8252353
+
+-Bee: like this
+https://graphicriver.net/item/game-character-shooter-bee-sprite-sheets/7966313
+
+-Cat: like this
+https://graphicriver.net/item/villain-cat-sprite-sheet/7222941
+
+-Frog
+
+-Monster: like one of these ones
+https://graphicriver.net/item/flying-shadow-creatures-sprite-sheets/8632272
+
+-another one you can choose  
+
+2) Wings
+Requirements:
+-Closed
+-As the player can mix the parts of the skin with any other parts, 2 sprites needed: 
+1-one at any resolution with only 1 wing centered. 
+2-one example with Wings + Body (it can exceed 256x256) so I know where to put the wings. 
+NB: The result can have 2 Wings (1 ahead the Body and 1 behind the Body) like this:
+https://dribbble.com/shots/2893036-Green-Fat-Flappy-Dragon-Game-Character
+-If colored, 2 versions (colored and uncolored) on the one-Wing sprite.
+-Animation: 3-5 sprites per sample (ideally 5).
+
+4(*3) Samples:
+-Birds wings: like this
+https://graphicriver.net/item/game-character-nerd-birds-sprite-sheets/8007287
+
+-Dragon wings: like this
+https://graphicriver.net/item/flappy-dragon-game-character-sprite-sheets/11608042
+
+-Dragonfly wings: like this 
+https://graphicriver.net/item/yellow-dragonfly-sprite-sheets/8327864
+
+-another one you can choose 
+
+3) Face: can be eyes+eyebrows+nose/mouth/beak,...
+Requirements:
+-As the player can mix the parts of the skin with any other parts, 2 sprites needed: 
+1-one at any resolution with only the face centered.
+2-one example Face + Body (it can exceed 256x256) so I know where to put the face. 
+-1 or 2 eyes as you can see in some examples
+-set of 3 sprites: 1 normal face (flying), 1 angry/laughing/provoking face (invincible dash), 1 dead face
+
+6(*3) Samples:
+Here you can see examples: https://graphicriver.net/item/sky-creatures-game-assets/7534018?ref=bevouliin
+-Bird: like this 
+https://graphicriver.net/item/stylish-bird-game-character-sprite-sheets/7885897
+-Eyes like him:
+https://revengeonwifi.files.wordpress.com/2015/11/saitama.jpg?w=439&h=200&crop=1
+-Like this
+https://graphicriver.net/item/dragonfly-game-character-sprite-sheets/8252353
+-Moskito: like the brown one
+http://desiznworld.com/wp-content/uploads/2015/10/8-Scary-Creatures-Sprite-Sheets.jpg
+-Kid: like this
+https://graphicriver.net/item/fish-with-earphone-game-character-sprite-sheets/11652858
+-another one you can choose 
+
+4) Hat
+Requirements:
+-As the player can mix the parts of the skin with any other parts, 2 sprites needed: 
+1-one at any resolution with only the hat centered.
+2-one example Hat + Body (it can exceed 256x256) so I know where to put the hat.
+
+4 Samples: 
+-Earphones: like this
+https://graphicriver.net/item/fish-with-earphone-game-character-sprite-sheets/11652858
+-Cap
+-Helmet
+-another you choose 
+
+If you have any difficulty of inspiration, you can replace some of my propositions by one you prefer.
+
+PART 2: SKILLS (68 sprites)
+---------------------------
+These characters can dash (and being invincible) straight ahead during 2 secondes.
+There is 4 elements: fire, water, thunder, earth.
+Player can choose one of these element before starting the game.
+
+1) Balls: characters have 3 attacking balls rotating around them (like an orbit).
+Requirements:
+-512x512
+-Hitbox shape should have ALL the same circle size, no problem for overflowing particles.
+-Animation: 6 sprites per ball
+
+4(*6) Samples:
+-Fire: like this
+http://www.thecave.info/wp-content/uploads/2014/08/flame_sprite.png
+!!! On this example, it is hard to see the hitbox, please put a more precise outline
+-Water: same idea
+-Thunder: same idea
+-Earth: inspiration: tree, plant, some leaves as particles...
+
+2) Invincible dash: characters can sprint and being invincible for a few seconds.
+Requirements:
+-256x256
+-Just one sprite, no animation.
+
+4 Samples:
+-Fire: like this (without the bird)
+https://ibb.co/kVnj1Q
+-Water: same idea
+-Thunder: same idea
+-Earth: same idea
+
+3) Rings: characters can spawn a protecting ring around them.
+The spawn (1sec) uses 4 sprites. Then the ring stays 4sec looping with the 6-sprites animation.
+Requirements:
+-512x512
+-Hitbox shape should have ALL the same ring size, no problem for overflowing particles.
+-Should look like the balls 
+-Animation: 6 sprites per ring
+-4 sprites for the animation spawning of the ring (mainly particles, no hitbox).
+
+4(*10) Samples:
+-Fire: exaggerated example, in a more cartoon way and less particles:
+http://wallpaper-gallery.net/images/circle-wallpaper/circle-wallpaper-17.jpg
+Spawning particles example, in a more cartoon way:
+https://thumb1.shutterstock.com/display_pic_with_logo/161342764/518147470/stock-vector-vector-glowing-fire-or-red-ring-of-shine-particles-abstract-glittering-shape-on-transparent-518147470.jpg
+-Water: same idea
+-Thunder: same idea
+-Earth: same idea
+
+PART 3: BACKGROUND (1 sprite)
+------------------
+It is a repetitive, geometrical background.
+It needs to be dark because there are colored light in the game.
+
+-Hexagonal shape is nice if you don't have any better idea.
+-Shadow effect
+-2 versions:
+1-1 normal version without transparency (black/gray) between hexagons,
+2-1 version where you put transparency between the hexagon so I can put color behind them.
+-Resolution between 500x500 and 1000x1000, but be sure that the sprite is nicely cut so I can repeat it.
+Examples in a little bit more cartoon way so the characters fit well inside: 
+https://s-media-cache-ak0.pinimg.com/originals/fd/e1/63/fde163f1c207f28d1c635d428e1d9d06.jpg
+http://slither.io/s/bg45.jpg
+https://i.ytimg.com/vi/4-AqlysTzGU/maxresdefault.jpg
