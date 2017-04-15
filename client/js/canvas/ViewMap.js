@@ -9,7 +9,7 @@ export default class ViewMap {
     
     preloadSprites() {
         this.map = new PIXI.extras.TilingSprite(this.cv.txt.mapTxt, cfg.mapSize, cfg.mapSize);
-        this.map.displayGroup = this.cv.limitLayer;
+        this.map.displayGroup = this.cv.mapLayer;
         this.cv.stage.addChild(this.map);
 
         this.bg = new PIXI.extras.TilingSprite(this.cv.txt.bgTxt, cfg.mapSize, cfg.mapSize);
@@ -27,7 +27,7 @@ export default class ViewMap {
 
         //Tunnel
         this.tunnel = new PIXI.Graphics();
-        this.tunnel.displayGroup = this.tunnelLayer;
+        this.tunnel.displayGroup = this.cv.tunnelLayer;
         this.cv.stage.addChild(this.tunnel);
         
         //Debug layer
@@ -65,7 +65,7 @@ export default class ViewMap {
         this.midLimit.position.x = x + cfg.midLimitOffset * Math.sqrt(2) * Math.cos(angle);
         this.midLimit.position.y = y + cfg.midLimitOffset * Math.sqrt(2) * Math.sin(angle);
         this.midLimit.rotation = -Math.PI / 4 + angle;
-
+        
         this.endLimit.position.x = x + cfg.endLimitOffset * Math.sqrt(2) * Math.cos(angle);
         this.endLimit.position.y = y + cfg.endLimitOffset * Math.sqrt(2) * Math.sin(angle);
         this.endLimit.rotation = -Math.PI / 4 + angle;

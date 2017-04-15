@@ -46,10 +46,11 @@ export default class Canvas {
     preloadStage() {
         this.stage = new PIXI.Container();
         this.stage.displayList = new PIXI.DisplayList();
-        this.limitLayer = new PIXI.DisplayGroup(0, false);
-        this.tunnelLayer = new PIXI.DisplayGroup(1, false);
-        this.foodLayer = new PIXI.DisplayGroup(2, false);
-        this.playerLayer = new PIXI.DisplayGroup(3, false);
+        this.mapLayer = new PIXI.DisplayGroup(1, false);
+        this.limitLayer = new PIXI.DisplayGroup(2, false);
+        this.tunnelLayer = new PIXI.DisplayGroup(3, false);
+        this.foodLayer = new PIXI.DisplayGroup(4, false);
+        this.playerLayer = new PIXI.DisplayGroup(5, false);
         // this.textLayer = new PIXI.DisplayGroup(4, false);
     }
 
