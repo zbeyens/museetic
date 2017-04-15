@@ -153,7 +153,7 @@ module.exports = {
     fireballSet: '/client/img/fireball.json',
     ringImg: '/client/img/firewater.png',
     shootImg: '/client/img/bullet.png',
-    foodImg: '/client/img/v9.png',
+    foodImg: '/client/img/v10.png',
     // mapImg: '/client/img/clouds.jpg',
     // mapImg: '/client/img/Background Black 512.jpg',
     mapImg: '/client/img/black.jpg',
