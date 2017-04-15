@@ -57,7 +57,7 @@ if (isProd) {
             minimize: true
         }),
         new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true, //true for minimized code or want correct line numbers for uglifyjs warnings
+            sourceMap: false, //true for minimized code or want correct line numbers for uglifyjs warnings
             compress: {
                 warnings: false, //true to debug
                 screw_ie8: true,

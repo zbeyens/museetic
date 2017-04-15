@@ -1,4 +1,4 @@
-var cfg = require('./config');
+const cfg = require('./config');
 
 exports.getScaleMass = function(mass) {
     return 1 - Math.sqrt(mass) * cfg.scaleMassFactor;
@@ -16,19 +16,19 @@ exports.getFoodSpriteRadius = function(mass) {
     return cfg.foodSpriteInitSize + Math.sqrt(mass) * cfg.foodSpriteFactor;
 };
 
-//sprite
+//core
 exports.getBallRadius = function(mass) {
     return cfg.ballInitSize + Math.sqrt(mass) * cfg.ballFactor;
 };
-//core
-exports.getBallSize = function(mass) {
+//sprite
+exports.getBallSpriteRadius = function(mass) {
     return cfg.ballSpriteInitSize + Math.sqrt(mass) * cfg.ballSpriteFactor;
 };
 
 exports.getBallPos = function(xc, yc, radius, angle) {
-    var x = xc + radius * Math.cos(angle);
-    var y = yc + radius * Math.sin(angle);
-    var pos = {
+    const x = xc + radius * Math.cos(angle);
+    const y = yc + radius * Math.sin(angle);
+    const pos = {
         x: x,
         y: y,
     };
@@ -69,8 +69,8 @@ exports.getScope = function(playerScope, checkMass) {
 };
 
 exports.getRandomPos = function(midBegin, midEnd, max) {
-    var randomRadius,
-        randomZone = Math.random();
+    let randomRadius;
+    const randomZone = Math.random();
 
     if (randomZone < cfg.foodInsideProportion) {
         randomRadius = exports.randomIntFromInterval(0, Math.pow(midBegin, 2));
@@ -78,7 +78,7 @@ exports.getRandomPos = function(midBegin, midEnd, max) {
         randomRadius = exports.randomIntFromInterval(Math.pow(midEnd, 2), Math.pow(max, 2));
     }
 
-    var angle = Math.random() * Math.PI * 2;
+    const angle = Math.random() * Math.PI * 2;
 
     return {
         x: Math.cos(angle) * Math.sqrt(randomRadius),
@@ -103,8 +103,8 @@ exports.distEucl = function(xi, yi, xf, yf) {
 };
 
 exports.idxOf = function(array, attr, value) {
-    var idx = -1;
-    for (var i = 0; i < array.length; i++) {
+    let idx = -1;
+    for (let i = 0; i < array.length; i++) {
         if (array[i][attr] === value) {
             idx = i;
             break;
@@ -122,17 +122,17 @@ exports.abs = function(number) {
 };
 
 exports.round = function(prec, float) {
-    var mul = Math.pow(10, prec);
+    const mul = Math.pow(10, prec);
     return Math.round(float * mul) / mul;
 };
 
 exports.sizeObject = function(object) {
-    var objectList = [];
-    var stack = [object];
-    var bytes = 0;
+    const objectList = [];
+    const stack = [object];
+    let bytes = 0;
 
     while (stack.length) {
-        var value = stack.pop();
+        const value = stack.pop();
 
         if (typeof value === 'boolean') {
             bytes += 4;
@@ -142,10 +142,10 @@ exports.sizeObject = function(object) {
             bytes += 8;
         } else if (typeof value === 'object' && objectList.indexOf(value) === -1) {
             objectList.push(value);
-
-            for (var i in value) {
-                stack.push(value[i]);
-            }
+            //NOTE sizeObject
+            // for (let i in value) {
+            //     stack.push(value[i]);
+            // }
         }
     }
     return bytes;

@@ -9,7 +9,7 @@ export default class ViewMap {
     
     preloadSprites() {
         this.map = new PIXI.extras.TilingSprite(this.cv.txt.mapTxt, cfg.mapSize, cfg.mapSize);
-        this.map.displayGroup = this.cv.tunnelLayer;
+        this.map.displayGroup = this.cv.limitLayer;
         this.cv.stage.addChild(this.map);
 
         this.bg = new PIXI.extras.TilingSprite(this.cv.txt.bgTxt, cfg.mapSize, cfg.mapSize);
@@ -57,6 +57,7 @@ export default class ViewMap {
         this.bg.anchor.set(0.5);
         this.bg.position.set(x, y);
         this.bg.scale.set(0);
+        this.bg.visible = false;
 
 
         //LIMITS

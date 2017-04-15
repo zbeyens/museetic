@@ -1,4 +1,5 @@
 module.exports = {
+    //SERVER
     env: 'development',
     
     serverPort: process.env.PORT || 3000,
@@ -22,43 +23,9 @@ module.exports = {
     
     debug: false,
     debugMove: false,
-    debugZoom: true, //to remove!
-    debugTileSize: false,
-    debugSelfScope: false,
-    debugBorder: false,
     
-    debugRingHitbox: false,
     
-    zoomFactor: 1.1,
-    zoomScaleLimit: 2.5,
-    
-    /**
-    * inactive_destroy = 5*60*1000;   //time in ms when to destroy inactive balls
-    * inactive_check   = 10*1000;     //time in ms when to search inactive balls
-    * spawn_interval   = 200;         //time in ms for respawn interval. 0 to disable (if your custom server don't have spawn problems)
-    * spawn_attempts   = 25;          //how much attempts to spawn before give up
-    */
-    
-    //balance size
-    scaleMassFactor: 0.001,
-    
-    ballInitSize: 20,
-    ballFactor: 0.5,
-    ballSpriteInitSize: 100,
-    ballSpriteFactor: 2,
-    ringInitSize: 100,
-    ringFactor: 2,
-    ringMaxInitSize: 151,
-    ringMaxFactor: 4.1,
-    
-    ballTreshold: 500,
-    ballSpeed: 1.4,
-    
-    ringFreqInit: 2000,
-    ringFreqFactor: 20,
-    ringTime: 300,
-    
-    //Map 960x600
+    //SCOPE - TILES
     scopeRatio: 16 / 9,
     scopeInitX: 1280, //1280 * 0.7,
     scopeInitY: 720, //720 * 0.7,
@@ -68,6 +35,17 @@ module.exports = {
     tileScopeAmountY: 11, //odd
     tileFoodRange: 5, //range check to eat foods
     
+    zoomFactor: 1.1,
+    zoomScaleLimit: 2.5,
+    debugZoom: true, //to remove!
+    debugTileSize: false,
+    debugSelfScope: false,
+    debugBorder: false,
+    
+    
+    //MAP
+    mapSize: 23200, //should be bigger to not see black
+    mapScale: 0.65,
     minimapRad: 50,
     miniselfRad: 3,
     midLimitRad: 3000,
@@ -76,11 +54,9 @@ module.exports = {
     endLimitRad: 10000,
     endLimitStroke: 1600,
     endLimitOffset: 6000,
-    mapSize: 23200, //should be bigger to not see black
-    mapScale: 0.65,
     tunnelHeight: 300,
     
-    //Player
+    //PLAYER - server - client
     playerNameMaxSize: 15,
     playerImmunityTime: 10000,
     playerVx: 152,
@@ -88,28 +64,56 @@ module.exports = {
     playerGravity: 825 * 0.8,
     playerMinMassDash: 0,
     playerInitMass: 0, //debug
+    scaleMassFactor: 0.005,
     selfRadiusInitSize: 25,
     selfRadiusFactor: 0.16,
     
-    // playerInitSize: 30, //init size sprite/hitbox
+    
     playerSpriteInitSize: 60, //init size sprite/hitbox
     playerSpriteFactor: 0.8,
     debugSelfHitbox: false,
     
     
+    //BALL - server - client
+    ballTreshold: 500, //treshold to spawn a new ball 
+    ballSpeed: 1.4,
+    ballInitSize: 20,
+    ballFactor: 0.5,
+    
+    ballSpriteInitSize: 100,
+    ballSpriteFactor: 2,
+    debugBall: false,
+    
+    
+    //DASH
     dashSpeed: 800,
     dashMassLoss: 1,
     dashTime: 500,
     //#sample of dash texture
     dashTxtSize: 4,
     
+    
+    //SHOOT
     shootInitSize: 64,
     shootTime: 1000,
+
+
+    //RING - not used?
+    ringInitSize: 100,
+    ringFactor: 2,
+    ringMaxInitSize: 151,
+    ringMaxFactor: 4.1,
     
-    //Foods - server, shared, client
+    ringFreqInit: 2000,
+    ringFreqFactor: 20,
+    ringTime: 300,
+    debugRingHitbox: false,
+    
+    
+    //FOOD - server, shared, client
     foodSpawnAmount: 500, //spawn amount for each click
     foodInsideProportion: 0.5,
-    foodMasses: [1, 2, 3, 4, 12, 13], //random spawning masses
+    foodMasses: [1, 2, 3, 4], //random spawning masses
      
     foodHitbox: 20, //radius - food eating
     foodInitSize: 10,
@@ -124,6 +128,8 @@ module.exports = {
     debugFood: false, //not used
     debugFoodHitbox: false,
     
+    
+    //COLORS
     gradColors: [
         0xBAFF74, //0 green
         0x6780FF, //1 light blue
@@ -139,7 +145,8 @@ module.exports = {
     // 0xFF83B8; //nop?
     // 0xBF55FF; //nop?
     
-    //Images
+    
+    //IMAGES
     //playerImage: '/client/img/planet.png',
     // playerSet: '/client/img/flappy.json',
     playerSet: '/client/img/grumpy.json',
@@ -169,4 +176,11 @@ module.exports = {
         fill: '#ffffff',
         stroke: '#000000',
     },
+    
+    /**
+    * inactive_destroy = 5*60*1000;   //time in ms when to destroy inactive balls
+    * inactive_check   = 10*1000;     //time in ms when to search inactive balls
+    * spawn_interval   = 200;         //time in ms for respawn interval. 0 to disable (if your custom server don't have spawn problems)
+    * spawn_attempts   = 25;          //how much attempts to spawn before give up
+    */
 };
