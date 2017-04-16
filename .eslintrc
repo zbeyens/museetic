@@ -12,12 +12,17 @@
             "experimentalObjectRestSpread": true
         }
     },
+    "globals": {
+        "_": true,
+        "PIXI": true,
+    },
     "rules": {
         ////////// Possible Errors //////////
 
         // "no-cond-assign": 0,          // disallow assignment in conditional expressions
         "no-console": 0,              // disallow use of console (off by default in the node environment)
         // "no-constant-condition": 0,   // disallow use of constant expressions in conditions
+        "no-continue": 0,
         // "no-control-regex": 0,        // disallow control characters in regular expressions
         // "no-debugger": 0,             // disallow use of debugger
         // "no-dupe-args": 0,           // disallow duplicate arguments in function definitions
@@ -129,6 +134,7 @@
         // "no-path-concat": 0,        // disallow string concatenation with __dirname and __filename (off by default) (on by default in the node environment)
         // "no-process-exit": 0,       // disallow process.exit() (on by default in the node environment)
         // "no-restricted-modules": 0, // restrict usage of specified node modules (off by default)
+        "no-restricted-properties": 0, // restrict usage of specified node modules (off by default)
         // "no-sync": 0,               // disallow use of synchronous methods (off by default)
 
 
@@ -148,11 +154,11 @@
         // "key-spacing": 0,               // enforces spacing between keys and values in object literal properties
         "linebreak-style": 0,
         // "max-nested-callbacks": 0,      // specify the maximum depth callbacks can be nested (off by default)
-        // "new-cap": 0,                   // require a capital letter for constructors
+        "new-cap": 0,                   // require a capital letter for constructors
         // "new-parens": 0,                // disallow the omission of parentheses when invoking a constructor with no arguments
         // "no-array-constructor": 0,      // disallow use of the Array constructor
         // "no-inline-comments": 0,        // disallow comments inline after code (off by default)
-        // "no-lonely-if": 0,              // disallow if as the only statement in an else block (off by default)
+        "no-lonely-if": 0,              // disallow if as the only statement in an else block (off by default)
         "no-mixed-operators": 0,
         "no-mixed-spaces-and-tabs": 0,  // disallow mixed spaces and tabs for indentation
         "no-multiple-empty-lines": 0,   // disallow multiple empty lines (off by default)

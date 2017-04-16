@@ -1,0 +1,9 @@
+@import "../../theme/variables.scss";
+
+.dividerTextWhite {
+    @include dividerText(white);
+}
+
+.dividerTextFront {
+    @include dividerText($bgc-front);
+}

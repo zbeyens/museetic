@@ -1,0 +1,21 @@
+@import "../../theme/variables.scss";
+
+
+.globalContainer {
+    font-family: $ff-app;
+}
+
+.contentContainer {
+    width: $width-container;
+}
+
+h1, h2, h3 {
+    font-family: $ffb-app;
+}
+
+.nav {
+    padding-top: 10px;
+}
+.aa {
+    // border-bottom: 2px solid black;
+}

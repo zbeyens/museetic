@@ -1,0 +1,22 @@
+@import "../../theme/variables.scss";
+
+.homeFrontH {
+    @extend .col-md-5, .col-md-offset-1;
+
+    @media (max-width: $screen-md-min) {
+        margin: 0 auto;
+        text-align: center;
+        width: 300px;
+    }
+
+}
+
+.loginFrontH {
+    @extend .center-block;
+    text-align: center;
+    width: 300px;
+}
+
+.signupFrontH {
+    @extend .loginFrontH;
+}

@@ -1,0 +1,18 @@
+@import "../../theme/variables.scss";
+
+.frontWelcome {
+    @media (max-width: $screen-md-min) {
+        text-align: center;
+    }
+
+    h2 {
+        margin-top: 35px;
+        margin-bottom: 30px;
+
+        font-size: 2.1em;
+        line-height: 38px;
+    }
+    p {
+        font-size: 1.4em;
+    }
+}

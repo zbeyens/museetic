@@ -1,0 +1,32 @@
+@import "../../theme/variables.scss";
+
+.frontArtTrend {
+    overflow-x: hidden;
+
+    padding: 0px 20px 20px 20px;
+    @extend .thumbnail, .col-xs-8, .col-xs-offset-2;
+    // overflow: auto; //expand parent div to the height of the childs.
+
+    text-align: center;
+
+    font-size: $ff-size-museum;
+}
+
+.imgContainer {
+    overflow: hidden;
+
+    height: 380px;
+}
+
+.imgCenter {
+    position: relative;
+    //center the img with overflow hidden
+    left: 50%;
+
+    width: auto;
+    height: 100%;
+    margin-left: -100%;
+
+    vertical-align: middle;
+    // border-radius: 6px;
+}

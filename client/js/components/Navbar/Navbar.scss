@@ -1,0 +1,30 @@
+@import "../../theme/variables.scss";
+
+.navHeader {
+    padding-top: 7px;
+    padding-left: 40px;
+}
+
+/*The band of the navbar*/
+.bandMuseetic {
+    user-select: none;
+
+    color: $color-brand !important;
+    /*padding-left: 25%;*/
+
+    font-family: 'bariol';
+    font-size: 2em;
+}
+
+.navbarGlobal {
+
+    background-color: white;
+}
+
+// col need float:none to be centered
+.navbarContainer {
+    min-height: 56px !important;
+    width: $width-container;
+
+    background-color: white;
+}
