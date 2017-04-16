@@ -2,6 +2,10 @@ import axios from "axios";
 
 export function fetchArt(id) {
     return function(dispatch) {
+        dispatch({
+            type: "FETCH_ART_REQUEST",
+        });
+
         const param = encodeURIComponent(id);
         axios.get('/fetchArt?id=' + param)
         .then((res) => {
@@ -121,19 +125,63 @@ export function likeArtProfile(id, i) {
     };
 }
 
-export function openDialog(currentArt) {
+export function jumpComment(bool) {
     return function(dispatch) {
         dispatch({
-            type: "OPEN_ART",
-            payload: currentArt,
+            type: 'JUMP_COMMENT',
+            payload: bool
         });
     };
 }
 
-export function closeDialog() {
+export function fetchComments(id) {
     return function(dispatch) {
-        dispatch({
-            type: "CLOSE_ART",
+        const param = encodeURIComponent(id);
+        axios.get('/fetchComments?id=' + param)
+        .then((res) => {
+            dispatch({
+                type: "FETCH_COMMENTS_SUCCESS",
+                payload: res.data
+            });
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
+export function sendComment(artId, com) {
+    return function(dispatch) {
+        axios.post('/sendComment', {
+            artId: artId,
+            content: com,
+        })
+        .then((res) => {
+            dispatch({
+                type: "FETCH_COMMENTS_SUCCESS",
+                payload: res.data
+            });
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
+export function deleteComment(artId, comId) {
+    return function(dispatch) {
+        axios.post('/deleteComment', {
+            artId: artId,
+            comId: comId,
+        })
+        .then((res) => {
+            dispatch({
+                type: "FETCH_COMMENTS_SUCCESS",
+                payload: res.data
+            });
+        })
+        .catch((e) => {
+            console.log(e);
         });
     };
 }

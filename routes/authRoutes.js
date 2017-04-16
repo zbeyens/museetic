@@ -39,7 +39,6 @@ module.exports = (app, passport, isLoggedIn) => {
 
 	//load auth datas
 	app.get('/loadAuth', (req, res, next) => {
-		console.log("load:");
 		if (req.isAuthenticated()) {
 			return res.send(getUserInfo(req.user));
 		} else {
@@ -53,8 +52,6 @@ module.exports = (app, passport, isLoggedIn) => {
 	//Local signup
 	app.post('/signup', isLoggedOut, (req, res, next) => {
 		passport.authenticate('local-signup', (err, user, info) => {
-			console.log(info);
-			console.log(req.session);
 			if (err)
 				return res.sendStatus(500);
 
@@ -76,7 +73,6 @@ module.exports = (app, passport, isLoggedIn) => {
 	//req.login automatically invoked with passport.authenticate.
 	app.post('/login', isLoggedOut, (req, res, next) => {
 		passport.authenticate('local-login', (err, user, info) => {
-            console.log(info);
 			if (err)
 				return res.sendStatus(500);
 
@@ -84,7 +80,6 @@ module.exports = (app, passport, isLoggedIn) => {
 			if (!user) {
 				return res.status(400).send(info);
 			}
-			console.log("login!");
 			//req.user is put.
 			req.login(user, (e) => {
 				if (e)

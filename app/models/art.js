@@ -25,6 +25,20 @@ const artSchema = mongoose.Schema({
             type: ObjectId,
             ref: 'User'
         }
+    ],
+
+    comments: [
+        {
+            author: {
+                type: ObjectId,
+                ref: 'User'
+            },
+            content: String,
+            date: {
+                type: Date,
+                default: Date.now
+            }
+        }
     ]
 
 });

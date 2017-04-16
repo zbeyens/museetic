@@ -8,7 +8,7 @@ import { Field, reduxForm } from 'redux-form';
 import GoogleButton from '../GoogleButton';
 import FacebookButton from '../FacebookButton';
 import { login } from '../../actions/authActions';
-import renderField from '../renderField';
+import inputField from '../RenderField/input';
 import loginValidation from './loginValidation';
 import styles from './FormLogin.scss';
 
@@ -45,7 +45,7 @@ class FormLogin extends Component {
                 {this.props.children}
                 <form onSubmit={handleSubmit(this.onSubmit)}>
                     <Field
-                        component={renderField}
+                        component={inputField}
                         className="form-control"
                         name="email"
                         type="text"
@@ -54,7 +54,7 @@ class FormLogin extends Component {
                         size="30"
                     />
                     <Field
-                        component={renderField}
+                        component={inputField}
                         className="form-control"
                         name="password"
                         type="password"

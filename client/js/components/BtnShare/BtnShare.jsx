@@ -8,6 +8,7 @@ class BtnShare extends Component {
         super(props);
         this.state = {open: false};
         this.onClick = this.onClick.bind(this);
+        this.handleRequestClose = this.handleRequestClose.bind(this);
     }
 
     componentDidMount() {
@@ -24,6 +25,12 @@ class BtnShare extends Component {
 
     onClick() {
         this.setState({open: true});
+    }
+
+    handleRequestClose() {
+        this.setState({
+            open: false,
+        });
     }
 
     render() {

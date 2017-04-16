@@ -5,7 +5,7 @@ async = require('async');
 module.exports = (app, isLoggedIn) => {
     // const isProduction = process.env.NODE_ENV === 'production';
 
-    //NOTE
+    //NOTE: better error handling...
     // if (!isProduction) {
     app.get('/populate', (req, res) => {
         artController.resetArts();
@@ -132,6 +132,39 @@ module.exports = (app, isLoggedIn) => {
                 console.log(err);
                 res.sendStatus(500);
             }
+        });
+    });
+
+    app.get('/fetchComments', isLoggedIn, (req, res) => {
+        const artId = decodeURIComponent(req.query.id);
+        const fetchComments = artController.fetchComments(artId);
+        fetchComments.then((art) => {
+            res.send(art.comments);
+        }).catch((err) => {
+            res.sendStatus(500);
+        });
+    });
+
+    app.post('/sendComment', isLoggedIn, (req, res) => {
+        const artId = req.body.artId;
+        const content = req.body.content;
+        const pushComment = artController.pushComment(req.user._id, artId, content);
+        pushComment.then((art) => {
+            res.send(art.comments);
+        }).catch((err) => {
+            res.sendStatus(500);
+        });
+    });
+
+    app.post('/deleteComment', isLoggedIn, (req, res) => {
+        const artId = req.body.artId;
+        const comId = req.body.comId;
+
+        const pullComment = artController.pullComment(req.user._id, artId, comId);
+        pullComment.then((art) => {
+            res.send(art.comments);
+        }).catch((err) => {
+            res.sendStatus(500);
         });
     });
 };

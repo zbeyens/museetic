@@ -1,7 +1,8 @@
 const initialState = {
 	currentArt: null,
     listArts: null,
-    open: false,
+    jump: false,
+    comments: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -32,6 +33,7 @@ export default function reducer(state = initialState, action) {
                 listArts: listArts,
             };
         }
+
 		case "FETCH_ARTS_REQUEST":
 			return {
 				...state,
@@ -42,23 +44,30 @@ export default function reducer(state = initialState, action) {
 				...state,
 				listArts: action.payload
 			};
+
+		case "FETCH_ART_REQUEST":
+			return {
+				...state,
+				currentArt: null,
+			};
 		case "FETCH_ART_SUCCESS":
 			return {
 				...state,
 				currentArt: action.payload,
-                open: true,
 			};
-		case "OPEN_ART":
-			return {
-				...state,
-				open: true,
-                currentArt: action.payload,
-			};
-		case "CLOSE_ART":
-			return {
-				...state,
-				open: false,
-			};
+
+        case "JUMP_COMMENT": {
+            return {
+                ...state,
+                jump: action.payload,
+            };
+        }
+        case "FETCH_COMMENTS_SUCCESS": {
+            return {
+                ...state,
+                comments: action.payload,
+            };
+        }
 	}
 
 	return state;

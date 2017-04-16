@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -9,9 +9,12 @@ import {
     BtnShare,
     BtnLikeArt,
     DividerText,
+    FormComment,
+    ListComment,
     ModalArt,
 } from '../../components';
-// import styles from './Art.scss';
+// import comValidation from './comValidation';
+import styles from './Art.scss';
 
 @connect(
     state => ({
@@ -24,8 +27,6 @@ import {
 )
 class Art extends Component {
     componentDidMount() {
-        if (this.props.currentArt) return;
-
         this.props.fetchArt(this.props.params.id);
     }
 
@@ -35,17 +36,34 @@ class Art extends Component {
         return (
             <div>
                 {currentArt &&
-                    <ModalArt art={currentArt}>
-                        <DividerText/>
-                        <BtnContainer>
-                            {user &&
-                                <div style={{display: 'inline'}}>
-                                    <BtnLikeArt art={currentArt}/>
-                                    <BtnComment art={currentArt}/>
-                                </div>
-                            }
-                            <BtnShare art={currentArt}/>
-                        </BtnContainer>
+                    <ModalArt>
+                        <div className={styles.art}>
+                            <h3><span>{currentArt.title}</span></h3>
+                            <h4>{currentArt.author}</h4>
+
+                            <div className={styles.imgContainer}>
+                                <img className={styles.imgCenter} src={currentArt.picture} alt="" />
+                            </div>
+                            <div className={styles.descContainer}>
+                                {currentArt.desc}
+                            </div>
+                            <DividerText/>
+                            <BtnContainer>
+                                {user &&
+                                    <div style={{display: 'inline'}}>
+                                        <BtnLikeArt art={currentArt}/>
+                                        <BtnComment art={currentArt}/>
+                                    </div>
+                                }
+                                <BtnShare art={currentArt}/>
+                            </BtnContainer>
+                        </div>
+
+                        <span className={styles.comsContainer}>
+                            <FormComment art={currentArt}/>
+
+                            <ListComment art={currentArt}/>
+                        </span>
                     </ModalArt>
                 }
             </div>

@@ -1,30 +1,7 @@
 @import "../../theme/variables.scss";
 
 .modalDialog{
-    width: 700px;
-}
-
-.modalArt {
-    //even the buttons are on the left
-    text-align: left;
-}
-
-.descContainer {
-    position: relative;
-
-    width: 100%;
-    margin-top: 10px;
-
-    white-space: pre-wrap;
-    word-wrap: break-word;
-
-    font-family: $ff-text;
-    font-size: $ff-size-desc;
-}
-
-.imgContainer {
-    float: right;
-
-    max-width: 100%;
-    margin: 10px;
+    div div {
+        padding: 0 !important;
+    }
 }

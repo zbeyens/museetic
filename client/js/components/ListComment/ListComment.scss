@@ -1,0 +1,18 @@
+@import "../../theme/variables.scss";
+
+.comContainer {
+    margin: 20px 10px;
+}
+
+.comLeft {
+    float: left;
+    margin-right: 8px;
+}
+
+.comRight {
+    // margin-left: 5px;
+}
+
+.comDate {
+    color: $color-subtitle;
+}

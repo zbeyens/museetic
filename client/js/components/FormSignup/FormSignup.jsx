@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
 import { signup } from '../../actions/authActions';
-import renderField from '../renderField';
+import inputField from '../RenderField/input';
 import signupValidation from './signupValidations';
 import styles from './FormSignup.scss';
 
@@ -39,14 +39,14 @@ class FormSignup extends Component {
             <div className={styles.formSignup}>
                 <form onSubmit={handleSubmit(this.onSubmit)}>
                     <Field
-                        component={renderField}
+                        component={inputField}
                         className="form-control"
                         name="name"
                         type="text"
                         placeholder="Nom"
                         size="30"/>
                     <Field
-                        component={renderField}
+                        component={inputField}
                         className="form-control"
                         name="email"
                         type="text"
@@ -54,7 +54,7 @@ class FormSignup extends Component {
                         errorAsync={signupError && signupError.email}
                         size="30"/>
                     <Field
-                        component={renderField}
+                        component={inputField}
                         className="form-control"
                         name="password"
                         type="password"

@@ -6,10 +6,9 @@ import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
 
 import {
-
     HTitle,
 } from '../';
-import { fetchArtTrend, openDialog } from '../../actions/artActions';
+import { fetchArtTrend } from '../../actions/artActions';
 import styles from './FrontArtTrend.scss';
 
 @connect(
@@ -18,7 +17,6 @@ import styles from './FrontArtTrend.scss';
     }),
     dispatch => bindActionCreators({
         fetchArtTrend,
-        openDialog,
     }, dispatch)
 )
 class FrontArtTrend extends Component {
@@ -33,7 +31,6 @@ class FrontArtTrend extends Component {
 
     handleOpen(art) {
         browserHistory.push('/art/' + art._id);
-        this.props.openDialog(art);
     }
 
     render() {

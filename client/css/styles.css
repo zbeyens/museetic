@@ -35,6 +35,10 @@ h3, h4 {
     font-family: "roboto";
 }
 
+textarea {
+    resize: vertical;
+}
+
 /*pic*/
 .pic {
     margin-right: 5px;

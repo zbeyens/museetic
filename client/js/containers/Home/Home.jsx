@@ -40,7 +40,7 @@ class Home extends Component {
                         <BtnContainer>
                             <BtnSkip />
                             <BtnLikeArt art={currentArt}/>
-                            <BtnComment art={currentArt}/>
+                            <BtnComment art={currentArt} jump/>
                             <BtnShare art={currentArt}/>
                         </BtnContainer>
                     </FrontArtTrend>

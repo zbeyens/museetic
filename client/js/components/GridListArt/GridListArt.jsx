@@ -6,14 +6,13 @@ import {GridList, GridTile} from 'material-ui/GridList';
 import IconButton from 'material-ui/IconButton';
 import Clear from 'material-ui/svg-icons/content/clear';
 
-import { likeArtProfile, openDialog } from '../../actions/artActions';
+import { likeArtProfile } from '../../actions/artActions';
 import styles from './GridListArt.scss';
 
 @connect(
     state => ({}),
     dispatch => bindActionCreators({
         likeArtProfile,
-        openDialog,
     }, dispatch)
 )
 class GridListArt extends Component {
@@ -24,7 +23,6 @@ class GridListArt extends Component {
 
     handleOpen(art) {
         browserHistory.push('/art/' + art._id);
-        this.props.openDialog(art);
     }
 
     render() {

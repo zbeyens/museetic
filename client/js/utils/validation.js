@@ -20,7 +20,7 @@ export function minLength(min) {
     return (value) => {
         if (!isEmpty(value) && value.length < min) {
             // return `Must be at least ${min} characters`;
-            return `Doit avoir au moins ${min} caractères`;
+            return `Minimum ${min} caractères`;
         }
     };
 }
@@ -29,7 +29,7 @@ export function maxLength(max) {
     return (value) => {
         if (!isEmpty(value) && value.length > max) {
             // return `Must be no more than ${max} characters`;
-            return `Doit avoir au maximum ${max} caractères`;
+            return `Maximum ${max} caractères`;
         }
     };
 }
