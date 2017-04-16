@@ -119,8 +119,9 @@ module.exports = {
     foodInitSize: 10,
     foodFactor: 5.6,
     
-    foodSpriteInitSize: 6, //sprite
-    foodSpriteFactor: 15, //sprite
+    foodSpriteInitSize: 5, //sprite
+    foodSpriteFactor: 14, //sprite
+    foodLightFactor: 0.035, //speed light of the food
     foodEatenHitbox: 8, //radius - food eaten (not mass dependent)
     foodMovingTime: 1000, //attracting maximal time (speed)
     foodRotationSpeed: 0.0035, //idle rotation speed
@@ -154,6 +155,7 @@ module.exports = {
     ringImg: '/client/img/firewater.png',
     shootImg: '/client/img/bullet.png',
     foodImg: '/client/img/v10.png',
+    foodLightImg: '/client/img/light .png', //4?
     // mapImg: '/client/img/clouds.jpg',
     // mapImg: '/client/img/Background Black 512.jpg',
     mapImg: '/client/img/black.jpg',

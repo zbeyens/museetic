@@ -11,26 +11,26 @@ const cfg = require('../../../shared/config');
     
 
 export default class Canvas {
-    constructor() {
+    constructor(game) {
         this.canvas = document.getElementById("ctx");
         this.assetsLoaded = false;
+        this.game = game;
         this.txt = new Textures(this);
         this.hud = new Hud(this);
+        this.preload();
+        
         this.cam = new Camera(this);
         this.vmap = new ViewMap(this);
         this.vplayer = new ViewPlayer(this);
         this.vball = new ViewBall(this);
         this.vfood = new ViewFood(this);
         this.vshoot = new ViewShoot(this);
-        
-        this.preload();
-        
-        window.addEventListener('resize', (e) => {
-            this.cam.resizeCamera();
-        });
-        this.cam.resizeCamera();
     }
     
+    /**
+     * renderer, stage, layers, 
+     * @return {[type]} [description]
+     */
     preload() {
         this.renderer = new PIXI.autoDetectRenderer(cfg.scopeInitX, cfg.scopeInitY, {
             view: this.canvas
@@ -55,18 +55,16 @@ export default class Canvas {
     }
 
     onTexturesLoaded() {
+        this.game.dom.homePanel.show();
+        this.canvas.style.display = 'block';
+        this.assetsLoaded = true;
+        
         this.vmap.preloadSprites();
-        //NOTE needed ?
+        //NOTE spectator
         this.vmap.drawMap({
             x: 0,
             y: 0,
         });
-        this.assetsLoaded = true;
-
-        //start DOM animation
-        const signPanelDiv = document.getElementById('signPanelDiv');
-        signPanelDiv.style.display = 'block';
-        this.canvas.style.display = 'block';
     }
 
     render() {
@@ -113,6 +111,7 @@ export default class Canvas {
             if (removedFoods[i].sprite) {
                 this.stage.removeChild(removedFoods[i].sprite);
                 removedFoods[i].sprite.destroy();
+                removedFoods[i].spriteLight.destroy();
             }
         }
         for (let i = removedShoots.length; i--;) {

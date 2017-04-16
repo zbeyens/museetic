@@ -12,15 +12,6 @@ export default class Hud {
     preloadHud() {
         //we don't apply scale on HUD (but we do on stage): no blur
         this.container = new PIXI.Container();
-
-        //Board
-        // const board = document.getElementById('boardDiv');
-        // const leaderboard = document.getElementById('leaderboard');
-        const num = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-        this.entries = [];
-        for (let i = 0; i < 10; i++) {
-            this.entries.push(document.getElementById(num[i]));
-        }
         
         //FPS
         this.fps = new Fps();
@@ -49,20 +40,6 @@ export default class Hud {
         this.container.visible = false;
     }
 
-    //DOM
-    drawBoard(board) {
-        const len = board.length;
-        for (let i = 0; i < len; i++) {
-            this.entries[i].textContent = (i + 1) + '. ' + board[i];
-        }
-        
-        if (len < 10) {
-            for (let i = len; i < 10; i++) {
-                this.entries[i].textContent = '';
-            }
-        }
-    }
-    
     drawHud(selfState) {
         //Mass if modif
         if (this.score.text !== 'Mass : ' + selfState.mass) {

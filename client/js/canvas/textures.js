@@ -19,6 +19,7 @@ export default class Textures {
             .add("mapTxt", cfg.mapImg)
             .add("bgTxt", cfg.bgImg)
             .add("foodTxt", cfg.foodImg)
+            .add("foodLightTxt", cfg.foodLightImg)
             .add(cfg.playerSet)
             .add(cfg.fireballSet)
 
@@ -82,6 +83,7 @@ export default class Textures {
         this.mapTxt = resources.mapTxt.texture;
         this.bgTxt = resources.bgTxt.texture;
         this.foodTxt = resources.foodTxt.texture;
+        this.foodLightTxt = resources.foodLightTxt.texture;
         // console.log(PIXI.loader.resources);
         this.playerTxtList = [];
         // for (let i = 0; i < 3; i++) {

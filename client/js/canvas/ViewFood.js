@@ -21,18 +21,29 @@ export default class ViewFood {
             const i = lot.randomIntFromInterval(0, cfg.gradColors.length - 1);
             food.sprite.tint = cfg.gradColors[i];
             
-            
             food.sprite.anchor.set(0.5);
             food.sprite.alpha = 0;
             food.sprite.displayGroup = this.cv.foodLayer;
-            
             this.cv.stage.addChild(food.sprite);
+
+            food.spriteLight = new PIXI.Sprite(this.cv.txt.foodLightTxt);
+            food.spriteLight.blendMode = PIXI.BLEND_MODES.ADD;
+            food.spriteLight.tint = cfg.gradColors[i];
+
+            food.spriteLight.anchor.set(0.5);
+            // food.spriteLight.alpha = 0;
+            food.spriteLight.displayGroup = this.cv.foodLayer;
+            food.spriteLight.scaleLight = 0; //
+            
+            this.cv.stage.addChild(food.spriteLight);
         }
         
         const x = food.state.x - selfState.x + this.canvas.width / 2;
         const y = food.state.y - selfState.y + this.canvas.height / 2;
         food.sprite.position.x = x;
         food.sprite.position.y = y;
+        food.spriteLight.position.x = x;
+        food.spriteLight.position.y = y;
         
         let size = lot.getFoodSpriteRadius(food.mass);
         // let size = 50 + 4 * food.mass;
@@ -44,6 +55,15 @@ export default class ViewFood {
             food.sprite.alpha = Math.round(food.sprite.alpha * 100) / 100;
             newScale = food.sprite.alpha; 
         }
+        
+        if (food.spriteLight.scaleLight >= 1.2) {
+            food.spriteLight.factor = -cfg.foodLightFactor;
+        }
+        if (food.spriteLight.scaleLight <= 0.4) {
+            food.spriteLight.factor = cfg.foodLightFactor;
+        }
+        food.spriteLight.scaleLight += food.spriteLight.factor;
+        food.spriteLight.scaleLight = Math.round(food.spriteLight.scaleLight * 100) / 100;
 
         //eaten
         if (food.referrer) {
@@ -59,6 +79,8 @@ export default class ViewFood {
         size *= newScale;
         food.sprite.width = size;
         food.sprite.height = size;
+        food.spriteLight.width = size * food.spriteLight.scaleLight;
+        food.spriteLight.height = size * food.spriteLight.scaleLight;
         
         if (cfg.debugFoodHitbox) {
             const sizeHitbox = lot.getFoodRadius(food.mass);

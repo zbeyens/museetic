@@ -1,4 +1,4 @@
-var Packet = require('./packet');
+const Packet = require('./packet');
 
 exports = module.exports = Sender;
 
@@ -14,7 +14,7 @@ Sender.prototype = {
      */
     sendMessage: function(packet) {
         if (this.socket.readyState === 1) {
-            var buf = packet.form();
+            const buf = packet.form();
             this.socket.send(buf);
         } else {
             this.onDisconnect();
@@ -22,17 +22,17 @@ Sender.prototype = {
     },
 
     /**
-     * onSubmit, send the username
+     * onSubmit, send the nickname
      * @return {void}
      */
     onSubmit: function() {
-        var signForm = document.getElementById("sign-form");
-        var signDivUsername = document.getElementById("signDiv-username");
+        const playForm = document.getElementById("playForm");
+        const nickname = document.getElementById("nickname");
 
-        signForm.onsubmit = function(e) {
+        playForm.onsubmit = function(e) {
             e.preventDefault();
             // this.sendMessage(new Packet.Clear());
-            this.sendMessage(new Packet.Submit(signDivUsername.value));
+            this.sendMessage(new Packet.Submit(nickname.value));
         }.bind(this);
     },
 

@@ -11,6 +11,8 @@ export default class Camera {
         this.zoom = 0;
         this.scaleTarget = 1;
         this.scaleCurrent = 1;
+        
+        this.resizeCamera();
     }
 
     setScaleTarget(applySmooth) {
@@ -79,7 +81,6 @@ export default class Camera {
     
     //modify this.scale and resize
     resizeCanvas() {
-        console.log("res");
         //like agario
         const w = window.innerWidth * 1.25;
         const h = window.innerHeight * 1.25;
@@ -122,12 +123,6 @@ export default class Camera {
     }
     
     resizeHud() {
-        const leaderboard = document.getElementById('leaderboard'); 
-        const boardDiv = document.getElementById('boardDiv'); 
-        const entry = document.getElementById('entry'); 
-        leaderboard.style.fontSize = (boardDiv.offsetWidth / 7) + "px";
-        entry.style.fontSize = (boardDiv.offsetWidth / 11) + "px";
-        
         const fpsTextX = 5 * this.scale,
         fpsTextY = 5 * this.scale,
         scoreX = 5 * this.scale,
@@ -144,9 +139,7 @@ export default class Camera {
         this.cv.hud.x.position.set(xX, xY);
         this.cv.hud.y.position.set(yX, yY);
         
-        console.log(this.scale);
         const style = lot.getStyle(20, this.scale);
-        console.log(style);
         this.cv.hud.fpsText.style = style;
         this.cv.hud.score.style = style;
         this.cv.hud.x.style = style;

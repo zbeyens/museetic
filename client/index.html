@@ -8,6 +8,9 @@
 	<script src="client/lib/pixi.min.js"></script>
 	<script src="client/lib/pixi-display.js"></script>
 	<script src="client/lib/underscore-min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 	<!-->
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Varela+Round" -->
 
@@ -16,7 +19,7 @@
 <body>
 
 	<!-- <div id="signDiv">
-	</div> -->
+</div> -->
 
 	<div id="gameDiv">
 
@@ -24,20 +27,26 @@
 			<canvas id="ctx"></canvas>
 		</div>
 
-		<div id="signPanelDiv">
-			<div id="titleDiv">
-				<span id="titleSpan">Malar.io</span>
-			</div>
+		<div id="mainFade">
+			<div id="homePanel">
+				<div id="midTopPanel">
 
-			<div id="formDiv">
-				<form id="sign-form">
-					<input id="signDiv-username" type="text" placeholder="Nickname" autofocus maxlength="140"></input>
-					<button id="signDiv-signIn" type="submit">Play</button>
-				</form>
+					<div id="titleDiv">
+						<h2 id="title">Mugo.io</h2>
+					</div>
+
+					<div id="formDiv">
+						<form id="playForm">
+							<input type="text" id="nickname" class="center-midTop form-control" placeholder="Nickname" autofocus maxlength="140" />
+							<button type="submit" id="btn-play" class="center-midTop btn btn-primary">Play</button>
+							<button id="btn-skin" class="center-midTop btn btn-primary">Change Skin</button>
+						</form>
+					</div>
+				</div>
 			</div>
 		</div>
 
-		<div id="hudDiv">
+		<div id="hudContainer">
 			<div id="boardDiv">
 				<div id="leaderboard">
 					<span id="pseudo">Leaderboard</span>
