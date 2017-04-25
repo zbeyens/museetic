@@ -33,16 +33,7 @@ module.exports = (app, isLoggedIn) => {
         });
     });
 
-    app.get('/fetchArtTrend', isLoggedIn, (req, res) => {
-        const findArtCurrent = userController.findArtCurrent(req.user);
-        findArtCurrent.then((user) => {
-            res.send(user.arts.current);
-        }).catch((err) => {
-            res.sendStatus(500);
-        });
-    });
-
-    app.get('/skipArt', isLoggedIn, (req, res) => {
+    const skipArt = (req, res) => {
         async.waterfall([
             //findArtCurrent from req.user
             (cb) => {
@@ -85,8 +76,23 @@ module.exports = (app, isLoggedIn) => {
             }
         });
         console.log("sending currentArt");
+    };
+
+    app.get('/fetchArtTrend', isLoggedIn, (req, res) => {
+        const findArtCurrent = userController.findArtCurrent(req.user);
+        findArtCurrent.then((user) => {
+            if (!user.arts.current) {
+                console.log(user);
+                skipArt(req, res);
+            } else {
+                res.send(user.arts.current);
+            }
+        }).catch((err) => {
+            res.sendStatus(500);
+        });
     });
 
+    app.get('/skipArt', isLoggedIn, skipArt);
 
     app.get('/likeart', isLoggedIn, (req, res) => {
         const userId = req.user._id;
