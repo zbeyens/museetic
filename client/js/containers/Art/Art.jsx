@@ -60,7 +60,9 @@ class Art extends Component {
                         </div>
 
                         <span className={styles.comsContainer}>
-                            <FormComment art={currentArt}/>
+                            { user &&
+                                <FormComment art={currentArt}/>
+                            }
 
                             <ListComment art={currentArt}/>
                         </span>
