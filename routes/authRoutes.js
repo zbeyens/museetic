@@ -17,6 +17,8 @@ const getUserInfo = (user) => {
     userInfo._id = user._id;
 	userInfo.email = user.email;
 	userInfo.name = user.name;
+	userInfo.friends = user.friends;
+	userInfo.friendRequests = user.friendRequests;
 	return userInfo;
 };
 

@@ -43,6 +43,9 @@ export function skipArt() {
         axios.get('/skipArt')
         .then((res) => {
             dispatch({
+                type: "FETCH_ARTTREND_REQUEST"
+            });
+            dispatch({
                 type: "FETCH_ARTTREND_SUCCESS",
                 payload: res.data,
             });
@@ -126,11 +129,9 @@ export function likeArtProfile(id, i) {
 }
 
 export function jumpComment(bool) {
-    return function(dispatch) {
-        dispatch({
-            type: 'JUMP_COMMENT',
-            payload: bool
-        });
+    return {
+        type: 'JUMP_COMMENT',
+        payload: bool
     };
 }
 

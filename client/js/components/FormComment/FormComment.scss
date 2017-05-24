@@ -1,15 +1,13 @@
-@import "../../theme/variables.scss";
 
 .comWrite {
     //Ordinarily, floats aren't counted in the layout of their parents.
     //To prevent height=0, add overflow: hidden to the parent.
     overflow: hidden;
 
-    width: 80%;
+    width: 70%;
 }
 
 .comAreaContainer {
-    @extend .col-xs-10;
     float: left;
 }
 
@@ -18,9 +16,9 @@
 
     width: 100%;
 
-    padding: 8px;
+    border-radius: 5px;
 }
 
-.comSend {
-    margin-left: 2px;
+.comBtn {
+    margin-top: 1px;
 }

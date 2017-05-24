@@ -29,9 +29,9 @@ class BtnComment extends Component {
             browserHistory.push('/art/' + this.props.art._id);
             this.props.jumpComment(true);
         } else {
-            const com = document.getElementById("com");
-            com.focus();
-            com.scrollIntoView(true);
+            const areaCom = document.getElementById("areaCom");
+            areaCom.focus();
+            areaCom.scrollIntoView(true);
         }
     }
 

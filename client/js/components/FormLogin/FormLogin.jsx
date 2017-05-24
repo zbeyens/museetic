@@ -5,11 +5,13 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
-import GoogleButton from '../GoogleButton';
-import FacebookButton from '../FacebookButton';
+// import GoogleButton from '../GoogleButton';
+// import FacebookButton from '../FacebookButton';
+import Subheader from 'material-ui/Subheader';
 import { login } from '../../actions/authActions';
 import inputField from '../RenderField/input';
 import loginValidation from './loginValidation';
+import cfg from '../../../../shared/config';
 import styles from './FormLogin.scss';
 
 
@@ -37,12 +39,13 @@ class FormLogin extends Component {
 
     render() {
         const { handleSubmit, submitting, pristine, loginError } = this.props;
-
+        // <FacebookButton divClass="socialDiv" buttonText="Se connecter avec Facebook"/>
+        // <GoogleButton divClass="socialDiv" buttonText="Se connecter avec Google"/>
+        // {this.props.children}
         return (
-            <div className={styles.formLogin}>
-                <FacebookButton divClass="socialDiv" buttonText="Se connecter avec Facebook"/>
-                <GoogleButton divClass="socialDiv" buttonText="Se connecter avec Google"/>
+            <div className={"padding-15 " + styles.formLogin}>
                 {this.props.children}
+
                 <form onSubmit={handleSubmit(this.onSubmit)}>
                     <Field
                         component={inputField}
@@ -51,7 +54,7 @@ class FormLogin extends Component {
                         type="text"
                         placeholder="Adresse e-mail"
                         errorAsync={loginError && loginError.email}
-                        size="30"
+                        maxLength={cfg.formEmailLength}
                     />
                     <Field
                         component={inputField}
@@ -60,31 +63,31 @@ class FormLogin extends Component {
                         type="password"
                         placeholder="Mot de passe"
                         errorAsync={loginError && loginError.password}
-                        size="30"
+                        maxLength={cfg.formPasswordLength}
                     />
 
                     { pristine &&
                         <Link to="/login">
-                            <button type="submit"
-                                className="btn btn-info dropdown-button"
-                                disabled={submitting}>
-                                Se connecter
-                            </button>
-                        </Link>
-                    }
-                    { !pristine &&
                         <button type="submit"
-                            className="btn btn-info dropdown-button"
+                            className="btn btn-info dropdown-button margin-t10"
                             disabled={submitting}>
                             Se connecter
                         </button>
-                    }
+                    </Link>
+                }
+                { !pristine &&
+                    <button type="submit"
+                        className="btn btn-info dropdown-button margin-t10"
+                        disabled={submitting}>
+                        Se connecter
+                    </button>
+                }
 
-                </form>
-            </div>
+            </form>
+        </div>
 
-        );
-    }
+    );
+}
 
 }
 

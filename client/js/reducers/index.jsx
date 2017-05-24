@@ -4,11 +4,13 @@ import { reducer as formReducer } from 'redux-form';
 
 import auth from './authReducer';
 import art from './artReducer';
+import chat from './chatReducer';
 import user from './userReducer';
 
 const appReducer = combineReducers({
     art,
     auth,
+    chat,
     user,
 
     form: formReducer,

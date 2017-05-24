@@ -29,11 +29,11 @@ const artSchema = mongoose.Schema({
 
     comments: [
         {
+            content: String,
             author: {
                 type: ObjectId,
                 ref: 'User'
             },
-            content: String,
             date: {
                 type: Date,
                 default: Date.now

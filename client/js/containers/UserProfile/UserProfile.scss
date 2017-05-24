@@ -1,5 +1,3 @@
-@import "../../theme/variables.scss";
-
 .leftContainer {
     padding: 15px;
 }
@@ -11,4 +9,8 @@
 .rightContainer {
     padding: 10px;
     // margin-left: 10px;
+}
+
+label {
+    display: block !important;
 }

@@ -1,12 +1,12 @@
 import {
     createValidator,
     required,
-    maxLength,
+    // maxLength,
     email
 } from '../../utils/validation';
 
 const validator = createValidator({
     email: [required, email],
-    password: [required, maxLength(20)]
+    password: [required]
 });
 export default validator;

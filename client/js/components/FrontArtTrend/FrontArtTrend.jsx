@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-// import { Link } from 'react-router';
-import { browserHistory } from 'react-router';
+import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
@@ -20,34 +19,25 @@ import styles from './FrontArtTrend.scss';
     }, dispatch)
 )
 class FrontArtTrend extends Component {
-    constructor(props) {
-        super(props);
-        this.handleOpen = this.handleOpen.bind(this);
-    }
-
     componentDidMount() {
         this.props.fetchArtTrend();
-    }
-
-    handleOpen(art) {
-        browserHistory.push('/art/' + art._id);
     }
 
     render() {
         const { currentArt, children } = this.props;
 
         return (
-            <Paper className={styles.frontArtTrend} zDepth={1}>
+            <Paper className={"thumbnail col-xs-8 col-xs-offset-2 padding-b20 " + styles.frontArtTrend} zDepth={1}>
                 {currentArt &&
                     <div>
                         <HTitle title={currentArt.title} />
                         <h4>{currentArt.author}</h4>
 
-                        <a href="javascript:" onClick={() => this.handleOpen(currentArt)}>
+                        <Link to={'/art/' + currentArt._id}>
                             <div className={styles.imgContainer}>
                                 <img className={styles.imgCenter} src={currentArt.picture} alt="" />
                             </div>
-                        </a>
+                        </Link>
 
                         {children}
                     </div>

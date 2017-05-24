@@ -2,7 +2,8 @@ const FacebookStrategy = require('passport-facebook').Strategy,
 	LocalStrategy = require('passport-local').Strategy,
 	validator = require('validator'),
 	User = require('../models/user'),
-	cfgAuth = require('../../config/auth');
+	cfgAuth = require('../../config/auth'),
+	cfg = require('../../shared/config');
 
 /**
  * we will use Session-based authentication
@@ -59,6 +60,11 @@ module.exports = function(passport) {
 
 				if (user) {
 					return done(null, false, {email: 'Email déjà utilisée'});
+				}
+				if (email.length > cfg.formEmailLength) {
+					return done(null, false, {email: 'Email trop long'});
+				} else if (req.body.name.length > cfg.formNameLength) {
+					return done(null, false, {name: 'Nom trop long'});
 				}
 				// create the user
 				const newUser = new User();

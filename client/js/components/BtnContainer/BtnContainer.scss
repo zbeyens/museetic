@@ -1,7 +1,5 @@
-@import "../../theme/variables.scss";
-
 .btnContainer {
-    @extend .center-block;
+    margin: 0 auto;
 
     button {
         margin: 0px 5px 0 5px;

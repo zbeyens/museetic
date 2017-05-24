@@ -7,11 +7,16 @@ import { connect } from 'react-redux';
 import { loadAuth } from '../../actions/authActions';
 import {
     DividerText,
+    FormChat,
     FormLogin,
-    InputSearch,
+    SearchName,
+    SearchProfile,
     LiDropdown,
     LiLogout,
-    LiMyCollection,
+    LiNavbar,
+    ListChat,
+    ListChatComment,
+    ModalMessages,
     Navbar,
 } from '../../components';
 // import OffNavbar from '../../components/OffNavbar.jsx';
@@ -46,27 +51,60 @@ class App extends Component {
                     {loaded &&
                         <Navbar>
                             {user &&
-                                <InputSearch />
+                                <SearchProfile />
                             }
 
-                            <ul className={"nav navbar-nav " + styles.nav} >
-                                {user &&
-                                    <LiMyCollection />
-                                }
-                            </ul>
+                            {user &&
+                                <ul className={"nav navbar-nav padding-t10"} >
+                                    <LiNavbar route="/notifications">
+                                    <div>
+                                        <i className="fa fa-bell fa-lg" />
+                                        { user.friendRequests.length > 0 &&
+                                            <span className="badge">{user.friendRequests.length}</span>
+                                        }
+                                    </div> </LiNavbar>
+                                </ul>
+                            }
+                            {user &&
+                                <ul className={"nav navbar-nav padding-t10"} >
+                                    <LiNavbar route="/"> <i className="fa fa-home fa-lg" /></LiNavbar>
+                                </ul>
+                            }
+                            {user &&
+                                <ul className={"nav navbar-nav padding-t10"} >
+                                    <LiNavbar route="/mycollection"> <i className="fa fa-star fa-lg" /> Ma collection </LiNavbar>
+                                </ul>
+                            }
+                            {user &&
+                                <ul className={"nav navbar-nav padding-t10"} >
+                                    <ModalMessages
+                                        modeIdle={<ListChat />}
+                                        modeNew={<SearchName />}
+                                        formChat={<FormChat />}
+                                        listChatComment={<ListChatComment />}
+                                    />
+                                </ul>
+                            }
+                            {user &&
+                                <ul className={"nav navbar-nav padding-t10"} >
+                                    <LiNavbar route="/friends"> <i className="fa fa-users fa-lg" /> Amis </LiNavbar>
+                                </ul>
+                            }
 
-                            <ul className={"nav navbar-nav navbar-right " + styles.nav}>
+
+                            <ul className={"nav navbar-nav navbar-right padding-t10"}>
                                 {!user &&
-                                    <LiDropdown a="Vous avez déjà un compte ? Connexion">
+                                    <LiDropdown inside={
                                         <FormLogin>
-                                            <DividerText styleName="dividerTextWhite" text="or"/>
-                                        </FormLogin>
+                                            <strong>Se connecter à Museetic</strong>
+                                        </FormLogin>}>
+                                        Vous avez déjà un compte ? Connexion
+                                        <span className="caret"/>
                                     </LiDropdown>
                                 }
                                 {user &&
-                                    <LiDropdown a={user.name}>
-                                        <LiLogout />
-                                    </LiDropdown>
+                                    <LiDropdown inside={<LiLogout />}>
+                                    {user.name} <span className="caret"/> </LiDropdown>
                                 }
                             </ul>
                         </Navbar>

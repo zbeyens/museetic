@@ -3,11 +3,14 @@ import {Route, IndexRoute} from 'react-router';
 import {
     App,
     Art,
+    Friends,
     Home,
-    Signup,
     Login,
     MyCollection,
+    News,
     NotFound,
+    Notifications,
+    Signup,
     UserProfile,
 } from './containers';
 import {loadAuth} from './actions/authActions';
@@ -59,7 +62,10 @@ export default(store) => {
                 <Route path="signup" component={Signup} onEnter={requireLogout}/>
                 <Route path="login" component={Login} onEnter={requireLogout}/>
 
+                <Route path="news" component={News} onEnter={requireLogin}/>
                 <Route path="mycollection" component={MyCollection} onEnter={requireLogin}/>
+                <Route path="friends" component={Friends} onEnter={requireLogin}/>
+                <Route path="notifications" component={Notifications} onEnter={requireLogin}/>
                 <Route path="user/:id" component={UserProfile} onEnter={requireLogin}/>
 
                 <Route path="art/:id" component={Art} />

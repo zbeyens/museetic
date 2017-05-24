@@ -9,7 +9,6 @@ import {
     BtnShare,
     DividerText,
     FrontWelcome,
-    FrontH,
     FormSignup,
     FrontArtTrend,
     // ModalArt,
@@ -27,11 +26,12 @@ class Home extends Component {
         return (
             <div>
                 {!user &&
-                    <div>
+                    <div className="center-block">
                         <FrontWelcome/>
-                        <FrontH styleName="homeFrontH" title="Inscription">
+                        <div className="col-xs-5 col-xs-offset-1">
+                            <h1>Inscription</h1>
                             <FormSignup/>
-                        </FrontH>
+                        </div>
                     </div>
                 }
                 {user &&

@@ -5,6 +5,7 @@ import { Field, reduxForm } from 'redux-form';
 
 import { sendComment, jumpComment } from '../../actions/artActions';
 import textAreaField from '../RenderField/textArea';
+import cfg from './../../../../shared/config';
 import styles from './FormComment.scss';
 
 
@@ -24,16 +25,17 @@ class FormComment extends Component {
     constructor(props) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
     componentDidMount() {
         //hack... DOM is not completly rendered directly
         if (this.props.jump) {
             const loop = setInterval(() => {
-                const com = document.getElementById("com");
-                if (com) {
-                    com.focus();
-                    com.scrollIntoView(true);
+                const areaCom = document.getElementById("areaCom");
+                if (areaCom) {
+                    areaCom.focus();
+                    areaCom.scrollIntoView(true);
                     this.props.jumpComment(false);
                     clearInterval(loop);
                 }
@@ -42,29 +44,40 @@ class FormComment extends Component {
     }
 
     onSubmit(values) {
-        this.props.sendComment(this.props.art._id, values.com);
+        if (values.com) {
+            this.props.sendComment(this.props.art._id, values.com);
+        }
+    }
+
+    handleKeyDown(e, cb) {
+        if (e.key === 'Enter' && e.shiftKey === false) {
+            e.preventDefault();
+            cb();
+            this.props.reset();
+        }
     }
 
     render() {
         const { handleSubmit } = this.props;
         return (
-            <form onSubmit={handleSubmit(this.onSubmit)}>
+            <form onSubmit={handleSubmit(this.onSubmit)}
+                onKeyDown={(e) => { this.handleKeyDown(e, handleSubmit(this.onSubmit)); }}>
                 <div className={styles.comWrite}>
 
-                    <div className={styles.comAreaContainer}>
+                    <div className={"col-xs-10 " + styles.comAreaContainer}>
                         <Field className={styles.comArea}
                             component={textAreaField}
-                            id="com"
+                            id="areaCom"
                             name="com"
-                            maxLength={15}
-                            rows={3}
+                            maxLength={cfg.formCommentLength}
+                            rows={cfg.formCommentRow}
                             placeholder={"Commenter..."}
                         />
                     </div>
-
-                    <button className={"btn btn-success " + styles.comSend}>
-                        <i className="fa fa-send"/>
+                    <button className={"btn btn-blue margin-b10 margin-l5 " + styles.comBtn}>
+                        Envoyer
                     </button>
+
                 </div>
             </form>
 

@@ -1,9 +1,13 @@
 const initialState = {
+    //search bar
 	inputTime: new Date(),
 	loading: false,
-	suggestions: [],
+    suggestions: [],
     userProfile: null,
-	value: ''
+	value: '',
+    //Notifications
+    listNotif: [],
+    listFriends: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -24,6 +28,21 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 userProfile: action.payload,
+            };
+        case "FETCH_NOTIFICATIONS_SUCCESS":
+            return {
+                ...state,
+                listNotif: action.payload,
+            };
+        case "FETCH_FRIENDS_REQUEST":
+            return {
+                ...state,
+                listFriends: null,
+            };
+        case "FETCH_FRIENDS_SUCCESS":
+            return {
+                ...state,
+                listFriends: action.payload,
             };
 		case "CLEAR_SUGGESTIONS":
 			return {

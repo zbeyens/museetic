@@ -10,7 +10,7 @@ import {
     BtnLikeArt,
     DividerText,
     FormComment,
-    ListComment,
+    ListArtComment,
     ModalArt,
 } from '../../components';
 // import comValidation from './comValidation';
@@ -64,7 +64,7 @@ class Art extends Component {
                                 <FormComment art={currentArt}/>
                             }
 
-                            <ListComment art={currentArt}/>
+                            <ListArtComment art={currentArt}/>
                         </span>
                     </ModalArt>
                 }

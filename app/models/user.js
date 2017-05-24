@@ -5,7 +5,6 @@ const ObjectId = mongoose.Schema.ObjectId;
 
 
 const userSchema = mongoose.Schema({
-
 	arts: {
 		current: {
 			type: ObjectId,
@@ -30,6 +29,18 @@ const userSchema = mongoose.Schema({
         trim: true
     },
     role: String, //admin, manager
+    friends: [
+        {
+            type: ObjectId,
+            ref: 'User'
+        }
+    ],
+    friendRequests: [
+        {
+            type: ObjectId,
+            ref: 'User'
+        }
+    ],
     dateReg: {
         type: Date,
         default: Date.now

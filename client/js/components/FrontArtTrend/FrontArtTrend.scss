@@ -3,11 +3,10 @@
 .frontArtTrend {
     overflow-x: hidden;
 
-    padding: 0px 20px 20px 20px;
-    @extend .thumbnail, .col-xs-8, .col-xs-offset-2;
     // overflow: auto; //expand parent div to the height of the childs.
 
     text-align: center;
+    min-height: 575px;
 
     font-size: $ff-size-museum;
 }

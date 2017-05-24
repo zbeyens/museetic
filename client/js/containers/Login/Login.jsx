@@ -1,23 +1,16 @@
 import React, {Component} from 'react';
 import {
-    FrontH,
     FormLogin,
-    DividerText,
+    // DividerText,
 } from '../../components';
-
 
 class Login extends Component {
 
     render() {
         return (
-            <div>
-                <FrontH
-                    styleName="loginFrontH"
-                    title="Connexion">
-                    <FormLogin>
-                        <DividerText styleName="dividerTextFront" text="or"/>
-                    </FormLogin>
-                </FrontH>
+            <div className={"col-xs-4 col-xs-offset-4 text-center"}>
+                <h1>Connexion</h1>
+                <FormLogin />
             </div>
         );
     }

@@ -1,13 +1,15 @@
 import {
     createValidator,
     required,
-    maxLength,
+    // maxLength,
     email
 } from '../../utils/validation';
+// import cfg from '../../../../shared/config';
+
 
 const signupValidation = createValidator({
-    name: [required, maxLength(15)],
+    name: [required],
     email: [required, email],
-    password: [required, maxLength(20)]
+    password: [required]
 });
 export default signupValidation;

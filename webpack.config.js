@@ -18,6 +18,7 @@ const isProd = process.env.NODE_ENV === "production";
 const isDevServer = process.env.NODE_ENV === "devserver";
 
 const config = {
+    devtool: 'inline-source-map',
     entry: [
         //connect to the server to receive bundle rebuild notifications
         'babel-polyfill',

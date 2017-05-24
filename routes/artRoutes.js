@@ -35,16 +35,17 @@ module.exports = (app, isLoggedIn) => {
 
     const skipArt = (req, res) => {
         async.waterfall([
-            //findArtCurrent from req.user
+            //findUserArts from req.user
             (cb) => {
-                const findArtCurrent = userController.findArtCurrent(req.user);
-                findArtCurrent.then((user) => {
+                const findUserArts = userController.findUserArts(req.user);
+                findUserArts.then((user) => {
                     cb(null, user.arts);
                 }).catch((err) => {
                     cb(err);
                 });
             }, //countArts to pick randomly one art
             (userArts, cb) => {
+                console.log(userArts);
                 const countArts = artController.count();
                 countArts.then((count) => {
                     cb(null, count, userArts); //
@@ -53,16 +54,23 @@ module.exports = (app, isLoggedIn) => {
                 });
             }, //findNextArts (random)
             (countArts, userArts, cb) => {
-                const findNextArt = artController.findNextArt(countArts, userArts.current);
+                userArts.skipped.push(userArts.current._id);
+
+                //once all skipped, empty the skipped list
+                if (userArts.skipped.length >= countArts) {
+                    userArts.skipped = [userArts.current._id];
+                }
+
+                const findNextArt = artController.findNextArt(countArts, userArts.current, userArts.skipped);
                 findNextArt.then((nextArt) => {
-                    cb(null, nextArt);
+                    cb(null, nextArt, userArts.skipped);
                 }).catch((err) => {
                     cb(err);
                 });
-            }, //updateArtCurrent from req.user
-            (nextArt, cb) => {
-                const updateArtCurrent = userController.updateArtCurrent(req.user._id, nextArt._id);
-                updateArtCurrent.then((user) => {
+            }, //updateUserArts from req.user
+            (nextArt, skippedArts, cb) => {
+                const updateUserArts = userController.updateUserArts(req.user._id, nextArt._id, skippedArts);
+                updateUserArts.then((user) => {
                     res.send(nextArt);
                     cb(null, 'done');
                 }).catch((err) => {
@@ -79,8 +87,8 @@ module.exports = (app, isLoggedIn) => {
     };
 
     app.get('/fetchArtTrend', isLoggedIn, (req, res) => {
-        const findArtCurrent = userController.findArtCurrent(req.user);
-        findArtCurrent.then((user) => {
+        const findUserArts = userController.findUserArts(req.user);
+        findUserArts.then((user) => {
             if (!user.arts.current) {
                 console.log(user);
                 skipArt(req, res);
@@ -98,7 +106,7 @@ module.exports = (app, isLoggedIn) => {
         const userId = req.user._id;
         const artId = req.query.id;
         async.waterfall([
-            //findArtCurrent from req.user
+            //findUserArts from req.user
             (cb) => {
                 const findLike = artController.findLike(userId, artId);
                 findLike.then((arts) => {

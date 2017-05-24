@@ -23,12 +23,18 @@ exports.count = () => {
     return Art.count().exec();
 };
 
-exports.findNextArt = (count, currentArt) => {
+exports.findNextArt = (count, currentArt, skippedArts) => {
     // Get a random entry
-    const random = Math.floor(Math.random() * count);
+    const random = Math.floor(Math.random() * (count - skippedArts.length));
 
     // Again query all users but only fetch one offset by our random #
-    return Art.findOne({}, 'picture title author desc likes').skip(random).exec();
+    return Art.findOne({
+        _id: {
+            $nin: skippedArts
+        }
+    }, 'picture title author desc likes')
+    .skip(random)
+    .exec();
 };
 
 //NOTE: select...

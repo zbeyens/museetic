@@ -1,45 +1,121 @@
-@font-face {font-family: "paris"; src: url('fonts/paris.ttf'); }
-@font-face {font-family: "bariol"; src: url('fonts/bariol.ttf'); }
-@font-face {font-family: "manifesto"; src: url('fonts/manifesto.ttf'); }
-@font-face {font-family: "kaushan"; src: url('fonts/kaushan.otf'); }
-@font-face {font-family: "kaushan"; src: url('fonts/kaushan.otf'); }
-@font-face {font-family: "roboto"; src: url('fonts/roboto/Roboto-Regular.ttf'); }
-@font-face {font-family: "raleway"; src: url('fonts/raleway/Raleway-Medium.ttf'); }
-@font-face {font-family: "raleway-bold"; src: url('fonts/raleway/Raleway-Bold.ttf'); }
-
 html {
     height: 100%;
 
-    background-color: rgb(245,247,250);
+    background-color: rgb(245, 247, 250);
 }
+
 body, #root {
     position: relative;
 
     width: 100%;
     height: 100%;
 
-    background-color: rgb(245,247,250);
+    background-color: rgb(245, 247, 250);
 }
 
 button:focus {
     /*remove the blue border*/
     outline: 0 !important;
 }
+
 a:focus {
+    text-decoration: none !important;
     /*remove the blue border*/
+
     outline: 0 !important;
-    text-decoration: none !important;
 }
 
 h3, h4 {
-    font-family: "roboto";
+    /*font-family: "roboto";*/
+    font-family: 'Open Sans', sans-serif;
 }
 
 textarea {
     resize: vertical;
+    padding: 8px;
+    color: black;
+    outline: none;
+}
+
+
+/*little margin*/
+.margin-10 {
+    margin: 10px;
+}
+.margin-15 {
+    margin: 15px;
+}
+.margin-l5 {
+    margin-left: 5px;
+}
+.margin-r5 {
+    margin-right: 5px;
+}
+.margin-l10 {
+    margin-left: 10px;
+}
+.margin-r10 {
+    margin-right: 10px;
+}
+.margin-t10 {
+    margin-top: 10px;
+}
+.margin-b10 {
+    margin-bottom: 10px;
+}
+.margin-l20 {
+    margin-left: 20px;
+}
+.margin-r20 {
+    margin-right: 20px;
+}
+.margin-t20 {
+    margin-top: 20px;
+}
+.margin-b20 {
+    margin-bottom: 20px;
+}
+.margin-lr5 {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.margin-tb10 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+.padding-10 {
+    padding: 10px;
+}
+.padding-15 {
+    padding: 15px;
+}
+.padding-t5 {
+    padding-top: 5px;
+}
+.padding-b5 {
+    padding-bottom: 5px;
+}
+.padding-t10 {
+    padding-top: 10px;
+}
+.padding-b10 {
+    padding-bottom: 10px;
+}
+.padding-t20 {
+    padding-top: 20px;
+}
+.padding-b20 {
+    padding-bottom: 20px;
+}
+.padding-tb10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 /*pic*/
+
 .pic {
     margin-right: 5px;
     padding: 1px;
@@ -47,10 +123,10 @@ textarea {
 
 
 /*social buttons*/
+
 .socialDiv {
     padding-bottom: 7px;
 }
-
 
 .btn-circle {
     width: 30px;
@@ -64,6 +140,7 @@ textarea {
     font-size: 12px;
     line-height: 1.428571429;
 }
+
 .btn-circle.btn-lg {
     width: 50px;
     height: 50px;
@@ -74,6 +151,7 @@ textarea {
     font-size: 18px;
     line-height: 1.33;
 }
+
 .btn-circle.btn-xl {
     width: 70px;
     height: 70px;
@@ -83,4 +161,55 @@ textarea {
 
     font-size: 24px;
     line-height: 1.33;
+}
+
+.notifications {
+    margin: 0;
+}
+
+.icon-wrapper {
+    position: relative;
+
+    float: left;
+}
+
+/*material-ui*/
+.badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+
+    display: flex;
+
+    width: 16px;
+    height: 16px;
+
+    color: rgb(255, 255, 255);
+    border-radius: 50%;
+    /*background-color: #ff4c89;*/
+    background-color: rgb(0, 190, 241);
+
+    font-size: 12px;
+    font-weight: 500;
+
+    flex-flow: row wrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+
+.btn-blue {
+    background-color: #0292c5 !important;
+    color: white;
+}
+
+.form-group {
+    margin: 0px;
+}
+
+/*components shared*/
+.modalTitle {
+    margin: 0;
+    display: inline-block;
 }

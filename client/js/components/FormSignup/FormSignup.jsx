@@ -8,6 +8,7 @@ import { signup } from '../../actions/authActions';
 import inputField from '../RenderField/input';
 import signupValidation from './signupValidations';
 import styles from './FormSignup.scss';
+import cfg from '../../../../shared/config';
 
 @reduxForm({
     form: 'signup',
@@ -40,11 +41,11 @@ class FormSignup extends Component {
                 <form onSubmit={handleSubmit(this.onSubmit)}>
                     <Field
                         component={inputField}
-                        className="form-control"
+                        className={" form-control"}
                         name="name"
                         type="text"
                         placeholder="Nom"
-                        size="30"/>
+                        maxLength={cfg.formNameLength}/>
                     <Field
                         component={inputField}
                         className="form-control"
@@ -52,19 +53,19 @@ class FormSignup extends Component {
                         type="text"
                         placeholder="Adresse e-mail"
                         errorAsync={signupError && signupError.email}
-                        size="30"/>
+                        maxLength={cfg.formEmailLength}/>
                     <Field
                         component={inputField}
                         className="form-control"
                         name="password"
                         type="password"
                         placeholder="Mot de passe"
-                        size="30"/>
+                        maxLength={cfg.formPasswordLength}/>
 
                     { pristine &&
                         <Link to="/signup">
                             <button type="submit"
-                                className="btn btn-success btn-lg"
+                                className="btn btn-success btn-lg margin-t10"
                                 disabled={submitting}>
                                 S'inscrire
                             </button>
@@ -72,7 +73,7 @@ class FormSignup extends Component {
                     }
                     { !pristine &&
                         <button type="submit"
-                            className="btn btn-success btn-lg"
+                            className="btn btn-success btn-lg margin-t10"
                             disabled={submitting}>
                             S'inscrire
                         </button>

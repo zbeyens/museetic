@@ -17,7 +17,7 @@ class Navbar extends Component {
             <nav className={"navbar navbar-default " + styles.navbarGlobal}>
                 <div className={"container-fluid center-block " + styles.navbarContainer}>
                     <div className={"navbar-header " + styles.navHeader}>
-                        <Link to="/"><span className={"navbar-brand " + styles.bandMuseetic}>Museetic</span></Link>
+                        <Link to="/news"><span className={"navbar-brand " + styles.bandMuseetic}>Museetic</span></Link>
                     </div>
 
                     {this.props.children}

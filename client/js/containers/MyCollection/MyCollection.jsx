@@ -30,7 +30,7 @@ class MyCollection extends Component {
         return (
             <div>
                 {listArts &&
-                    <Paper className={styles.cont} zDepth={1}>
+                    <Paper className={"col-xs-10 col-xs-offset-1 " + styles.cont} zDepth={1}>
                         <HTitle title="Ma collection"/>
 
                         <GridListArt list={listArts} mycollection/>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { browserHistory } from 'react-router';
+import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {GridList, GridTile} from 'material-ui/GridList';
@@ -16,20 +16,11 @@ import styles from './GridListArt.scss';
     }, dispatch)
 )
 class GridListArt extends Component {
-    constructor(props) {
-        super(props);
-        this.handleOpen = this.handleOpen.bind(this);
-    }
-
-    handleOpen(art) {
-        browserHistory.push('/art/' + art._id);
-    }
-
     render() {
         const artsProfile = this.props.list;
 
         return (
-            <div className={styles.root}>
+            <div className={"margin-t10 " + styles.root}>
                 <GridList
                     cellHeight={270}
                     className={styles.gridList}
@@ -37,12 +28,10 @@ class GridListArt extends Component {
                     {artsProfile.map((art, i) => (
                         <GridTile
                             key={art._id}
-                            title={<a
-                                href="javascript:"
-                                className={styles.a}
-                                onClick={() => this.handleOpen(art)}
-                                key={art._id}>{art.title}
-                            </a>}
+                            title={
+                                <Link to={'/art/' + art._id} className={styles.a}>
+                                {art.title}
+                            </Link>}
                             subtitle={<span>de <b>{art.author}</b></span>}
                             actionIcon={
                                 this.props.mycollection &&

@@ -1,9 +1,6 @@
-@import "../../theme/variables.scss";
 
 .frontWelcome {
-    @media (max-width: $screen-md-min) {
-        text-align: center;
-    }
+    text-align: center;
 
     h2 {
         margin-top: 35px;

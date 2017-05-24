@@ -30,6 +30,14 @@ class ModalArt extends Component {
     render() {
         const { children } = this.props;
 
+        const btnTimes = (
+            <a href="javascript:"
+                className={styles.btnTimes}
+                onClick={this.handleClose}>
+                <i className="fa fa-times"/>
+            </a>
+        );
+
         return (
             <Dialog
                 modal={false}
@@ -38,7 +46,7 @@ class ModalArt extends Component {
                 autoScrollBodyContent
                 contentClassName={styles.modalDialog}
                 contentStyle={{maxWidth: '900px'}}>
-
+                {btnTimes}
                 {children}
             </Dialog>
         );

@@ -83,7 +83,7 @@ export function login(values) {
                     payload: res.data
                 });
 
-                browserHistory.push('/');
+                browserHistory.push('/news');
                 //     // - Save the JWT in localStorage (response.data.token)
                 //     localStorage.setItem('token', response.data.loggedIn);
                 // }
