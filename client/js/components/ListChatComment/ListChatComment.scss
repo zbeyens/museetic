@@ -1,0 +1,14 @@
+@import "../../theme/variables.scss";
+
+.commentsCtn{
+    overflow-y: scroll;
+    max-height: 450px;
+}
+
+.comLeft {
+    float: left;
+}
+
+.comDate {
+    color: $color-subtitle;
+}
