@@ -44,14 +44,16 @@ class FormSignup extends Component {
                         className={" form-control"}
                         name="name"
                         type="text"
-                        placeholder="Nom"
+                        label="Nom"
+                        placeholder="Votre nom"
                         maxLength={cfg.formNameLength}/>
                     <Field
                         component={inputField}
                         className="form-control"
                         name="email"
                         type="text"
-                        placeholder="Adresse e-mail"
+                        label="Email"
+                        placeholder="Votre adresse email"
                         errorAsync={signupError && signupError.email}
                         maxLength={cfg.formEmailLength}/>
                     <Field
@@ -59,13 +61,14 @@ class FormSignup extends Component {
                         className="form-control"
                         name="password"
                         type="password"
-                        placeholder="Mot de passe"
+                        label="Mot de passe"
+                        placeholder="Créez un mot de passe"
                         maxLength={cfg.formPasswordLength}/>
 
                     { pristine &&
                         <Link to="/signup">
                             <button type="submit"
-                                className="btn btn-success btn-lg margin-t10"
+                                className="btn btn-success btn-lg"
                                 disabled={submitting}>
                                 S'inscrire
                             </button>
@@ -73,7 +76,7 @@ class FormSignup extends Component {
                     }
                     { !pristine &&
                         <button type="submit"
-                            className="btn btn-success btn-lg margin-t10"
+                            className="btn btn-success btn-lg"
                             disabled={submitting}>
                             S'inscrire
                         </button>

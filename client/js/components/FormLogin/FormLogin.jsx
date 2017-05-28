@@ -7,7 +7,7 @@ import { Field, reduxForm } from 'redux-form';
 
 // import GoogleButton from '../GoogleButton';
 // import FacebookButton from '../FacebookButton';
-import Subheader from 'material-ui/Subheader';
+// import Subheader from 'material-ui/Subheader';
 import { login } from '../../actions/authActions';
 import inputField from '../RenderField/input';
 import loginValidation from './loginValidation';
@@ -52,7 +52,8 @@ class FormLogin extends Component {
                         className="form-control"
                         name="email"
                         type="text"
-                        placeholder="Adresse e-mail"
+                        label="Email"
+                        placeholder="Votre adresse email"
                         errorAsync={loginError && loginError.email}
                         maxLength={cfg.formEmailLength}
                     />
@@ -61,7 +62,8 @@ class FormLogin extends Component {
                         className="form-control"
                         name="password"
                         type="password"
-                        placeholder="Mot de passe"
+                        label="Mot de passe"
+                        placeholder="Votre mot de passe"
                         errorAsync={loginError && loginError.password}
                         maxLength={cfg.formPasswordLength}
                     />
@@ -69,7 +71,7 @@ class FormLogin extends Component {
                     { pristine &&
                         <Link to="/login">
                         <button type="submit"
-                            className="btn btn-info dropdown-button margin-t10"
+                            className="btn btn-info dropdown-button"
                             disabled={submitting}>
                             Se connecter
                         </button>
@@ -77,7 +79,7 @@ class FormLogin extends Component {
                 }
                 { !pristine &&
                     <button type="submit"
-                        className="btn btn-info dropdown-button margin-t10"
+                        className="btn btn-info dropdown-button"
                         disabled={submitting}>
                         Se connecter
                     </button>

@@ -84,11 +84,31 @@ export function addFriend(value, UserProfile) {
         });
     };
 }
+export function addModerator(id, UserProfile) {
+    return function(dispatch) {
+        axios.get('/addModerator?q=' + id).then((res) => {
+            UserProfile.props.fetchUserProfile(0, id);
+        }).catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
 //value: id
 export function removeFriend(value, UserProfile) {
     return function(dispatch) {
         axios.get('/removeFriend?q=' + value).then((res) => {
             UserProfile.props.loadAuth();
+        }).catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
+export function removeModerator(id, UserProfile) {
+    return function(dispatch) {
+        axios.get('/removeModerator?q=' + id).then((res) => {
+            UserProfile.props.fetchUserProfile(0, id);
         }).catch((e) => {
             console.log(e);
         });
@@ -142,6 +162,25 @@ export function declineFriend(id, Notifications) {
             console.log("declineFriend");
             Notifications.props.fetchNotifications();
         }).catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
+export function editUser(values, Form) {
+    return function(dispatch) {
+        const formData = new FormData();
+
+        Object.keys(values).forEach((key,index) => {
+            formData.append(key, values[key]);
+        });
+
+        axios.post('/editUser', formData)
+        .then((res) => {
+            window.location.reload();
+            // Form.props.fetchArt(values.id);
+        })
+        .catch((e) => {
             console.log(e);
         });
     };

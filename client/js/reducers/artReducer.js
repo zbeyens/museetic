@@ -1,5 +1,5 @@
 const initialState = {
-	currentArt: null,
+	artProfile: null,
     listArts: null,
     jump: false,
     comments: [],
@@ -10,18 +10,18 @@ export default function reducer(state = initialState, action) {
 		case "FETCH_ARTTREND_REQUEST":
 			return {
 				...state,
-				currentArt: null,
+				artProfile: null,
 			};
 		case "FETCH_ARTTREND_SUCCESS":
 			return {
 				...state,
-				currentArt: action.payload
+				artProfile: action.payload
 			};
 		case "LIKE_ART_SUCCESS":
 			return {
 				...state,
-				currentArt: {
-					...state.currentArt,
+				artProfile: {
+					...state.artProfile,
 					likes: action.payload
 				}
 			};
@@ -48,12 +48,12 @@ export default function reducer(state = initialState, action) {
 		case "FETCH_ART_REQUEST":
 			return {
 				...state,
-				currentArt: null,
+				artProfile: null,
 			};
 		case "FETCH_ART_SUCCESS":
 			return {
 				...state,
-				currentArt: action.payload,
+				artProfile: action.payload,
 			};
 
         case "JUMP_COMMENT": {

@@ -11,8 +11,14 @@ const ObjectId = mongoose.Schema.ObjectId;
 const artSchema = mongoose.Schema({
 
 	picture: String,
+    museumName: String, //just for museums.json
+    museum: {
+        type: ObjectId,
+        ref: 'Museum'
+    },
 	title: String,
-    author: String,
+    subtitle: String,
+    abstract: String,
 	desc: String,
 
 	dateReg: {

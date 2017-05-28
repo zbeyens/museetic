@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
+
+import Avatar from 'material-ui/Avatar';
 import Divider from 'material-ui/Divider';
 
 // import { fetchComments } from '../../actions/chatActions';
@@ -67,7 +69,11 @@ class ListChatComment extends Component {
                             <Divider />
                             <div className={"margin-10"} >
                                 <div className={"margin-r10 " + styles.comLeft}>
-                                    <img src="client/img/user-image32.png" alt="" />
+                                    <Avatar
+                                        src={com.author.picture}
+                                        className="img-circle"
+                                        size={32}
+                                    />
                                 </div>
                                 <div className={styles.comRight}>
                                     <div className={styles.comAuthor}>

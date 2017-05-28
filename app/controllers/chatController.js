@@ -7,10 +7,10 @@ exports.fetchChats = (userId) => {
     .populate([
         {
             path: 'messages.author',
-            select: 'name'
+            select: 'name picture'
         }, {
             path: 'participants.user',
-            select: 'name'
+            select: 'name picture'
         }
     ]).exec();
 };
@@ -64,16 +64,16 @@ exports.pushMessage = (senderId, receiverId, content) => {
     });
 };
 
-// exports.findArtCurrent = (user) => {
-//     return Chat.findById(user._id)
-//     .populate({path: 'arts.current'})
-//     .exec();
-// };
-//
-// exports.pushChat = (userId, friendId) => {
-//     return User.findByIdAndUpdate(userId, {
-//         $push: {
-//             friendRequests: friendId
-//         }
-//     }).exec();
-// };
+exports.readChat = (chatId, userId) => {
+    return Chat.findById(chatId)
+    .exec((err, chat) => {
+        if (chat) {
+            for (let i = 0; i < chat.participants.length; i++) {
+                if (chat.participants[i].user.equals(userId)) {
+                    chat.participants[i].read = true;
+                    return chat.save();
+                }
+            }
+        }
+    });
+};

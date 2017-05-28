@@ -1,4 +1,5 @@
 import axios from "axios";
+import { browserHistory } from 'react-router';
 
 export function fetchArt(id) {
     return function(dispatch) {
@@ -76,7 +77,7 @@ export function fetchMyCollection() {
 }
 
 /**
-* recv currentArt.likes: check if selfUser id is inside to like or unlike
+* recv artProfile.likes: check if selfUser id is inside to like or unlike
 * @param  {ObjectId} id : artId
 */
 export function likeArt(id) {
@@ -97,7 +98,7 @@ export function likeArt(id) {
 }
 
 /**
-* recv currentArt.likes: check if selfUser id is inside to like or unlike
+* recv artProfile.likes: check if selfUser id is inside to like or unlike
 * @param  {ObjectId} id : artId
 */
 export function likeArtProfile(id, i) {
@@ -180,6 +181,58 @@ export function deleteComment(artId, comId) {
                 type: "FETCH_COMMENTS_SUCCESS",
                 payload: res.data
             });
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
+export function addArt(values) {
+    return function(dispatch) {
+        //for file uploading, json -> formdata
+        const formData = new FormData();
+
+        Object.keys(values).forEach((key,index) => {
+            formData.append(key, values[key]);
+        });
+
+        axios.post('/addArt', formData)
+        .then((res) => {
+            browserHistory.push('/art/' + res.data);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
+export function editArt(values, Form) {
+    return function(dispatch) {
+        const formData = new FormData();
+
+        Object.keys(values).forEach((key,index) => {
+            formData.append(key, values[key]);
+        });
+
+        axios.post('/editArt', formData)
+        .then((res) => {
+            window.location.reload();
+            // Form.props.fetchArt(values.id);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
+export function removeArt(id) {
+    return function(dispatch) {
+        axios.post('/removeArt', {
+            id
+        })
+        .then((res) => {
+            browserHistory.push('/museums');
         })
         .catch((e) => {
             console.log(e);

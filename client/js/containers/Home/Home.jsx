@@ -16,12 +16,12 @@ import {
 
 @connect(state => ({
     user: state.auth.user,
-    currentArt: state.art.currentArt,
+    artProfile: state.art.artProfile,
 }))
 class Home extends Component {
 
     render() {
-        const {user, currentArt} = this.props;
+        const {user, artProfile} = this.props;
 
         return (
             <div>
@@ -39,9 +39,9 @@ class Home extends Component {
                         <DividerText/>
                         <BtnContainer>
                             <BtnSkip />
-                            <BtnLikeArt art={currentArt}/>
-                            <BtnComment art={currentArt} jump/>
-                            <BtnShare art={currentArt}/>
+                            <BtnLikeArt art={artProfile}/>
+                            <BtnComment art={artProfile} jump/>
+                            <BtnShare art={artProfile}/>
                         </BtnContainer>
                     </FrontArtTrend>
                 }

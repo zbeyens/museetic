@@ -3,7 +3,8 @@ const FacebookStrategy = require('passport-facebook').Strategy,
 	validator = require('validator'),
 	User = require('../models/user'),
 	cfgAuth = require('../../config/auth'),
-	cfg = require('../../shared/config');
+	cfg = require('../../shared/config'),
+    cfgShared = require('../../shared/config');
 
 /**
  * we will use Session-based authentication
@@ -70,6 +71,7 @@ module.exports = function(passport) {
 				const newUser = new User();
 
 				newUser.name = req.body.name;
+                newUser.picture = cfgShared.defaultPicUser;
 				newUser.email = email;
 				newUser.local.password = newUser.generateHash(password);
 

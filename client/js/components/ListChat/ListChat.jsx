@@ -5,7 +5,7 @@ import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Avatar from 'material-ui/Avatar';
 import {darkBlack} from 'material-ui/styles/colors';
-import { fetchChats, setDestMessage } from '../../actions/chatActions';
+import { fetchChats, readChat, setDestMessage, setUnreadChats } from '../../actions/chatActions';
 
 // import styles from './ListChat.scss';
 
@@ -14,10 +14,13 @@ import { fetchChats, setDestMessage } from '../../actions/chatActions';
     state => ({
         user: state.auth.user,
         listChat: state.chat.listChat,
+        unreadChats: state.chat.unreadChats,
     }),
     dispatch => bindActionCreators({
         fetchChats,
-        setDestMessage
+        readChat,
+        setDestMessage,
+        setUnreadChats
     }, dispatch)
 )
 class ListChat extends Component {
@@ -26,16 +29,13 @@ class ListChat extends Component {
         this.onClickChat = this.onClickChat.bind(this);
     }
 
-    componentDidMount() {
-        this.props.fetchChats();
-    }
-
-    onClickChat(destUser) {
+    onClickChat(chatId, destUser) {
+        this.props.readChat(this, chatId);
         this.props.setDestMessage(destUser);
     }
 
     render() {
-        const { listChat, user } = this.props;
+        const { unreadChats, listChat, user } = this.props;
 
         const destUsers = [];
         for (let i = 0; i < listChat.length; i++) {
@@ -46,22 +46,40 @@ class ListChat extends Component {
             }
         }
 
+        const isRead = (chat) => {
+            if (!unreadChats.includes(chat._id)) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+
         return (
             <List>
                 {listChat.map((chat, i) => (
                     <div key={chat._id}>
                         <ListItem
-                            leftAvatar={<Avatar src="client/img/user-image32.png" />}
+                            leftAvatar={<Avatar src={destUsers[i].picture} />}
                             primaryText={<span style={{color: '#e04e3e'}}>{destUsers[i].name}</span>}
                             secondaryText={
                                 chat.messages.length > 0 &&
-                                <p>
-                                    <span style={{color: darkBlack}}>{chat.messages[chat.messages.length-1].author.name + " -- "}</span>
-                                    {chat.messages[chat.messages.length-1].content}
-                                </p>
+                                <div>
+                                    {isRead(chat) &&
+                                        <div>
+                                            <span style={{color: darkBlack}}>{chat.messages[chat.messages.length-1].author.name + " -- "}</span>
+                                            <span>{chat.messages[chat.messages.length-1].content}</span>
+                                        </div>
+                                    }
+                                    {!isRead(chat) &&
+                                        <div>
+                                            <strong style={{color: darkBlack}}>{chat.messages[chat.messages.length-1].author.name + " -- "}</strong>
+                                            <strong>{chat.messages[chat.messages.length-1].content}</strong>
+                                        </div>
+                                    }
+                                </div>
                             }
                             secondaryTextLines={2}
-                            onTouchTap={() => this.onClickChat(destUsers[i])}
+                            onTouchTap={() => this.onClickChat(chat._id, destUsers[i])}
                         />
                         <Divider inset />
                     </div>

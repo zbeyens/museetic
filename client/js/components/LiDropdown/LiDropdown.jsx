@@ -7,10 +7,10 @@ class LiDropdown extends Component {
         return (
             <li className="dropdown">
                 <a href="javascript:" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    {this.props.children}
+                    {this.props.title} <span className="caret"/>
                 </a>
                 <ul className="dropdown-menu">
-                    {this.props.inside}
+                    {this.props.children}
                 </ul>
             </li>
         );

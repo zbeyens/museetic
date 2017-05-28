@@ -6,13 +6,23 @@ export function setDestMessage(destUser) {
         payload: destUser
     };
 }
+export function setChatOpen(opened) {
+    return {
+        type: "UPDATE_OPEN",
+        payload: opened
+    };
+}
+export function setUnreadChats(chats) {
+    return {
+        type: "UPDATE_UNREAD_CHATS",
+        payload: chats
+    };
+}
 
 export function fetchChats() {
     return function(dispatch) {
         axios.get('/fetchChats')
         .then((res) => {
-            console.log("chats:");
-            console.log(res.data);
             dispatch({
                 type: "FETCH_CHATS_SUCCESS",
                 payload: res.data
@@ -20,7 +30,6 @@ export function fetchChats() {
 
             const areaChat = document.getElementById("listChatComment");
             if (areaChat) {
-                console.log("koko ");
                 areaChat.scrollTop = areaChat.scrollHeight;
             }
         })
@@ -41,6 +50,20 @@ export function sendChatMessage(FormChat, destUserId, com) {
             console.log("send chat");
             console.log(res.data);
             FormChat.props.fetchChats();
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    };
+}
+
+export function readChat(ListChat, chatId) {
+    return function(dispatch) {
+        axios.post('/readChat', {
+            id: chatId,
+        })
+        .then((res) => {
+            ListChat.props.fetchChats();
         })
         .catch((e) => {
             console.log(e);

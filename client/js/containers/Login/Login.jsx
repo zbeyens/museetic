@@ -8,8 +8,8 @@ class Login extends Component {
 
     render() {
         return (
-            <div className={"col-xs-4 col-xs-offset-4 text-center"}>
-                <h1>Connexion</h1>
+            <div className={"col-xs-4 col-xs-offset-4"}>
+                <h1 className="text-center">Connexion</h1>
                 <FormLogin />
             </div>
         );

@@ -3,9 +3,12 @@ import {Route, IndexRoute} from 'react-router';
 import {
     App,
     Art,
+    EditProfile,
     Friends,
     Home,
     Login,
+    Museum,
+    Museums,
     MyCollection,
     News,
     NotFound,
@@ -62,13 +65,16 @@ export default(store) => {
                 <Route path="signup" component={Signup} onEnter={requireLogout}/>
                 <Route path="login" component={Login} onEnter={requireLogout}/>
 
+                <Route path="editProfile" component={EditProfile} onEnter={requireLogin}/>
                 <Route path="news" component={News} onEnter={requireLogin}/>
                 <Route path="mycollection" component={MyCollection} onEnter={requireLogin}/>
+                <Route path="museums" component={Museums} onEnter={requireLogin}/>
                 <Route path="friends" component={Friends} onEnter={requireLogin}/>
                 <Route path="notifications" component={Notifications} onEnter={requireLogin}/>
                 <Route path="user/:id" component={UserProfile} onEnter={requireLogin}/>
 
                 <Route path="art/:id" component={Art} />
+                <Route path="museum/:id" component={Museum} />
 
                 <Route path="*" component={NotFound} status={404}/>
             </Route>

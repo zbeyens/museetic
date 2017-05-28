@@ -18,9 +18,11 @@ import styles from './GridListArt.scss';
 class GridListArt extends Component {
     render() {
         const artsProfile = this.props.list;
+        console.log(artsProfile);
 
+        //can dislike only MyCollection arts
         return (
-            <div className={"margin-t10 " + styles.root}>
+            <div className={" " + styles.root}>
                 <GridList
                     cellHeight={270}
                     className={styles.gridList}
@@ -32,7 +34,10 @@ class GridListArt extends Component {
                                 <Link to={'/art/' + art._id} className={styles.a}>
                                 {art.title}
                             </Link>}
-                            subtitle={<span>de <b>{art.author}</b></span>}
+                            subtitle={
+                                <Link to={'/museum/' + art.museum._id} className={styles.a}>
+                                <b>{art.museum.name}</b>
+                            </Link>}
                             actionIcon={
                                 this.props.mycollection &&
                                 <IconButton onClick={() => this.props.likeArtProfile(art._id, i)}>

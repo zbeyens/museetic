@@ -1,10 +1,13 @@
 // const async = require('async');
+const path = require('path');
+const cfg = require('../shared/config');
+const fs = require('fs');
 const userController = require('../app/controllers/userController'),
 artController = require('../app/controllers/artController'),
 validator = require('validator'),
 async = require('async');
 
-module.exports = (app, isLoggedIn) => {
+module.exports = (app, isLoggedIn, isModerator, upload) => {
     //send [] suggestions
     app.get('/suggestions', isLoggedIn, (req, res) => {
         let q = req.query.q;
@@ -134,6 +137,37 @@ module.exports = (app, isLoggedIn) => {
         //should check if not in friendRequests first...
     });
 
+    app.get('/addModerator', isLoggedIn, (req, res) => {
+        const q = req.query.q;
+
+        if (req.user.role === 'admin') {
+            const removeModerator = userController.addModerator(q);
+            removeModerator.then((user) => {
+                res.sendStatus(200);
+            }).catch((err) => {
+                res.sendStatus(500);
+                console.log(err);
+            });
+        } else {
+            res.sendStatus(401);
+        }
+    });
+    app.get('/removeModerator', isLoggedIn, (req, res) => {
+        const q = req.query.q;
+
+        if (req.user.role === 'admin') {
+            const removeModerator = userController.removeModerator(q);
+            removeModerator.then((user) => {
+                res.sendStatus(200);
+            }).catch((err) => {
+                res.sendStatus(500);
+                console.log(err);
+            });
+        } else {
+            res.sendStatus(401);
+        }
+    });
+
     app.get('/fetchNotifications', isLoggedIn, (req, res) => {
         const fetchNotifications = userController.fetchNotifications(req.user.id);
         fetchNotifications.then((user) => {
@@ -185,5 +219,63 @@ module.exports = (app, isLoggedIn) => {
             console.log(err);
         });
         //should check if not in friendRequests first...
+    });
+
+
+    app.get('/declineFriend', isLoggedIn, (req, res) => {
+        const q = req.query.q;
+
+        const declineFriend = userController.declineFriend(req.user.id, q);
+        declineFriend.then((user) => {
+            res.sendStatus(200);
+        }).catch((err) => {
+            res.sendStatus(500);
+            console.log(err);
+        });
+        //should check if not in friendRequests first...
+    });
+
+    app.post('/editUser', isLoggedIn, upload.single('picture'), (req, res) => {
+        const msg = req.body;
+
+        const values = {};
+        if (msg.name) {
+            values.name = msg.name;
+        }
+        values.profession = msg.profession ? msg.profession : '';
+        values.gender = msg.gender ? msg.gender : '';
+        values.bio = msg.bio ? msg.bio : '';
+        values.location = msg.location ? msg.location : '';
+
+        console.log(msg);
+        console.log(values);
+
+        const findUserById = userController.findUserById(req.user.id);
+        findUserById.then((user) => {
+            //edit only if uploaded file
+            if (req.file) {
+                if (user.picture && user.picture !== cfg.defaultPicUser) {
+                    //check if previous file exists
+                    const prevPicture = path.join(__dirname, '/..', user.picture);
+                    fs.stat(prevPicture, (err, stats) => {
+                        if (err) {
+                            return console.error(err);
+                        }
+                        //delete previous file
+                        fs.unlink(prevPicture);
+                    });
+                }
+                values.picture = '/client/img/uploads/' + req.file.filename;
+            }
+
+            return userController.updateUser(req.user.id, values);
+        })
+        .then(() => {
+            res.sendStatus(200);
+        })
+        .catch((err) => {
+            res.sendStatus(500);
+            console.log(err);
+        });
     });
 };

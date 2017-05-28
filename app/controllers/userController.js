@@ -39,7 +39,7 @@ exports.searchUsersByName = (name) => {
 };
 
 exports.findUserById = (id) => {
-    return User.findById(id, 'dateReg name role friends friendRequests')
+    return User.findById(id, 'dateReg name picture bio profession location gender role friends friendRequests')
     .exec();
 };
 
@@ -62,7 +62,7 @@ exports.fetchNotifications = (id) => {
     return User.findById(id, 'friendRequests')
     .populate({
         path: 'friendRequests',
-        select: 'name'
+        select: 'name picture'
     })
     .exec();
 };
@@ -70,7 +70,7 @@ exports.fetchFriends = (id) => {
     return User.findById(id, 'friends')
     .populate({
         path: 'friends',
-        select: 'name'
+        select: 'name picture'
     })
     .exec();
 };
@@ -100,5 +100,23 @@ exports.removeFriend = (userId, friendId) => {
             friends: friendId
         },
     })
+    .exec();
+};
+
+exports.addModerator = (userId) => {
+    return User.findByIdAndUpdate(userId, {
+        role: 'moderator'
+    })
+    .exec();
+};
+exports.removeModerator = (userId) => {
+    return User.findByIdAndUpdate(userId, {
+        role: ''
+    })
+    .exec();
+};
+
+exports.updateUser = (id, values) => {
+    return User.findByIdAndUpdate(id, values)
     .exec();
 };

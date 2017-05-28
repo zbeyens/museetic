@@ -10,7 +10,7 @@ const express = require('express'),
 	path = require('path'),
 	// fs = require('fs'),
 	favicon = require('serve-favicon'),
-	// chalk = require('chalk'), multer = require('multer'), //upload pic
+	// chalk = require('chalk'), m
 	// server-side
 	passport = require('passport'),
 	mongoose = require('mongoose');
@@ -28,8 +28,13 @@ app.use('/client', express.static(path.join(__dirname, 'client')));
 app.use('/shared', express.static(path.join(__dirname, 'shared')));
 app.use(favicon(path.join(__dirname, '/client/img/museum.png')));
 app.use(logger('dev'));
-app.use(bodyParser.json()); //support json-encoded bodies
-app.use(bodyParser.urlencoded({extended: true})); //support url-encoded bodies
+app.use(bodyParser.json({limit: '50mb'})); //support json-encoded bodies
+app.use(bodyParser.urlencoded({
+    extended: true,
+    parameterLimit: 1000000,
+    limit: '50mb'
+})); //support url-encoded bodies
+
 // app.use(cookieParser()); // read cookies (needed for auth) take a pic and put it in uploads.
 
 

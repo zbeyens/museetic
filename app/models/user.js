@@ -5,18 +5,6 @@ const ObjectId = mongoose.Schema.ObjectId;
 
 
 const userSchema = mongoose.Schema({
-	arts: {
-		current: {
-			type: ObjectId,
-			ref: 'Art'
-		},
-		skipped: [
-			{
-				type: ObjectId,
-				ref: 'Art'
-			}
-		],
-	},
     name: {
         type: String,
         required: true,
@@ -28,7 +16,30 @@ const userSchema = mongoose.Schema({
         unique: true,
         trim: true
     },
-    role: String, //admin, manager
+    bio: String,
+    picture: String,
+    location: String,
+    profession: String,
+    gender: String,
+    arts: {
+        current: {
+            type: ObjectId,
+            ref: 'Art'
+        },
+        skipped: [
+            {
+                type: ObjectId,
+                ref: 'Art'
+            }
+        ],
+    },
+    museums: [
+        {
+            type: ObjectId,
+            ref: 'Museum'
+        }
+    ],
+    role: String, //admin, moderator
     friends: [
         {
             type: ObjectId,
@@ -45,31 +56,31 @@ const userSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
-	local: {
-		password: {
-			type: String,
-			required: true
-		}
-	},
-	facebook: {
-		id: String,
-		token: String,
-		picture: String
-	},
-	google: {
-		id: String,
-		token: String,
-	},
+    local: {
+        password: {
+            type: String,
+            required: true
+        }
+    },
+    facebook: {
+        id: String,
+        token: String,
+        picture: String
+    },
+    google: {
+        id: String,
+        token: String,
+    },
 });
 
 // generating a hash
 userSchema.methods.generateHash = function(password) {
-	return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 };
 
 // checking if password is valid
 userSchema.methods.validPassword = function(password) {
-	return bcrypt.compareSync(password, this.local.password);
+    return bcrypt.compareSync(password, this.local.password);
 };
 
 //compile

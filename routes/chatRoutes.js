@@ -25,4 +25,16 @@ module.exports = (app, isLoggedIn) => {
             console.log(err);
         });
     });
+
+    app.post('/readChat', isLoggedIn, (req, res) => {
+        const msg = req.body;
+        console.log(msg);
+        const readChat = chatController.readChat(msg.id, req.user.id);
+        readChat.then((chat) => {
+            res.sendStatus(200);
+        }).catch((err) => {
+            res.sendStatus(500);
+            console.log(err);
+        });
+    });
 };

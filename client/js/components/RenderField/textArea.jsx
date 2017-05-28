@@ -1,12 +1,15 @@
 import React from 'react';
 
 export default ({
-    input, name, className, id,
+    input, label, name, className, id,
     maxLength, minLength, cols, rows, placeholder,
     meta: { active, touched, error },
 }) => {
     return (
         <div className={(touched && error) ? "form-group has-error" : "form-group"}>
+            { label &&
+                <label>{label}</label>
+            }
             <textarea {...input}
                 className={className}
                 id={id}

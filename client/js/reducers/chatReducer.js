@@ -1,6 +1,8 @@
 const initialState = {
+    open: false,
     destUser: null,
     listChat: [],
+    unreadChats: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -9,6 +11,16 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 destUser: action.payload,
+            };
+        case "UPDATE_OPEN":
+            return {
+                ...state,
+                open: action.payload,
+            };
+        case "UPDATE_UNREAD_CHATS":
+            return {
+                ...state,
+                unreadChats: action.payload,
             };
         case "FETCH_CHATS_SUCCESS":
             return {

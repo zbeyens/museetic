@@ -5,25 +5,27 @@ import { bindActionCreators } from 'redux';
 import Dialog from 'material-ui/Dialog';
 import Divider from 'material-ui/Divider';
 
-import { setDestMessage } from '../../actions/chatActions';
+import { setDestMessage, setChatOpen } from '../../actions/chatActions';
 import styles from './ModalMessages.scss';
 
 @connect(
     state => ({
+        user: state.auth.user,
         destUser: state.chat.destUser,
+        open: state.chat.open,
+        listChat: state.chat.listChat
     }),
     dispatch => bindActionCreators({
-        setDestMessage
+        setDestMessage,
+        setChatOpen,
     }, dispatch)
 )
 class ModalMessages extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false,
             mode: "idle",
         };
-        this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.onClickNew = this.onClickNew.bind(this);
         this.onClickBack = this.onClickBack.bind(this);
@@ -40,12 +42,9 @@ class ModalMessages extends Component {
         }
     }
 
-    handleOpen() {
-        this.setState({open: true});
-    }
-
     handleClose() {
-        this.setState({open: false, mode: "idle"});
+        this.props.setChatOpen(false);
+        this.setState({mode: "idle"});
         this.props.setDestMessage(null);
     }
 
@@ -79,77 +78,72 @@ class ModalMessages extends Component {
         );
 
         return (
-            <li>
-                <a href="javascript:" onClick={this.handleOpen}>
-                    <i className="fa fa-envelope fa-lg" /> Messages
-                </a>
-                <Dialog
-                    modal={false}
-                    open={this.state.open}
-                    onRequestClose={this.handleClose}
-                    autoScrollBodyContent
-                    contentClassName={styles.modalDialog}
-                    contentStyle={{maxWidth: '700px', minHeight: '600px'}}>
+            <Dialog
+                modal={false}
+                open={this.props.open}
+                onRequestClose={this.handleClose}
+                autoScrollBodyContent
+                contentClassName={styles.modalDialog}
+                contentStyle={{maxWidth: '700px', minHeight: '600px'}}>
 
-                    {
-                        this.state.mode === "idle" && !destUser &&
-                        <div>
-                            {btnTimes}
-                            <div className="margin-b20">
-                                <h3 className="modalTitle">
-                                    Messages privés
-                                </h3>
-                                <button className={"btn btn-blue margin-r10 " + styles.btnNew}
-                                    onClick={this.onClickNew}>
-                                    <i className="fa fa-pencil-square-o"/> Nouveau
-                                </button>
-                            </div>
-
-                            <Divider/>
-
-                            {modeIdle}
-
+                {
+                    this.state.mode === "idle" && !destUser &&
+                    <div>
+                        {btnTimes}
+                        <div className="margin-b20">
+                            <h3 className="modalTitle">
+                                Messages privés
+                            </h3>
+                            <button className={"btn btn-blue margin-r10 " + styles.btnNew}
+                                onClick={this.onClickNew}>
+                                <i className="fa fa-pencil-square-o"/> Nouveau
+                            </button>
                         </div>
-                    }
-                    {
-                        this.state.mode === "new" && !destUser &&
-                        <div>
-                            {btnBack}
-                            {btnTimes}
-                            <div className={styles.modalHeader + " text-center"}>
-                                <h3 className="modalTitle">Nouveau message</h3>
-                            </div>
-                            <Divider/>
 
-                            {modeNew}
+                        <Divider/>
+
+                        {modeIdle}
+
+                    </div>
+                }
+                {
+                    this.state.mode === "new" && !destUser &&
+                    <div>
+                        {btnBack}
+                        {btnTimes}
+                        <div className={styles.modalHeader + " text-center"}>
+                            <h3 className="modalTitle">Nouveau message</h3>
                         </div>
-                    }
-                    {
-                        destUser !== null &&
-                        <div>
-                            {btnBack}
-                            {btnTimes}
-                            <div className={styles.modalHeader + " text-center"}>
-                                <h3 className="modalTitle">
-                                    <Link
-                                        to={'/user/' + destUser._id}>
-                                        {destUser.name}
-                                    </Link>
-                                </h3>
-                            </div>
-                            <Divider/>
+                        <Divider/>
 
-                            {listChatComment}
-
-                            <div className={styles.conversMessages}>
-                                {formChat}
-                            </div>
-
+                        {modeNew}
+                    </div>
+                }
+                {
+                    destUser !== null &&
+                    <div>
+                        {btnBack}
+                        {btnTimes}
+                        <div className={styles.modalHeader + " text-center"}>
+                            <h3 className="modalTitle">
+                                <Link
+                                    to={'/user/' + destUser._id}>
+                                    {destUser.name}
+                                </Link>
+                            </h3>
                         </div>
-                    }
+                        <Divider/>
 
-                </Dialog>
-            </li>
+                        {listChatComment}
+
+                        <div className={styles.conversMessages}>
+                            {formChat}
+                        </div>
+
+                    </div>
+                }
+
+            </Dialog>
         );
     }
 }

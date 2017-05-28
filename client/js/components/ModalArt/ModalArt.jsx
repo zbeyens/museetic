@@ -8,7 +8,7 @@ import styles from './ModalArt.scss';
 
 @connect(
     state => ({
-        currentArt: state.art.currentArt,
+        artProfile: state.art.artProfile,
         previousRoute: state.routing.previousRoute,
     }),
     dispatch => bindActionCreators({}, dispatch)

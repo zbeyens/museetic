@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-// import Avatar from 'material-ui/Avatar';
+import Avatar from 'material-ui/Avatar';
 import Paper from 'material-ui/Paper';
 
 import { fetchFriends } from '../../actions/userActions';
@@ -36,7 +36,11 @@ class Notifications extends Component {
                                     <div className="media">
                                         <div className="media-left">
                                             <div className="media-object">
-                                                <img src="client/img/user-image32.png" className="img-circle" alt="Name"/>
+                                                <Avatar
+                                                    src={friend.picture}
+                                                    className="img-circle"
+                                                    size={32}
+                                                />
                                             </div>
                                         </div>
                                         <div className="media-body">

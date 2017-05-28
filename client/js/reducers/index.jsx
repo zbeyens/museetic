@@ -4,6 +4,7 @@ import { reducer as formReducer } from 'redux-form';
 
 import auth from './authReducer';
 import art from './artReducer';
+import museum from './museumReducer';
 import chat from './chatReducer';
 import user from './userReducer';
 
@@ -12,6 +13,7 @@ const appReducer = combineReducers({
     auth,
     chat,
     user,
+    museum,
 
     form: formReducer,
     routing: routerReducer // Add the reducer to your store on the `routing` key

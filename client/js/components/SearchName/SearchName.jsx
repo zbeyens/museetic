@@ -44,7 +44,7 @@ class SearchName extends Component {
 
     onSubmit(chosenRequest, index) {
         if (!chosenRequest) return;
-        const chosenUser = this.props.suggestions[index];
+        const chosenUser = chosenRequest;
 
         this.props.setDestMessage(chosenUser);
     }
@@ -55,11 +55,13 @@ class SearchName extends Component {
 
     render() {
         const suggestions = [];
+        //dont push self
         for (let i = 0; i < this.props.suggestions.length; i++) {
             if (this.props.suggestions[i]._id !== this.props.user._id) {
                 suggestions.push(this.props.suggestions[i]);
             }
         }
+
         //config for Object list i.e. suggestions = [{name, _id}]
         const dataSourceConfig = {
             text: 'name',

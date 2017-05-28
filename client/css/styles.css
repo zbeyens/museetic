@@ -25,31 +25,47 @@ a:focus {
     outline: 0 !important;
 }
 
-h3, h4 {
-    /*font-family: "roboto";*/
+h1, h2, h3, h4 {
+    font-weight: normal !important;
     font-family: 'Open Sans', sans-serif;
 }
 
+label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
 textarea {
-    resize: vertical;
     padding: 8px;
+
+    resize: vertical;
+
     color: black;
     outline: none;
 }
 
 
 /*little margin*/
+.margin-0 {
+    margin: 0;
+}
 .margin-10 {
     margin: 10px;
 }
 .margin-15 {
     margin: 15px;
 }
+.margin-t5 {
+    margin-top: 5px;
+}
+.margin-b5 {
+    margin-bottom: 5px;
+}
 .margin-l5 {
     margin-left: 5px;
 }
 .margin-r5 {
-    margin-right: 5px;
+    margin-right: 25px;
 }
 .margin-l10 {
     margin-left: 10px;
@@ -76,15 +92,17 @@ textarea {
     margin-bottom: 20px;
 }
 .margin-lr5 {
+    margin-right: 5px;
     margin-left: 5px;
-    margin-right: 5px;
 }
 .margin-tb10 {
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-
+.padding-0 {
+    padding: 0;
+}
 .padding-10 {
     padding: 10px;
 }
@@ -200,16 +218,13 @@ textarea {
 
 
 .btn-blue {
+    color: white;
     background-color: #0292c5 !important;
-    color: white;
-}
-
-.form-group {
-    margin: 0px;
 }
 
 /*components shared*/
 .modalTitle {
-    margin: 0;
     display: inline-block;
+
+    margin: 0;
 }

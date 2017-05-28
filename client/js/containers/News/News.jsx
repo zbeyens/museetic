@@ -18,9 +18,9 @@ import styles from './News.scss';
     }, dispatch)
 )
 class News extends Component {
-    //     <Link to={'/art/' + currentArt._id}>
+    //     <Link to={'/art/' + artProfile._id}>
     //     <div className={styles.imgContainer}>
-    //         <img className={styles.imgCenter} src={currentArt.picture} alt="" />
+    //         <img className={styles.imgCenter} src={artProfile.picture} alt="" />
     //     </div>
     // </Link>
     render() {

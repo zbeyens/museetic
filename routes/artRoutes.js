@@ -1,13 +1,17 @@
+const path = require('path');
+const cfg = require('../shared/config');
+const fs = require('fs');
 const artController = require('../app/controllers/artController'),
 userController = require('../app/controllers/userController'),
+museumController = require('../app/controllers/museumController'),
 async = require('async');
 
-module.exports = (app, isLoggedIn) => {
+module.exports = (app, isLoggedIn, isModerator, upload) => {
     // const isProduction = process.env.NODE_ENV === 'production';
 
     //NOTE: better error handling...
     // if (!isProduction) {
-    app.get('/populate', (req, res) => {
+    app.get('/populate', isModerator, (req, res) => {
         artController.resetArts();
         res.redirect("/");
     });
@@ -45,7 +49,6 @@ module.exports = (app, isLoggedIn) => {
                 });
             }, //countArts to pick randomly one art
             (userArts, cb) => {
-                console.log(userArts);
                 const countArts = artController.count();
                 countArts.then((count) => {
                     cb(null, count, userArts); //
@@ -54,11 +57,12 @@ module.exports = (app, isLoggedIn) => {
                 });
             }, //findNextArts (random)
             (countArts, userArts, cb) => {
-                userArts.skipped.push(userArts.current._id);
-
-                //once all skipped, empty the skipped list
-                if (userArts.skipped.length >= countArts) {
-                    userArts.skipped = [userArts.current._id];
+                if (userArts.current !== null) {
+                    userArts.skipped.push(userArts.current._id);
+                    //once all skipped, empty the skipped list
+                    if (userArts.skipped.length >= countArts) {
+                        userArts.skipped = [userArts.current._id];
+                    }
                 }
 
                 const findNextArt = artController.findNextArt(countArts, userArts.current, userArts.skipped);
@@ -83,14 +87,13 @@ module.exports = (app, isLoggedIn) => {
                 res.sendStatus(500);
             }
         });
-        console.log("sending currentArt");
+        console.log("sending artProfile");
     };
 
     app.get('/fetchArtTrend', isLoggedIn, (req, res) => {
         const findUserArts = userController.findUserArts(req.user);
         findUserArts.then((user) => {
             if (!user.arts.current) {
-                console.log(user);
                 skipArt(req, res);
             } else {
                 res.send(user.arts.current);
@@ -116,7 +119,6 @@ module.exports = (app, isLoggedIn) => {
                 });
             },
             (arts, cb) => {
-                console.log(arts);
                 if (arts.length) {
                     const pullLike = artController.pullLike(userId, artId);
                     pullLike.then((art) => {
@@ -179,6 +181,102 @@ module.exports = (app, isLoggedIn) => {
             res.send(art.comments);
         }).catch((err) => {
             res.sendStatus(500);
+        });
+    });
+
+    app.post('/addArt', isLoggedIn, isModerator, upload.single('picture'), (req, res) => {
+        const values = req.body;
+
+        //NOTE: should limit values
+        if (req.file) {
+            values.picture = '/client/img/uploads/' + req.file.filename;
+        } else {
+            values.picture = cfg.defaultPicArt;
+        }
+
+        let newArt = {};
+        const pushArt = artController.pushArt(values);
+        pushArt.then((art) => {
+            newArt = art;
+            return museumController.pushArtToMuseum(art._id, values.museum);
+        })
+        .then((museum) => {
+            res.send(newArt._id);
+        })
+        .catch((err) => {
+            res.sendStatus(500);
+            console.log(err);
+        });
+    });
+
+    app.post('/editArt', isLoggedIn, isModerator, upload.single('picture'), (req, res) => {
+        const id = req.body.id;
+        const msg = req.body;
+
+        const values = {};
+        values.title = msg.title ? msg.title : '';
+        values.subtitle = msg.subtitle ? msg.subtitle : '';
+        values.abstract = msg.abstract ? msg.abstract : '';
+        values.desc = msg.desc ? msg.desc : '';
+
+        console.log(id);
+        const findById = artController.findById(id);
+        findById.then((art) => {
+            //edit only if uploaded file
+            if (req.file) {
+                if (art.picture && art.picture !== cfg.defaultPicArt) {
+                    //check if previous file exists
+                    const prevPicture = path.join(__dirname, '/..', art.picture);
+                    fs.stat(prevPicture, (err, stats) => {
+                        if (err) {
+                            return console.error(err);
+                        }
+                        //delete previous file
+                        fs.unlink(prevPicture);
+                    });
+                }
+                values.picture = '/client/img/uploads/' + req.file.filename;
+            }
+
+            const updateArt = artController.updateArt(id, values);
+            updateArt.then(() => {
+                res.sendStatus(200);
+            }).catch((err) => {
+                res.sendStatus(500);
+                console.log(err);
+            });
+        }).catch((err) => {
+            res.sendStatus(500);
+            console.log(err);
+        });
+    });
+
+    app.post('/removeArt', isLoggedIn, isModerator, (req, res) => {
+        const id = req.body.id;
+
+        const findById = artController.findById(id);
+        findById.then((art) => {
+            //delete pic
+            if (art.picture && art.picture !== cfg.defaultPicArt) {
+                //check if previous file exists
+                const prevPicture = path.join(__dirname, '/..', art.picture);
+                fs.stat(prevPicture, (err, stats) => {
+                    if (err) {
+                        return console.error(err);
+                    }
+                    //delete previous file
+                    fs.unlink(prevPicture);
+                });
+            }
+
+            return artController.removeArt(id);
+        })
+        .then(() => {
+            res.sendStatus(200);
+        })
+        .catch((err) => {
+            res.sendStatus(500);
+            console.log(err);
         });
     });
 };

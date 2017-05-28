@@ -15,8 +15,14 @@ function isLoggedOut(req, res, next) {
 const getUserInfo = (user) => {
 	const userInfo = {};
     userInfo._id = user._id;
+    userInfo.role = user.role;
 	userInfo.email = user.email;
 	userInfo.name = user.name;
+	userInfo.bio = user.bio;
+	userInfo.picture = user.picture;
+	userInfo.location = user.location;
+	userInfo.profession = user.profession;
+	userInfo.gender = user.gender;
 	userInfo.friends = user.friends;
 	userInfo.friendRequests = user.friendRequests;
 	return userInfo;

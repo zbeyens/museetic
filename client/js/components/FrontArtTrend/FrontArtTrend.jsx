@@ -12,7 +12,7 @@ import styles from './FrontArtTrend.scss';
 
 @connect(
     state => ({
-        currentArt: state.art.currentArt,
+        artProfile: state.art.artProfile,
     }),
     dispatch => bindActionCreators({
         fetchArtTrend,
@@ -24,18 +24,18 @@ class FrontArtTrend extends Component {
     }
 
     render() {
-        const { currentArt, children } = this.props;
+        const { artProfile, children } = this.props;
 
         return (
             <Paper className={"thumbnail col-xs-8 col-xs-offset-2 padding-b20 " + styles.frontArtTrend} zDepth={1}>
-                {currentArt &&
+                {artProfile &&
                     <div>
-                        <HTitle title={currentArt.title} />
-                        <h4>{currentArt.author}</h4>
+                        <HTitle title={artProfile.title} />
+                        <h4>{artProfile.author}</h4>
 
-                        <Link to={'/art/' + currentArt._id}>
+                        <Link to={'/art/' + artProfile._id}>
                             <div className={styles.imgContainer}>
-                                <img className={styles.imgCenter} src={currentArt.picture} alt="" />
+                                <img className={styles.imgCenter} src={artProfile.picture} alt="" />
                             </div>
                         </Link>
 
