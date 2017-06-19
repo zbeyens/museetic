@@ -57,7 +57,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
                 });
             }, //findNextArts (random)
             (countArts, userArts, cb) => {
-                if (userArts.current !== null) {
+                if (userArts.current !== undefined) {
                     userArts.skipped.push(userArts.current._id);
                     //once all skipped, empty the skipped list
                     if (userArts.skipped.length >= countArts) {
