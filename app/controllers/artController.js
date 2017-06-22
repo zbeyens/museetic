@@ -158,3 +158,10 @@ exports.removeArt = (id) => {
     return Art.findByIdAndRemove(id)
     .exec();
 };
+
+exports.removeMuseumArts = (id) => {
+    return Art.remove({
+        museum: id
+    })
+    .exec();
+};

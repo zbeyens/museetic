@@ -57,7 +57,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
                 });
             }, //findNextArts (random)
             (countArts, userArts, cb) => {
-                if (userArts.current !== undefined) {
+                if (userArts.current) {
                     userArts.skipped.push(userArts.current._id);
                     //once all skipped, empty the skipped list
                     if (userArts.skipped.length >= countArts) {
@@ -87,7 +87,6 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
                 res.sendStatus(500);
             }
         });
-        console.log("sending artProfile");
     };
 
     app.get('/fetchArtTrend', isLoggedIn, (req, res) => {
@@ -219,7 +218,6 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         values.abstract = msg.abstract ? msg.abstract : '';
         values.desc = msg.desc ? msg.desc : '';
 
-        console.log(id);
         const findById = artController.findById(id);
         findById.then((art) => {
             //edit only if uploaded file

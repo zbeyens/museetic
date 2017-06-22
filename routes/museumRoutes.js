@@ -3,6 +3,7 @@ const cfg = require('../shared/config');
 const fs = require('fs');
 
 const museumController = require('../app/controllers/museumController');
+const artController = require('../app/controllers/artController');
 // userController = require('../app/controllers/userController'),
 // async = require('async');
 
@@ -124,14 +125,15 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
                 });
             }
 
-            const removeMuseum = museumController.removeMuseum(id);
-            removeMuseum.then(() => {
-                res.sendStatus(200);
-            }).catch((err) => {
-                res.sendStatus(500);
-                console.log(err);
-            });
-        }).catch((err) => {
+            return museumController.removeMuseum(id);
+        })
+        .then((museum) => {
+            return artController.removeMuseumArts(museum.id);
+        })
+        .then(() => {
+            res.sendStatus(200);
+        })
+        .catch((err) => {
             res.sendStatus(500);
             console.log(err);
         });
