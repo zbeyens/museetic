@@ -24,7 +24,9 @@ cfgDb(mongoose);
 cfgPassport(passport);
 
 //all client static files served before session.
-app.use('/client', express.static(path.join(__dirname, 'client')));
+app.use('/client', express.static(path.join(__dirname, 'client'), {
+    maxAge: '1h'
+}));
 app.use('/shared', express.static(path.join(__dirname, 'shared')));
 app.use(favicon(path.join(__dirname, '/client/img/museum.png')));
 app.use(logger('dev'));
