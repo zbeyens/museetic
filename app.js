@@ -2,16 +2,12 @@ const express = require('express'),
 	session = require('express-session'),
 	app = express(),
 	bodyParser = require('body-parser'),
-	// cookieParser = require('cookie-parser'), //not needed with passport
 	MongoStore = require('connect-mongo')(session),
 	logger = require('morgan'),
 	http = require('http'),
 	// httpProxy = require('http-proxy'), https = require('https'),
 	path = require('path'),
-	// fs = require('fs'),
 	favicon = require('serve-favicon'),
-	// chalk = require('chalk'), m
-	// server-side
 	passport = require('passport'),
 	mongoose = require('mongoose');
 
@@ -78,6 +74,7 @@ app.use((req, res, next) => {
 	next();
 });
 
+//for development hot reloading
 if (isDev) {
 	//dev
 	const webpack = require('webpack'),
@@ -104,24 +101,6 @@ if (isDev) {
 
 routes(app, passport);
 
-// /////// old // /////// var oauth2Client = new OAuth2(CLIENT_ID,
-// CLIENT_SECRET, REDIRECT_URL); var COMMENTS_FILE = path.join(__dirname,
-// 'comments.json'); app.get('/api/comments', function(req, res) {
-// fs.readFile(COMMENTS_FILE, function(err, data) {         if (err) {
-//   process.exit(1); }         res.json(JSON.parse(data));     }); });
-//
-// var success = function(err, login) {     console.log(err + login); };
-// app.post('/api/comments', function(req, res) {     fs.readFile(COMMENTS_FILE,
-// function(err, data) {         if (err) {             console.error(err);
-//   process.exit(1);         }         var comments = JSON.parse(data);      //
-// NOTE: In a real implementation, we would likely rely on a database or
-// // some other approach (e.g. UUIDs) to ensure a globally unique id. We'll
-//     // treat Date.now() as unique-enough for our purposes.    var newComment
-// = {             id: Date.now(),             author: req.body.author,
-//    text: req.body.text,         }; comments.push(newComment);
-// fs.writeFile(COMMENTS_FILE, JSON.stringify(comments, null, 4), function(err)
-// {             if (err) {             console.error(err);
-// process.exit(1); }             res.json(comments);         });     }); });
 
 const server = http.createServer(app);
 server.listen(process.env.PORT || 5000, () => {

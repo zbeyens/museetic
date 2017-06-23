@@ -7,16 +7,17 @@ museumController = require('../app/controllers/museumController'),
 async = require('async');
 
 module.exports = (app, isLoggedIn, isModerator, upload) => {
-    // const isProduction = process.env.NODE_ENV === 'production';
-
     //NOTE: better error handling...
-    // if (!isProduction) {
-    app.get('/populate', isModerator, (req, res) => {
-        artController.resetArts();
-        res.redirect("/");
-    });
-    // }
+    const isProduction = process.env.NODE_ENV === 'production';
+    if (!isProduction) {
+        //populate all the ulb arts if moderator.
+        app.get('/populate', isModerator, (req, res) => {
+            artController.resetArts();
+            res.redirect("/");
+        });
+    }
 
+    //fetch one art from its id
     app.get('/fetchArt', (req, res) => {
         const artId = decodeURIComponent(req.query.id);
 
@@ -28,6 +29,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //if logged in, fetch the arts liked from the user id
     app.get('/fetchmycollection', isLoggedIn, (req, res) => {
         const findByLikes = artController.findByLikes(req.user._id);
         findByLikes.then((arts) => {
@@ -37,6 +39,10 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //1) fetch all the user arts from the user id
+    //2) count the number of arts
+    //3) add the current art in arts.skipped
+    //4) fetch and send the next art
     const skipArt = (req, res) => {
         async.waterfall([
             //findUserArts from req.user
@@ -89,6 +95,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     };
 
+    //if logged in, fetch the art.current from the user id. If there is no art.current, skipArt
     app.get('/fetchArtTrend', isLoggedIn, (req, res) => {
         const findUserArts = userController.findUserArts(req.user);
         findUserArts.then((user) => {
@@ -102,8 +109,10 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //if logged in, skip the current art
     app.get('/skipArt', isLoggedIn, skipArt);
 
+    //if logged in, like/dislike the art
     app.get('/likeart', isLoggedIn, (req, res) => {
         const userId = req.user._id;
         const artId = req.query.id;
@@ -150,6 +159,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //if logged in, fetch all the comments from the art id.
     app.get('/fetchComments', isLoggedIn, (req, res) => {
         const artId = decodeURIComponent(req.query.id);
         const fetchComments = artController.fetchComments(artId);
@@ -160,6 +170,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //if logged in, push a comment in an art from its id, content and user id.
     app.post('/sendComment', isLoggedIn, (req, res) => {
         const artId = req.body.artId;
         const content = req.body.content;
@@ -171,6 +182,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //if logged in, delete the comment from the user id, artId and comId
     app.post('/deleteComment', isLoggedIn, (req, res) => {
         const artId = req.body.artId;
         const comId = req.body.comId;
@@ -183,6 +195,11 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //if logged in, if moderator, add one art from the form values.
+    //if there is a picture, upload it
+    //push the art
+    //push the art to the corresponding museum
+    //send the new art
     app.post('/addArt', isLoggedIn, isModerator, upload.single('picture'), (req, res) => {
         const values = req.body;
 
@@ -208,6 +225,8 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //same than addArt by editing. Edit only the values modified.
+    //delete the previous picture if overwritten.
     app.post('/editArt', isLoggedIn, isModerator, upload.single('picture'), (req, res) => {
         const id = req.body.id;
         const msg = req.body;
@@ -249,6 +268,8 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //if logged in/moderator, remove an art from its id
+    //delete the picture if existing.
     app.post('/removeArt', isLoggedIn, isModerator, (req, res) => {
         const id = req.body.id;
 

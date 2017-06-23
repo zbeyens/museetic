@@ -1,7 +1,7 @@
 const Museum = require('../models/museum'),
 museumsData = require('../../config/museums.json');
 
-//dev
+//only for dev
 exports.resetMuseums = () => {
     //reset
     Museum.remove({}, () => {
@@ -15,7 +15,7 @@ exports.resetMuseums = () => {
     }
 };
 
-//all museums
+//find all museums
 exports.findAll = () => {
     return Museum.find({}, 'picture name')
     .exec();

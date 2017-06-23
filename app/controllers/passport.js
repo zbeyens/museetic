@@ -3,7 +3,7 @@ const FacebookStrategy = require('passport-facebook').Strategy,
 	validator = require('validator'),
 	User = require('../models/user'),
 	cfgAuth = require('../../config/auth'),
-	cfg = require('../../shared/config'),
+	cfg = require('../../config/configServer'),
     cfgShared = require('../../shared/config');
 
 /**
@@ -44,8 +44,7 @@ module.exports = function(passport) {
 		passReqToCallback: true // allows us to pass back the entire request to the callback
 	}, (req, email, password, done) => {
 		if (!validator.isEmail(email)) {
-			console.log("Email invalide");
-			return done(null, false, {email: 'Email invalide'});
+			return done(null, false, {email: cfg.mailErrorInvalide});
 		}
 
 		// asynchronous
@@ -60,12 +59,12 @@ module.exports = function(passport) {
 					return done(err);
 
 				if (user) {
-					return done(null, false, {email: 'Email déjà utilisée'});
+					return done(null, false, {email: cfg.mailErrorUsed});
 				}
 				if (email.length > cfg.formEmailLength) {
-					return done(null, false, {email: 'Email trop long'});
+					return done(null, false, {email: cfg.mailErrorLength});
 				} else if (req.body.name.length > cfg.formNameLength) {
-					return done(null, false, {name: 'Nom trop long'});
+					return done(null, false, {name: cfg.nameErrorLength});
 				}
 				// create the user
 				const newUser = new User();
@@ -75,7 +74,7 @@ module.exports = function(passport) {
 				newUser.email = email;
 				newUser.local.password = newUser.generateHash(password);
 
-                if (email === "kindaichilogins@gmail.com") {
+                if (email === cfg.adminMail) {
                     newUser.role = "admin";
                 }
 
@@ -89,13 +88,13 @@ module.exports = function(passport) {
 		});
 	}));
 
+    //same for authenticating
 	passport.use('local-login', new LocalStrategy({
 		usernameField: 'email',
 		passwordField: 'password',
 		passReqToCallback: true
 	}, (req, email, password, done) => {
 		if (!validator.isEmail(email)) {
-			console.log("Email invalide");
 			return done(null, false, {global: 'Invalide'});
 		}
 
@@ -107,21 +106,19 @@ module.exports = function(passport) {
 
 			// if no user is found, return the message
 			if (!user) {
-				console.log("Email invalide");
-				return done(null, false, {email: "L'email que vous avez entré ne correspond à aucun compte."});
+				return done(null, false, {email: cfg.authMailErrorInvalide});
 			}
 
 			// if the user is found but the password is wrong
 			if (!user.validPassword(password)) {
-				console.log("Le mot de passe que vous avez entré est incorrect.");
-				return done(null, false, {password: "Le mot de passe que vous avez entré est incorrect."});
+				return done(null, false, {password: cfg.authPasswordErrorInvalide});
 			}
 
 			return done(null, user);
 		});
 	}));
 
-	//Facebook.
+	//Facebook. Not used
 	passport.use(new FacebookStrategy({
 		// pull in our app id and secret from our auth.js file
 		clientID: cfgAuth.facebookAuth.clientID,

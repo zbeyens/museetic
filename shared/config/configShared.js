@@ -1,3 +1,4 @@
+//this is the config shared by both server and client
 module.exports = {
     //input length
     formNameLength: 20,

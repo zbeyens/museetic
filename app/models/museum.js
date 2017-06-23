@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const ObjectId = mongoose.Schema.ObjectId;
 
+//Museum schema
 const museumSchema = mongoose.Schema({
     picture: String,
     name: String,

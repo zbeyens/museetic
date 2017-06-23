@@ -1,5 +1,7 @@
 const Chat = require('../models/chat');
 
+//NOTE: I will comment only one time the "new" things. Then it should be trivial.
+
 exports.fetchChats = (userId) => {
     return Chat.find({
         'participants.user': userId
@@ -15,6 +17,8 @@ exports.fetchChats = (userId) => {
     ]).exec();
 };
 
+//push a message in an existing chat.
+//create a new chat if not existing.
 exports.pushMessage = (senderId, receiverId, content) => {
     //reset
     return Chat.findOne({
@@ -64,6 +68,7 @@ exports.pushMessage = (senderId, receiverId, content) => {
     });
 };
 
+//mark the chat as read for one user
 exports.readChat = (chatId, userId) => {
     return Chat.findById(chatId)
     .exec((err, chat) => {

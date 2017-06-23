@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { loadAuth } from '../../actions/authActions';
-import { fetchNotifications, acceptFriend, declineFriend } from '../../actions/userActions';
+import { acceptFriend, declineFriend } from '../../actions/userActions';
 // import styles from './BtnFriendContainer.scss';
 
 
@@ -13,7 +13,6 @@ import { fetchNotifications, acceptFriend, declineFriend } from '../../actions/u
     }),
     dispatch => bindActionCreators({
         loadAuth,
-        fetchNotifications,
         acceptFriend,
         declineFriend
     }, dispatch)

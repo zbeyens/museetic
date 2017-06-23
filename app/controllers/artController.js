@@ -3,7 +3,9 @@ Museum = require('../models/museum'),
 artsData = require('../../config/arts.json');
 //NOTE: async useless, use .then
 
-//dev
+//NOTE: I will comment only one time the "new" things. Then it should be trivial.
+
+//only for dev
 exports.resetArts = () => {
     //reset
     Art.remove({}, () => {
@@ -15,7 +17,6 @@ exports.resetArts = () => {
             new Art(artsData[i]).save((err, newArt) => {
                 if (err) console.log(err);
 
-                console.log("cool ");
                 const findMuseum = Museum.findOneAndUpdate({
                     name: newArt.museumName
                 }, {
@@ -50,6 +51,7 @@ exports.count = () => {
     return Art.count().exec();
 };
 
+//find the next art not in skippedArts and skip a random number of art.
 exports.findNextArt = (count, artProfile, skippedArts) => {
     // Get a random entry
     const random = Math.floor(Math.random() * (count - skippedArts.length));
@@ -65,6 +67,7 @@ exports.findNextArt = (count, artProfile, skippedArts) => {
 };
 
 //NOTE: select...
+//return the new updated art
 exports.pushLike = (userId, artId) => {
     return Art.findByIdAndUpdate(artId, {
         $push: {
@@ -89,6 +92,7 @@ exports.findLike = (userId, artId) => {
     }, '').exec();
 };
 
+//find an art by its id and populate the museum name and picture
 exports.findByLikes = (userId) => {
     return Art.find({
         likes: userId

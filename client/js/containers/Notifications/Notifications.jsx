@@ -25,8 +25,14 @@ import styles from './Notifications.scss';
 )
 class Notifications extends Component {
     componentDidMount() {
-        this.props.fetchNotifications();
-        this.props.loadAuth();
+        this.fetchNotifInt = setInterval(() => {
+            this.props.fetchNotifications();
+            this.props.loadAuth();
+        }, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.fetchNotifInt);
     }
 
     render() {

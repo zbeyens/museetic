@@ -1,3 +1,4 @@
+//this is the configuration of the db
 exports = module.exports = (mongoose) => {
     //dev - production
     const url = process.env.MONGODB_URI || 'mongodb://localhost/museetic';

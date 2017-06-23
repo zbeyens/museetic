@@ -3,7 +3,8 @@ mongoose.Promise = global.Promise;
 const bcrypt = require('bcrypt-nodejs');
 const ObjectId = mongoose.Schema.ObjectId;
 
-
+//User schema.
+//Facebook and google are not used for the moment.
 const userSchema = mongoose.Schema({
     name: {
         type: String,
@@ -73,12 +74,12 @@ const userSchema = mongoose.Schema({
     },
 });
 
-// generating a hash
+// generating a hash from a password
 userSchema.methods.generateHash = function(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 };
 
-// checking if password is valid
+// checking if password is valid for authenticating.
 userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.local.password);
 };

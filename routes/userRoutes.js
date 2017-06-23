@@ -1,4 +1,3 @@
-// const async = require('async');
 const path = require('path');
 const cfg = require('../shared/config');
 const fs = require('fs');
@@ -8,7 +7,8 @@ validator = require('validator'),
 async = require('async');
 
 module.exports = (app, isLoggedIn, isModerator, upload) => {
-    //send [] suggestions
+    //send a list of suggestions in search bar
+    //if length is valide
     app.get('/suggestions', isLoggedIn, (req, res) => {
         let q = req.query.q;
         if (!q)
@@ -34,11 +34,10 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
-    //send 1 user
+    //fetch one user profile
     app.get('/search', isLoggedIn, (req, res) => {
         const q = req.query.q;
         const id = decodeURIComponent(q);
-        console.log(q);
 
         async.waterfall([
             //findArtCurrent from req.user
@@ -51,7 +50,6 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
                 });
             },
             (user, cb) => {
-                console.log(user);
                 const findByLikes = artController.findByLikes(user._id);
                 findByLikes.then((arts) => {
                     res.send({
@@ -71,6 +69,8 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //push/pull friend request
+    //can not be friend with self.
     app.get('/addFriend', isLoggedIn, (req, res) => {
         let q = req.query.q;
         if (!q)
@@ -91,11 +91,9 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
                     break;
                 }
             }
-            console.log(friendRequested);
             if (!friendRequested) {
                 const pushFriendRequest = userController.pushFriendRequest(q, req.user._id);
                 pushFriendRequest.then(() => {
-                    console.log("added");
                     res.sendStatus(200);
                 }).catch((err) => {
                     res.sendStatus(500);
@@ -104,7 +102,6 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
             } else {
                 const pullFriendRequest = userController.pullFriendRequest(q, req.user._id);
                 pullFriendRequest.then(() => {
-                    console.log("removed");
                     res.sendStatus(200);
                 }).catch((err) => {
                     res.sendStatus(500);
@@ -118,6 +115,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         //should check if not in friendRequests first...
     });
 
+    //remove from the friend list for both users
     app.get('/removeFriend', isLoggedIn, (req, res) => {
         const q = req.query.q;
 
@@ -137,6 +135,8 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         //should check if not in friendRequests first...
     });
 
+
+    //if admin, add in moderator
     app.get('/addModerator', isLoggedIn, (req, res) => {
         const q = req.query.q;
 
@@ -152,6 +152,8 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
             res.sendStatus(401);
         }
     });
+
+    //if admin, remove from moderator
     app.get('/removeModerator', isLoggedIn, (req, res) => {
         const q = req.query.q;
 
@@ -168,6 +170,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         }
     });
 
+    //fetch the friend requests from the user id
     app.get('/fetchNotifications', isLoggedIn, (req, res) => {
         const fetchNotifications = userController.fetchNotifications(req.user.id);
         fetchNotifications.then((user) => {
@@ -178,6 +181,8 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
         //should check if not in friendRequests first...
     });
+
+    //fetch the friends from the user id
     app.get('/fetchFriends', isLoggedIn, (req, res) => {
         const fetchFriends = userController.fetchFriends(req.user.id);
         fetchFriends.then((user) => {
@@ -188,6 +193,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //accept friend -> push in friend list of both users.
     //NOTE: check if not in friend...
     app.get('/acceptFriend', isLoggedIn, (req, res) => {
         const q = req.query.q;
@@ -208,6 +214,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         //should check if not in friendRequests first...
     });
 
+    //decline a friend request from 2 user id
     app.get('/declineFriend', isLoggedIn, (req, res) => {
         const q = req.query.q;
 
@@ -221,20 +228,9 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         //should check if not in friendRequests first...
     });
 
-
-    app.get('/declineFriend', isLoggedIn, (req, res) => {
-        const q = req.query.q;
-
-        const declineFriend = userController.declineFriend(req.user.id, q);
-        declineFriend.then((user) => {
-            res.sendStatus(200);
-        }).catch((err) => {
-            res.sendStatus(500);
-            console.log(err);
-        });
-        //should check if not in friendRequests first...
-    });
-
+    //edit a user profile.
+    //Edit only the values modified.
+    //delete the previous picture if overwritten.
     app.post('/editUser', isLoggedIn, upload.single('picture'), (req, res) => {
         const msg = req.body;
 
@@ -247,8 +243,6 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         values.bio = msg.bio ? msg.bio : '';
         values.location = msg.location ? msg.location : '';
 
-        console.log(msg);
-        console.log(values);
 
         const findUserById = userController.findUserById(req.user.id);
         findUserById.then((user) => {

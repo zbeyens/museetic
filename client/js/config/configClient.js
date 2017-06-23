@@ -1,3 +1,4 @@
+//this is the configuration of the client html
 export default {
     //page d'inscription
     signupTitle: "Décrouvrez les musées belges sous un nouvel angle.",

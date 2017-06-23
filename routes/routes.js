@@ -7,6 +7,9 @@ chatRoutes = require('./chatRoutes');
 const multer = require('multer'),
 crypto = require('crypto');
 
+/**
+ * this configurate where to put pictures, with random bytes generated for the name
+ */
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, '../client/img/uploads/'));
@@ -19,11 +22,13 @@ const storage = multer.diskStorage({
         // cb(null, file.fieldname + '-' + Date.now());
     }
 });
+// specify the limits and the storage
 const upload = multer({
     storage: storage,
     limits: { fileSize: 5000000 }
 });
 
+//check whether the user is logged in
 function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on
     if (!req.isAuthenticated()) {
@@ -33,6 +38,7 @@ function isLoggedIn(req, res, next) {
     return next();
 }
 
+//check whether the user is moderator or admin
 function isModerator(req, res, next) {
     if (!(req.user.role === 'admin' || req.user.role === 'moderator')) {
         return res.sendStatus(403);
@@ -41,6 +47,7 @@ function isModerator(req, res, next) {
     return next();
 }
 
+
 module.exports = (app, passport) => {
     authRoutes(app, passport, isLoggedIn);
     artRoutes(app, isLoggedIn, isModerator, upload);
@@ -48,7 +55,7 @@ module.exports = (app, passport) => {
     userRoutes(app, isLoggedIn, isModerator, upload);
     chatRoutes(app, isLoggedIn);
 
-    //Main - after all our routing
+    //Main file - after all routing
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, '../index.html'));
     });

@@ -4,20 +4,20 @@ const fs = require('fs');
 
 const museumController = require('../app/controllers/museumController');
 const artController = require('../app/controllers/artController');
-// userController = require('../app/controllers/userController'),
-// async = require('async');
+
 
 module.exports = (app, isLoggedIn, isModerator, upload) => {
-    // const isProduction = process.env.NODE_ENV === 'production';
-
     //NOTE: better error handling...
-    // if (!isProduction) {
-    app.get('/museumpopulate', isModerator, (req, res) => {
-        museumController.resetMuseums();
-        res.redirect("/");
-    });
+    const isProduction = process.env.NODE_ENV === 'production';
+    if (!isProduction) {
+        //ulb museum populate
+        app.get('/museumpopulate', isModerator, (req, res) => {
+            museumController.resetMuseums();
+            res.redirect("/");
+        });
+    }
 
-
+    //fetch a museum from its id
     app.get('/fetchMuseum', (req, res) => {
         const museumId = req.query.id;
 
@@ -29,6 +29,7 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //fetch all the museums
     app.get('/fetchAllMuseums', (req, res) => {
         const findAll = museumController.findAll();
         findAll.then((museums) => {
@@ -38,12 +39,13 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //if logged in, if moderator, add one museum from the form values.
+    //if there is a picture, upload it
+    //push the museum and send its id
     app.post('/addMuseum', isLoggedIn, isModerator, upload.single('picture'), (req, res) => {
         const values = req.body;
 
         //NOTE: should limit values
-        // console.log(values);
-        // console.log(req.file);
         if (req.file) {
             values.picture = '/client/img/uploads/' + req.file.filename;
         } else {
@@ -61,6 +63,8 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //same than addMuseum by editing. Edit only the values modified.
+    //delete the previous picture if overwritten.
     app.post('/editMuseum', isLoggedIn, isModerator, upload.single('picture'), (req, res) => {
         const id = req.body.id;
         const msg = req.body;
@@ -107,6 +111,8 @@ module.exports = (app, isLoggedIn, isModerator, upload) => {
         });
     });
 
+    //if logged in/moderator, remove a museum from its id
+    //delete the picture if existing.
     app.post('/removeMuseum', isLoggedIn, isModerator, (req, res) => {
         const id = req.body.id;
 

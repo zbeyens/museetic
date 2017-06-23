@@ -25,8 +25,8 @@ class ModalMessages extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchChats(); //NOTE: CAN INCLUDE IN INTERVAL
         this.fetchChatsInt = setInterval(() => {
+            this.props.fetchChats(); //NOTE: CAN INCLUDE IN INTERVAL
             //check if self read the message
             const unreadChats = [];
             for (let i = 0; i < this.props.listChat.length; i++) {
@@ -40,7 +40,7 @@ class ModalMessages extends Component {
                 }
             }
             this.props.setUnreadChats(unreadChats);
-        }, 100);
+        }, 300);
     }
 
     componentWillUnmount() {

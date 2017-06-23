@@ -3,6 +3,7 @@ mongoose.Promise = global.Promise;
 const ObjectId = mongoose.Schema.ObjectId;
 
 // http://stackoverflow.com/questions/26936645/mongoose-private-chat-message-model
+// the next comments are some suggestion for the future
 const chatSchema = mongoose.Schema({
     // sender: {
     // 	type: ObjectId,
