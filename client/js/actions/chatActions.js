@@ -30,7 +30,7 @@ export function fetchChats() {
 
             const areaChat = document.getElementById("listChatComment");
             if (areaChat) {
-                areaChat.scrollTop = areaChat.scrollHeight;
+                // areaChat.scrollTop = areaChat.scrollHeight;
             }
         })
         .catch((e) => {

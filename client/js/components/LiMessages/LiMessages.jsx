@@ -32,7 +32,7 @@ class ModalMessages extends Component {
             for (let i = 0; i < this.props.listChat.length; i++) {
                 for (let j = 0; j < this.props.listChat[i].participants.length; j++) {
                     const participant = this.props.listChat[i].participants[j];
-                    if (participant.user._id === this.props.user._id) {
+                    if (participant.user && participant.user._id === this.props.user._id) {
                         if (!participant.read) {
                             unreadChats.push(this.props.listChat[i]._id);
                         }

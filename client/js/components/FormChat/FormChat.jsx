@@ -36,6 +36,12 @@ class FormChat extends Component {
         if (values.com) {
             this.props.reset();
             this.props.sendChatMessage(this, this.props.destUser._id, values.com);
+            setTimeout(() => {
+                const list = document.getElementById("listChatComment");
+                if (list) {
+                    list.scrollTop = list.scrollHeight;
+                }
+            }, 500);
         }
     }
 

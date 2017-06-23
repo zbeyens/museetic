@@ -15,6 +15,8 @@ import {
 } from '../../components';
 import styles from './UserProfile.scss';
 
+import cfgClient from '../../config/configClient';
+
 @connect(
     state => ({
         user: state.auth.user,
@@ -128,40 +130,40 @@ class UserProfile extends Component {
                             {
                                 userProfile.role === 'admin' &&
                                 <h4>
-                                    <span className="label label-primary role">Admin</span>
+                                    <span className="label label-primary role">{cfgClient.admin}</span>
                                 </h4>
                             }
                             {
                                 userProfile.role === 'moderator' &&
                                 <h4>
-                                    <span className="label label-danger role">Modérateur</span>
+                                    <span className="label label-danger role">{cfgClient.moderator}</span>
                                 </h4>
                             }
                             {!userProfile.role &&
                                 <h4>
-                                    <span className="label label-success role">Membre</span>
+                                    <span className="label label-success role">{cfgClient.member}</span>
                                 </h4>
                             }
                             {
                                 user.role === 'admin' && !userProfile.role &&
                                 <button className="btn btn-danger" onClick={this.onAddModerator}>
-                                    <i className="fa fa-plus-circle"/> Ajouter aux modérateurs
+                                    <i className="fa fa-plus-circle"/> {cfgClient.addModerator}
                                 </button>
                             }
                             {
                                 user.role === 'admin' && userProfile.role === 'moderator' &&
                                 <button className="btn btn-danger" onClick={this.onRemoveModerator}>
-                                    <i className="fa fa-minus-circle"/> Retirer des modérateurs
+                                    <i className="fa fa-minus-circle"/> {cfgClient.removeModerator}
                                 </button>
                             }
                             {!isFriend && !friendRequested && !isMyProfile && !friendResponse &&
                                 <button className="btn btn-default margin-t5" onClick={this.onAddFriend}>
-                                    <i className="fa fa-user-plus"/> Ajouter en ami
+                                    <i className="fa fa-user-plus"/> {cfgClient.addFriend}
                                 </button>
                             }
                             {!isFriend && friendRequested === true && !isMyProfile && !friendResponse &&
                                 <button className="btn btn-default margin-t5" onClick={this.onAddFriend}>
-                                    <i className="fa fa-user-plus"/> Invitation envoyée
+                                    <i className="fa fa-user-plus"/> {cfgClient.addedFriend}
                                 </button>
                             }
                             {!isFriend && !isMyProfile && friendResponse &&
@@ -169,13 +171,13 @@ class UserProfile extends Component {
                             }
                             {isFriend &&
                                 <button className="btn btn-default margin-t5" onClick={this.onRemoveFriend}>
-                                    <i className="fa fa-user-times"/> Retirer des amis
+                                    <i className="fa fa-user-times"/> {cfgClient.removeFriend}
                                 </button>
                             }
                             {!isMyProfile &&
                                 <div>
                                     <button className="btn btn-info margin-t5 margin-b5" onClick={this.onClickContact}>
-                                        <i className="fa fa-comment"/> Contacter
+                                        <i className="fa fa-comment"/> {cfgClient.contact}
                                     </button>
                                 </div>
                             }

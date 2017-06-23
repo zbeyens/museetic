@@ -53,7 +53,7 @@ class ListChatComment extends Component {
         if (destUser) {
             for (let i = 0; i < listChat.length; i++) {
                 for (let j = 0; j < listChat[i].participants.length; j++) {
-                    if (listChat[i].participants[j].user._id === destUser._id) {
+                    if (listChat[i].participants[j].user && listChat[i].participants[j].user._id === destUser._id) {
                         listChatComment = listChat[i];
                         break;
                     }

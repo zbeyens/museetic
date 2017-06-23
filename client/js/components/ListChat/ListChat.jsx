@@ -40,9 +40,7 @@ class ListChat extends Component {
         const destUsers = [];
         for (let i = 0; i < listChat.length; i++) {
             for (let j = 0; j < listChat[i].participants.length; j++) {
-                if (listChat[i].participants[j] &&
-                    listChat[i].participants[j].user &&
-                    listChat[i].participants[j].user._id !== user._id) {
+                if (listChat[i].participants[j].user && listChat[i].participants[j].user._id !== user._id) {
                     destUsers.push(listChat[i].participants[j].user);
                 }
             }
@@ -60,30 +58,34 @@ class ListChat extends Component {
             <List>
                 {listChat.map((chat, i) => (
                     <div key={chat._id}>
-                        <ListItem
-                            leftAvatar={<Avatar src={destUsers[i].picture} />}
-                            primaryText={<span style={{color: '#e04e3e'}}>{destUsers[i].name}</span>}
-                            secondaryText={
-                                chat.messages.length > 0 &&
-                                <div>
-                                    {isRead(chat) &&
+                        {destUsers[i] &&
+                            <div>
+                                <ListItem
+                                    leftAvatar={<Avatar src={destUsers[i].picture} />}
+                                    primaryText={<span style={{color: '#e04e3e'}}>{destUsers[i].name}</span>}
+                                    secondaryText={
+                                        chat.messages.length > 0 &&
                                         <div>
-                                            <span style={{color: darkBlack}}>{chat.messages[chat.messages.length-1].author.name + " -- "}</span>
-                                            <span>{chat.messages[chat.messages.length-1].content}</span>
+                                            {isRead(chat) &&
+                                                <div>
+                                                    <span style={{color: darkBlack}}>{chat.messages[chat.messages.length-1].author.name + " -- "}</span>
+                                                    <span>{chat.messages[chat.messages.length-1].content}</span>
+                                                </div>
+                                            }
+                                            {!isRead(chat) &&
+                                                <div>
+                                                    <strong style={{color: darkBlack}}>{chat.messages[chat.messages.length-1].author.name + " -- "}</strong>
+                                                    <strong>{chat.messages[chat.messages.length-1].content}</strong>
+                                                </div>
+                                            }
                                         </div>
                                     }
-                                    {!isRead(chat) &&
-                                        <div>
-                                            <strong style={{color: darkBlack}}>{chat.messages[chat.messages.length-1].author.name + " -- "}</strong>
-                                            <strong>{chat.messages[chat.messages.length-1].content}</strong>
-                                        </div>
-                                    }
-                                </div>
-                            }
-                            secondaryTextLines={2}
-                            onTouchTap={() => this.onClickChat(chat._id, destUsers[i])}
-                        />
-                        <Divider inset />
+                                    secondaryTextLines={2}
+                                    onTouchTap={() => this.onClickChat(chat._id, destUsers[i])}
+                                />
+                                <Divider inset />
+                            </div>
+                        }
                     </div>
                 ))}
             </List>

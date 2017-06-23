@@ -44,6 +44,7 @@ class SearchProfile extends Component {
         //NOTE: index=-1 if enter
         if (!chosenRequest) return;
         const chosenUser = this.props.suggestions[index];
+        if (!chosenUser) return;
 
         if (this.props.userProfile) {
             this.props.fetchUserProfile(1, chosenUser._id);

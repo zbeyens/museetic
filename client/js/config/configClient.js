@@ -9,4 +9,14 @@ export default {
     //page de news
     newsTitle: "Bonjour ",
     newsDesc: "Accédez aux oeuvres ",
+
+    admin: "Admin",
+    moderator: "Modérateur",
+    member: "Membre",
+    addFriend: "Ajouter comme ami",
+    addedFriend: "Invitation envoyée",
+    removeFriend: "Retirer des amis",
+    contact: "Contacter",
+    addModerator: "Ajouter comme modérateur",
+    removeModerator: "Retirer des modérateurs",
 };
