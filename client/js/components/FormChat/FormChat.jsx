@@ -34,6 +34,7 @@ class FormChat extends Component {
 
     onSubmit(values) {
         if (values.com) {
+            this.props.reset();
             this.props.sendChatMessage(this, this.props.destUser._id, values.com);
         }
     }

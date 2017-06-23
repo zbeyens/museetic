@@ -40,7 +40,9 @@ class ListChat extends Component {
         const destUsers = [];
         for (let i = 0; i < listChat.length; i++) {
             for (let j = 0; j < listChat[i].participants.length; j++) {
-                if (listChat[i].participants[j].user._id !== user._id) {
+                if (listChat[i].participants[j] &&
+                    listChat[i].participants[j].user &&
+                    listChat[i].participants[j].user._id !== user._id) {
                     destUsers.push(listChat[i].participants[j].user);
                 }
             }

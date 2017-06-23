@@ -45,6 +45,7 @@ class FormComment extends Component {
 
     onSubmit(values) {
         if (values.com) {
+            this.props.reset();
             this.props.sendComment(this.props.art._id, values.com);
         }
     }
