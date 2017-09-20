@@ -28,6 +28,9 @@ class News extends Component {
             <div className="text-center">
                 <h1>Bonjour {this.props.user.name}!</h1>
                 <div className={styles.belowTitle}>
+                    <div className={styles.credits}>
+                        {cfg.credits}
+                    </div>
                     <div>
                         <span>{cfg.newsDesc}</span>
                         <Link to="/">par ici.</Link>

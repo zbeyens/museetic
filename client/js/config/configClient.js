@@ -9,6 +9,8 @@ export default {
     //page de news
     newsTitle: "Bonjour ",
     newsDesc: "Accédez aux oeuvres ",
+    credits: "Museetic est un concept original créé lors du hackathon #CULTUREHACK15 (organisé par le BUBBLE HUB de Charleroi, 17-18/10/2015, @Bois du Casier), par M. Afnaim, J. Bouniton, F. Piquin, J. Skieresz, J. Torreele.\n\n Ce prototype du concept a été réalisé en 2016-17 par Z. Beyens dans le cadre d'un projet de 1er master de l'École Polytechnique de l'ULB sous la supervision de G. Geeraerts et J. Richelle.",
+
 
     admin: "Admin",
     moderator: "Modérateur",
